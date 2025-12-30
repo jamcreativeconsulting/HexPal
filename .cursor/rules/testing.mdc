@@ -1,0 +1,29 @@
+---
+description: Testing requirements and scenarios
+agentRequested: true
+---
+
+# Testing Requirements
+
+## Before Committing
+- Test on latest macOS version
+- Test with multiple displays
+- Test with different color profiles
+- Verify hotkey works reliably
+- Check memory usage
+- Verify no crashes
+
+## Test Scenarios
+- Pick color from browser
+- Pick color from desktop app
+- Pick color from image viewer
+- Pick color across multiple displays
+- Test hotkey from different apps
+- Test clipboard copy functionality
+
+## Error Testing
+- Test permission denial scenarios
+- Test hotkey conflicts
+- Test multi-display edge cases
+- Test color profile conversions
+- Test memory under load

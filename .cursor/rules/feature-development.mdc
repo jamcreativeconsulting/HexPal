@@ -1,0 +1,70 @@
+---
+description: Feature development process and feature bloat prevention
+agentRequested: true
+---
+
+# Feature Development Process
+
+## Adding New Features
+1. **Justify:** Does it support the core workflow?
+2. **Plan:** Update `docs/PLAN.md` with feature details
+3. **Implement:** Follow code standards
+4. **Test:** Verify performance and reliability
+5. **Document:** Update README and code comments
+
+## MVP Features (Must Have)
+- Menu bar icon
+- Global hotkey (Cmd+Shift+C)
+- Screen color picker with magnifying glass
+- HEX code display
+- Automatic clipboard copy
+- Visual confirmation
+
+## Post-MVP Features (Nice to Have)
+- Color history
+- Multiple formats (RGB, HSL)
+- Customizable hotkey
+- Palette management
+- Contrast checker
+
+## Feature Bloat Prevention
+- **Question:** "Do users actually need this?"
+- **Rule:** If it doesn't make getting HEX codes faster, question it
+- **Principle:** Simplicity over features
+
+## What NOT to Do
+- Don't add features that slow down the core workflow
+- Don't require configuration for basic use
+- Don't add unnecessary dependencies
+- Don't compromise on speed for features
+- Don't add features "just because"
+
+## What TO Do
+- Optimize for speed
+- Keep it simple
+- Make it reliable
+- Polish the UI
+- Document everything
+
+## Git & Version Control
+
+### Commit Messages
+- Use clear, descriptive commit messages
+- Format: "Type: Brief description"
+- Types: feat, fix, docs, refactor, test, chore
+- Example: "feat: Add global hotkey support"
+- Example: "docs: Update API documentation for ColorConverter"
+
+### Branch Strategy
+- `main` - Production-ready code
+- `develop` - Development branch
+- `feature/*` - New features
+- `fix/*` - Bug fixes
+
+### Before Merging
+- Code review required
+- All tests passing
+- Documentation updated
+- No linter errors
+- Performance targets met
+- File size limits respected (400 lines max)

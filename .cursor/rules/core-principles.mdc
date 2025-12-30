@@ -1,0 +1,42 @@
+---
+description: HEXPal core principles and project philosophy
+alwaysApply: true
+---
+
+# HEXPal Core Principles
+
+HEXPal is a free, open-source macOS menu bar application for quickly picking colors from anywhere on screen and getting HEX codes. Built with Swift and AppKit, optimized for speed and simplicity.
+
+## 1. Speed-First Design
+- **Goal:** Get HEX codes in < 2 seconds
+- **Priority:** Optimize for the most common use case (picking HEX codes quickly)
+- **Rule:** Every feature must justify its impact on speed
+
+## 2. Simplicity Over Features
+- **Philosophy:** Do one thing exceptionally well
+- **Rule:** Don't add features unless they directly support the core workflow
+- **Question to ask:** "Does this make getting HEX codes faster or simpler?"
+
+## 3. Free & Open Source
+- **Commitment:** No paywalls, no subscriptions
+- **Rule:** All code must be open-source compatible
+- **License:** Use appropriate open-source license (MIT recommended)
+
+## 4. Developer-Focused
+- **Target:** Developers and designers who need HEX codes quickly
+- **Rule:** HEX code is the primary format, others are secondary
+- **Output:** Code-ready HEX codes (e.g., `#FF5733`)
+
+## 5. Reliability & Polish
+- **Standard:** Professional quality despite being free
+- **Rule:** No bugs, smooth performance, beautiful UI
+- **Testing:** Test on multiple macOS versions and display configurations
+
+## Questions to Ask Before Adding Features
+1. Does this make getting HEX codes faster?
+2. Do users actually need this?
+3. Will this slow down the core workflow?
+4. Can we achieve the goal more simply?
+5. Is this consistent with our speed-first philosophy?
+
+**Remember:** Speed, simplicity, and reliability are our priorities. When in doubt, choose the simpler, faster option.

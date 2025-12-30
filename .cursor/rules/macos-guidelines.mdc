@@ -1,0 +1,47 @@
+---
+description: macOS-specific development guidelines and best practices
+globs: ["**/*.swift"]
+alwaysApply: true
+---
+
+# macOS-Specific Guidelines
+
+## Permissions
+- Request Screen Recording permission on first launch
+- Request Accessibility permission if needed for hotkeys
+- Provide clear instructions if permission denied
+- Link to System Preferences when needed
+
+## Menu Bar App Best Practices
+- No dock icon (LSUIElement = true)
+- Menu bar icon should be minimal and recognizable
+- Respect macOS design guidelines
+- Support dark mode
+
+## Screen Capture
+- Handle multiple displays correctly
+- Support different color profiles
+- Convert to sRGB for HEX representation
+- Document color accuracy limitations
+
+## Global Hotkeys
+- Default: Cmd+Shift+C (non-conflicting)
+- Allow customization
+- Handle conflicts gracefully
+- Provide alternative activation methods
+
+## UI/UX Guidelines
+- Minimal and clean design
+- Fast and responsive
+- Intuitive and discoverable
+- Consistent with macOS design
+- Support keyboard navigation
+- Provide clear labels
+- Support VoiceOver
+- Follow macOS accessibility guidelines
+
+## Critical Error Handling
+- Screen capture failures: Check Screen Recording permission, verify display configuration
+- Hotkey registration failures: Check permission status, verify registration, check for conflicts
+- Permission denials: Provide clear user guidance and links to System Preferences
+- Memory issues: Monitor memory usage, optimize caching strategies

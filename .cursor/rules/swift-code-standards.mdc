@@ -1,0 +1,122 @@
+---
+description: Swift code style guide and architecture patterns for open source clarity
+globs: ["**/*.swift"]
+alwaysApply: true
+---
+
+# Swift Code Standards
+
+## Swift Style Guide
+- **Follow Swift API Design Guidelines** (https://swift.org/documentation/api-design-guidelines/)
+- Use meaningful, descriptive variable and function names
+- Prefer `let` over `var` when possible (immutability)
+- Use guard statements for early returns
+- Use camelCase for variables/functions, PascalCase for types
+- Use 4 spaces for indentation (not tabs)
+- Limit line length to 100 characters (soft limit, 120 max)
+
+## Naming Conventions
+- **Descriptive names:** `calculateTotalPrice()` not `calcTP()`
+- **Clear intent:** `isColorPickerActive` not `flag`
+- **Consistent terminology:** Use same terms throughout codebase
+- **Avoid abbreviations:** `color` not `clr`, `manager` not `mgr`
+- **Boolean properties:** Use `is`, `has`, `can` prefixes
+
+## Code Organization
+
+### File Structure
+- One primary type per file (class, struct, enum)
+- File name matches type name exactly
+- Use extensions to organize code within files
+- Group related functionality together
+
+### Extension Organization
+```swift
+// Main type definition
+class ColorPickerController {
+    // Core properties and methods
+}
+
+// MARK: - Protocol Conformances
+extension ColorPickerController: NSWindowDelegate {
+    // Protocol methods
+}
+
+// MARK: - Private Helpers
+private extension ColorPickerController {
+    // Private helper methods
+}
+```
+
+### Directory Structure
+- **App/**: Application entry point and app delegate
+- **Controllers/**: View controllers and managers
+- **Models/**: Data models and business logic
+- **Views/**: UI components and custom views
+- **Utilities/**: Helper classes and utilities
+- **Resources/**: Assets, Info.plist, etc.
+
+## Architecture Patterns
+- **MVC:** Use Model-View-Controller pattern
+- **Separation of Concerns:** Keep controllers, models, utilities separate
+- **Single Responsibility:** Each class should have one clear purpose
+- **Dependency Injection:** Avoid singletons where possible
+- **Protocol-Oriented:** Use protocols for abstraction and testability
+
+## Code Quality
+
+### Clarity Over Cleverness
+- Write code that's easy to understand
+- Favor explicit over implicit
+- Make intent clear through naming and structure
+
+### Error Handling
+- Always use try-catch blocks for error-prone operations
+- Use Result types for operations that can fail
+- Log errors to console with clear messages
+- Handle errors gracefully - don't crash the app
+- Provide user-friendly error messages when appropriate
+
+### Type Safety
+- Use strong typing, avoid `Any` when possible
+- Use optionals appropriately
+- Leverage Swift's type system for safety
+
+### Performance
+- Profile before optimizing
+- Use lazy properties for expensive initialization
+- Cache expensive computations
+- Avoid unnecessary allocations in hot paths
+
+## Open Source Best Practices
+
+### Code Clarity
+- Write self-documenting code
+- Use meaningful names that explain purpose
+- Structure code logically
+- Add comments for WHY, not WHAT
+
+### Modularity
+- Clear module boundaries
+- Well-defined interfaces
+- Minimal coupling between modules
+- High cohesion within modules
+
+### Consistency
+- Follow established patterns in the codebase
+- Use consistent formatting
+- Maintain consistent naming conventions
+- Follow the same architectural patterns
+
+## Code Review Checklist
+Before submitting code for review:
+- [ ] Follows Swift API Design Guidelines
+- [ ] No linter errors
+- [ ] All tests passing
+- [ ] Performance targets met
+- [ ] Documentation updated (public APIs documented)
+- [ ] Error handling implemented
+- [ ] Memory leaks checked
+- [ ] File size under 400 lines
+- [ ] Code is clear and self-documenting
+- [ ] Naming is descriptive and consistent

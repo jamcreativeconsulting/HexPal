@@ -1,0 +1,40 @@
+---
+description: Maintenance guidelines and regular tasks
+agentRequested: true
+---
+
+# Maintenance Guidelines
+
+## Regular Tasks
+- Update dependencies monthly
+- Review and update documentation quarterly
+- Test on new macOS versions when released
+- Monitor for user feedback
+- Keep MCPs updated
+
+## Code Quality
+- Refactor when needed
+- Remove dead code
+- Keep dependencies minimal
+- Update Swift version when stable
+- Follow Apple's deprecation warnings
+
+## Emergency Procedures
+
+### If Hotkey Stops Working
+1. Check permission status
+2. Verify hotkey registration
+3. Check for conflicts
+4. Provide fallback activation method
+
+### If Screen Capture Fails
+1. Check Screen Recording permission
+2. Verify display configuration
+3. Handle errors gracefully
+4. Provide user guidance
+
+### If App Crashes
+1. Check error logs
+2. Identify root cause
+3. Fix immediately
+4. Test thoroughly before release

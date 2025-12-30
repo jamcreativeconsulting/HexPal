@@ -1,0 +1,276 @@
+---
+description: Comprehensive documentation requirements for open source clarity
+globs: ["**/*.swift"]
+alwaysApply: true
+---
+
+# Documentation Standards for Open Source
+
+## Documentation Philosophy
+This is an **open source project**. Documentation must be comprehensive, clear, and helpful for:
+- New contributors understanding the codebase
+- Users understanding how to use the project
+- Maintainers understanding design decisions
+- Future developers (including yourself) understanding why code exists
+
+## Inline Documentation (Code Comments)
+
+### Public APIs - REQUIRED
+All public classes, structs, enums, functions, and properties MUST have documentation comments:
+
+```swift
+/// Converts an NSColor to a HEX string representation.
+///
+/// - Parameter color: The color to convert
+/// - Returns: A HEX string in the format "#RRGGBB" (e.g., "#FF5733")
+/// - Note: Alpha channel is ignored, only RGB values are used
+/// - Example:
+///   ```swift
+///   let hex = colorToHex(NSColor.red) // Returns "#FF0000"
+///   ```
+func colorToHex(_ color: NSColor) -> String {
+    // Implementation
+}
+```
+
+### Complex Logic - REQUIRED
+Any non-obvious code, algorithms, or business logic MUST have explanatory comments:
+
+```swift
+// Convert display coordinates to screen capture coordinates
+// macOS uses different coordinate systems for displays vs. captured images
+// This conversion ensures accurate pixel color extraction
+let capturePoint = convertDisplayToCapture(point: mouseLocation)
+```
+
+### Why, Not What
+- ✅ Good: "Convert to sRGB because HEX codes are always in sRGB color space"
+- ❌ Bad: "Convert color" (obvious from code)
+
+### Edge Cases & Gotchas
+Document any edge cases, limitations, or non-obvious behavior:
+
+```swift
+/// Captures the screen and extracts pixel color.
+///
+/// - Warning: Requires Screen Recording permission. Will fail silently if not granted.
+/// - Note: Color accuracy may vary based on display color profile. Results are converted to sRGB.
+/// - Parameter point: Screen coordinates (origin at top-left)
+/// - Returns: NSColor at the specified point, or nil if capture fails
+func capturePixelColor(at point: CGPoint) -> NSColor? {
+    // Implementation
+}
+```
+
+## External Documentation Files
+
+### README.md - REQUIRED
+Must include:
+- Project overview and purpose
+- Installation instructions
+- Quick start guide
+- Usage examples
+- Contributing guidelines
+- License information
+
+### Code Documentation (docs/)
+- Architecture overview
+- API reference
+- Design decisions and rationale
+- Development setup guide
+- Testing guide
+
+### Inline Documentation Standards
+
+#### File Headers
+Each Swift file should start with a brief description:
+
+```swift
+//
+//  ColorConverter.swift
+//  HEXPal
+//
+//  Converts NSColor instances to various string formats (HEX, RGB, HSL).
+//  Handles color space conversions and format validation.
+//
+```
+
+#### Function Documentation Template
+```swift
+/// [Brief one-line description]
+///
+/// [Detailed description if needed]
+///
+/// - Parameters:
+///   - paramName: [Description]
+/// - Returns: [Description]
+/// - Throws: [Error types if applicable]
+/// - Note: [Any important notes]
+/// - Warning: [Any warnings]
+/// - Example:
+///   ```swift
+///   [Example code]
+///   ```
+```
+
+#### Class/Struct Documentation Template
+```swift
+/// [Brief description]
+///
+/// [Detailed description]
+///
+/// ## Usage
+/// [Usage example]
+///
+/// ## Thread Safety
+/// [Thread safety notes if applicable]
+///
+/// ## Performance
+/// [Performance considerations if applicable]
+class ColorPickerController {
+    // Implementation
+}
+```
+
+## Documentation Checklist
+
+Before committing code:
+- [ ] All public APIs have doc comments
+- [ ] Complex logic has explanatory comments
+- [ ] Edge cases are documented
+- [ ] File headers include purpose description
+- [ ] Examples are provided for public APIs
+- [ ] Warnings are included for potential issues
+- [ ] README.md is updated if needed
+- [ ] Architecture docs updated for significant changes
+
+## Documentation Examples
+
+### Good Documentation
+```swift
+/// Manages global hotkey registration for HEXPal.
+///
+/// This class handles registration of system-wide keyboard shortcuts that
+/// can activate the color picker from any application. It manages permission
+/// requests, conflict detection, and hotkey lifecycle.
+///
+/// ## Usage
+/// ```swift
+/// let hotkeyManager = HotkeyManager()
+/// try hotkeyManager.register(key: .c, modifiers: [.command, .shift]) {
+///     // Activate color picker
+/// }
+/// ```
+///
+/// ## Thread Safety
+/// All methods must be called from the main thread.
+///
+/// - Warning: Requires Accessibility permission on macOS 10.14+
+class HotkeyManager {
+    // Implementation
+}
+```
+
+### Bad Documentation
+```swift
+// Hotkey manager
+class HotkeyManager {
+    // Implementation
+}
+```
+
+## Open Source Considerations
+
+### For Contributors
+- Document WHY design decisions were made
+- Explain non-obvious implementation choices
+- Provide context for future maintainers
+- Include examples and use cases
+
+### For Users
+- Clear API documentation
+- Usage examples
+- Common pitfalls and solutions
+- Migration guides for breaking changes
+
+### For Maintainers
+- Architecture decisions documented
+- Performance considerations noted
+- Known limitations documented
+- Future improvement ideas noted
+
+## Documentation Maintenance
+- Keep documentation up-to-date with code changes
+- Review documentation during code reviews
+- Update examples when APIs change
+- Remove outdated comments
+
+## MCP Usage for Documentation
+
+### Context7 MCP (Primary Documentation Tool)
+Context7 is excellent for documentation because it provides examples of well-documented Swift code.
+
+**Use Context7 for:**
+- Finding examples of Swift doc comment formats
+- Learning Swift API documentation patterns
+- Getting code examples with proper documentation
+- Understanding documentation best practices
+- Querying: "Show me examples of well-documented Swift classes with doc comments"
+
+**Example Queries:**
+```
+@context7 Show me examples of Swift doc comments for public APIs
+@context7 How to document Swift functions with parameters and return values?
+@context7 Best practices for Swift class documentation
+```
+
+### Sequential Thinking MCP
+Use Sequential Thinking for planning and structuring documentation.
+
+**Use Sequential Thinking for:**
+- Planning documentation architecture
+- Breaking down complex documentation tasks
+- Deciding what to document and in what detail
+- Structuring README and external docs
+
+**Example Queries:**
+```
+@sequential-thinking What documentation structure should we use for an open source Swift menu bar app?
+@sequential-thinking How should we organize our API documentation for contributors?
+```
+
+### Documentation-Specific MCPs
+**Current Status:** No dedicated documentation-generation MCPs are currently available or needed.
+
+**Why Context7 + Sequential Thinking are sufficient:**
+- Context7 provides documentation examples and patterns
+- Sequential Thinking helps plan documentation structure
+- Swift-DocC (Apple's documentation tool) is used separately, not via MCP
+- Markdown/documentation is straightforward enough without specialized MCPs
+
+**Future Consideration:**
+- If documentation-generation MCPs become available, evaluate based on:
+  - Integration with Swift-DocC
+  - Markdown generation capabilities
+  - API documentation automation
+  - Currently, manual documentation is preferred for quality control
+
+### Documentation Workflow with MCPs
+1. **Planning Phase:**
+   - Use Sequential Thinking to plan documentation structure
+   - Query Context7 for documentation examples and patterns
+
+2. **Writing Phase:**
+   - Query Context7 for Swift doc comment examples
+   - Use Context7 to find similar documented APIs
+   - Reference Context7 examples for formatting
+
+3. **Review Phase:**
+   - Verify documentation completeness
+   - Cross-reference with official Apple docs
+   - Ensure consistency with examples from Context7
+
+4. **Maintenance:**
+   - Document which MCPs helped with which documentation
+   - Note MCP usage in commit messages when relevant
+   - Keep MCP examples updated as patterns evolve

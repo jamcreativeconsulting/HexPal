@@ -1,0 +1,32 @@
+---
+description: Security and privacy guidelines
+alwaysApply: true
+---
+
+# Security & Privacy
+
+## Permissions
+- Only request necessary permissions
+- Explain why permissions are needed
+- Handle permission denial gracefully
+- Don't collect or transmit user data
+
+## Privacy
+- No analytics or tracking
+- No data collection
+- No network requests (unless explicitly needed)
+- Local-only operation
+
+## Error Handling & Logging
+
+### Logging Standards
+- Log errors to console with clear messages
+- Use appropriate log levels (debug, info, warning, error)
+- Include context in error messages
+- Don't log sensitive information
+
+### Error Handling Rules
+- Always use try-catch for error-prone operations
+- Don't let errors crash the app
+- Provide user-friendly error messages
+- Log errors for debugging

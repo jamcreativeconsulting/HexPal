@@ -1,0 +1,28 @@
+---
+description: Performance targets and optimization guidelines
+alwaysApply: true
+---
+
+# Performance Requirements
+
+## Speed Targets
+- **Activation:** < 100ms from hotkey to picker ready
+- **Total Workflow:** < 2 seconds from activation to HEX in clipboard
+- **Memory:** < 50MB RAM usage
+- **CPU:** < 1% idle, < 5% when active
+
+## Optimization Rules
+- Profile before optimizing
+- Avoid premature optimization
+- Cache screen captures when possible
+- Use efficient algorithms for color conversion
+- Minimize UI redraws
+
+## Success Metrics
+- Activation: < 100ms ✅
+- Total workflow: < 2 seconds ✅
+- Memory: < 50MB ✅
+- CPU: < 1% idle, < 5% active ✅
+- HEX accuracy: 100% ✅
+- Hotkey reliability: 99.9%+ ✅
+- Crash rate: < 0.1% ✅
