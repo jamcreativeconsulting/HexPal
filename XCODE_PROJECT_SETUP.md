@@ -27,7 +27,9 @@ This guide will help you create the Xcode project for HEXPal and integrate it wi
 - **Language:** Swift
 - **Interface:** Storyboard (we'll use AppKit programmatically)
 - **Use Core Data:** No
-- **Include Tests:** Yes
+- **Testing System:** **XCTest for Unit and UI Tests** (select this option, not "None" or "Swift Testing")
+  
+  **Note:** We're using XCTest framework for our test suite. The test files (HexPalTests.swift, TestHelpers.swift) are already created and use XCTest.
 
 6. Click **Next**
 7. **Save Location:** Navigate to `/Users/jordan/Desktop/Business/JAMCreativeConsulting/Products/HEXPal`

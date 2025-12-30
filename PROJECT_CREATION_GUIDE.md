@@ -30,8 +30,11 @@ This will verify all files are in place before creating the project.
    Language: Swift
    Interface: Storyboard (we'll use AppKit programmatically)
    Use Core Data: ❌ No
-   Include Tests: ✅ Yes
+   Testing System: ✅ XCTest for Unit and UI Tests
    ```
+   
+   **Important:** Select "XCTest for Unit and UI Tests" (not "None" or "Swift Testing"). 
+   We're using XCTest framework for our test suite (HexPalTests.swift).
 
 4. **Save Location:**
    - Navigate to: `/Users/jordan/Desktop/Business/JAMCreativeConsulting/Products/HEXPal`
