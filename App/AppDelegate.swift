@@ -22,20 +22,30 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - NSApplicationDelegate
     
+    override init() {
+        super.init()
+        print("🚀 AppDelegate: init() called")
+        fflush(stdout) // Force flush output
+    }
+    
     func applicationDidFinishLaunching(_ aNotification: Notification) {
         print("✅ AppDelegate: applicationDidFinishLaunching called")
+        fflush(stdout) // Force flush output
         
         // Configure app to not show in dock (menu bar only)
         configureMenuBarOnlyMode()
         
         // Initialize menu bar controller
         print("✅ AppDelegate: Creating MenuBarController")
+        fflush(stdout)
         menuBarController = MenuBarController()
         
         print("✅ AppDelegate: Calling setupMenuBar()")
+        fflush(stdout)
         menuBarController?.setupMenuBar()
         
         print("✅ AppDelegate: Setup complete")
+        fflush(stdout)
         
         // Request necessary permissions
         requestPermissions()

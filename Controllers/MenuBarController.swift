@@ -44,27 +44,47 @@ class MenuBarController {
     /// Creates a status item in the menu bar and builds the menu structure.
     /// Should be called once during application startup.
     func setupMenuBar() {
+        print("✅ MenuBarController: setupMenuBar() called")
+        
         // Create status item
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
         guard let statusItem = statusItem else {
-            print("Error: Failed to create status item")
+            print("❌ ERROR: Failed to create status item")
             return
         }
         
+        print("✅ MenuBarController: Status item created successfully")
+        
         // Configure status item button
         if let button = statusItem.button {
-            button.image = NSImage(systemSymbolName: "eyedropper", accessibilityDescription: "HEXPal")
-            button.image?.isTemplate = true // Supports dark mode
+            print("✅ MenuBarController: Button exists")
+            
+            // Try to create the eyedropper image
+            if let image = NSImage(systemSymbolName: "eyedropper", accessibilityDescription: "HEXPal") {
+                print("✅ MenuBarController: Eyedropper image created")
+                button.image = image
+                button.image?.isTemplate = true // Supports dark mode
+                print("✅ MenuBarController: Image set on button")
+            } else {
+                print("⚠️ WARNING: Could not create eyedropper image, using text fallback")
+                button.title = "HEX"
+            }
+            
             button.action = #selector(statusItemClicked)
             button.target = self
+            print("✅ MenuBarController: Button configured")
+        } else {
+            print("❌ ERROR: Status item button is nil")
         }
         
         // Build menu
         buildMenu()
+        print("✅ MenuBarController: Menu built")
         
         // Assign menu to status item
         statusItem.menu = menu
+        print("✅ MenuBarController: Menu assigned, setup complete")
     }
     
     // MARK: - Private Methods
