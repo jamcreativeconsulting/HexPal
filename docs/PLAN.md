@@ -700,7 +700,6 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 
 **Remaining Tasks:**
 1. ⏳ UI/UX refinements (Medium priority)
-   - Click notification to copy again
    - Welcome notification on first launch
    - Launch at login preference
 2. ⏳ Error handling improvements
@@ -725,11 +724,16 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 | Multi-monitor support | Notification appears on correct screen | ✅ Done |
 | Compact notification | Smaller, cleaner layout (180×50) | ✅ Done |
 
+**Implemented (Medium-Impact, Medium-Effort):**
+| Improvement | Description | Status |
+|-------------|-------------|--------|
+| Click to copy | Clicking notification re-copies to clipboard | ✅ Done |
+| Hover to pause | Mouse hover pauses dismiss timer | ✅ Done |
+| Paste tooltip | Shows "⌘V to paste" hint on click | ✅ Done |
+
 **Planned (Medium-Impact, Medium-Effort):**
 | Improvement | Description | Status |
 |-------------|-------------|--------|
-| Click to copy | Clicking notification re-copies to clipboard | ⏳ Planned |
-| Hover to pause | Mouse hover pauses dismiss timer | ⏳ Planned |
 | Welcome notification | First-launch "Press ⌘⇧P to pick colors!" | ⏳ Planned |
 | Launch at login | Toggle in preferences | ⏳ Planned |
 
@@ -753,7 +757,7 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 **File Size Compliance (400-line limit):**
 - ✅ `PreferencesWindowController.swift` - 290 lines
 - ✅ `ScreenCapture.swift` - 294 lines
-- ✅ `ClipboardNotificationView.swift` - 243 lines (checkmark UI, multi-monitor, fade animation)
+- ✅ `ClipboardNotificationView.swift` - 387 lines (click-to-copy, hover-to-pause, paste tooltip)
 - ✅ `MenuBarController.swift` - 212 lines (updated with hotkey display)
 - ✅ `HotkeyManager.swift` - 189 lines
 - ✅ `AppDelegate.swift` - 110 lines

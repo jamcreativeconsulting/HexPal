@@ -4,9 +4,42 @@
 //
 //  Displays a modern, non-intrusive notification when a color is copied to clipboard.
 //  Shows color swatch, checkmark, and HEX code. Auto-dismisses with smooth fade animation.
+//  Supports click-to-copy and hover-to-pause interactions.
 //
 
 import Cocoa
+
+// MARK: - Interactive Content View
+
+/// Custom view that handles mouse events for the notification.
+private class InteractiveNotificationView: NSView {
+    var onClicked: (() -> Void)?
+    var onMouseEntered: (() -> Void)?
+    var onMouseExited: (() -> Void)?
+    private var trackingArea: NSTrackingArea?
+    
+    override func updateTrackingAreas() {
+        super.updateTrackingAreas()
+        if let existing = trackingArea { removeTrackingArea(existing) }
+        trackingArea = NSTrackingArea(
+            rect: bounds, options: [.mouseEnteredAndExited, .activeAlways], owner: self, userInfo: nil)
+        if let area = trackingArea { addTrackingArea(area) }
+    }
+    
+    override func mouseDown(with event: NSEvent) { onClicked?() }
+    
+    override func mouseEntered(with event: NSEvent) {
+        onMouseEntered?()
+        NSCursor.pointingHand.push()
+    }
+    
+    override func mouseExited(with event: NSEvent) {
+        onMouseExited?()
+        NSCursor.pop()
+    }
+}
+
+// MARK: - Clipboard Notification View
 
 /// A modern, non-intrusive notification for clipboard copy confirmation.
 ///
@@ -14,6 +47,10 @@ import Cocoa
 /// a color swatch, checkmark indicator, and HEX code. Uses minimal text with
 /// universal visual language (✓ = success). Automatically dismisses after a short delay
 /// with a smooth fade animation. Appears on the screen where the mouse is located.
+///
+/// ## Features
+/// - **Click to copy**: Clicking the notification re-copies the HEX code
+/// - **Hover to pause**: Mouse hover pauses the auto-dismiss timer
 ///
 /// ## Usage
 /// ```swift
@@ -33,12 +70,21 @@ class ClipboardNotificationView {
     /// Timer for auto-dismissal
     private var dismissTimer: Timer?
     
+    /// Time remaining when timer was paused (for hover-to-pause)
+    private var remainingTime: TimeInterval = 2.0
+    
+    /// Timestamp when timer was paused
+    private var pausedAt: Date?
+    
     /// Self-reference to prevent deallocation during animation
     /// Set during show(), cleared after dismiss animation completes
     private static var activeNotification: ClipboardNotificationView?
     
     /// Flag to prevent double cleanup
     private var hasCleanedUp = false
+    
+    /// Tooltip label reference for "⌘V to paste" hint
+    private var tooltipLabel: NSTextField?
     
     // MARK: - Initialization
     
@@ -78,7 +124,7 @@ class ClipboardNotificationView {
         // Calculate position (top-right corner with padding)
         let padding: CGFloat = 20
         let width: CGFloat = 180
-        let height: CGFloat = 50
+        let height: CGFloat = 56
         
         let screenFrame = screen.visibleFrame
         let x = screenFrame.maxX - width - padding
@@ -98,15 +144,26 @@ class ClipboardNotificationView {
         window.backgroundColor = .clear
         window.isOpaque = false
         window.hasShadow = true
-        window.ignoresMouseEvents = true
+        window.ignoresMouseEvents = false  // Enable mouse events for click/hover
         // Don't use .canJoinAllSpaces - it can cause wrong screen placement
         window.collectionBehavior = [.transient]
         
-        // Create content view
-        let contentView = NSView(frame: NSRect(x: 0, y: 0, width: width, height: height))
+        // Create interactive content view for click and hover support
+        let contentView = InteractiveNotificationView(frame: NSRect(x: 0, y: 0, width: width, height: height))
         contentView.wantsLayer = true
         contentView.layer?.cornerRadius = 12
         contentView.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.95).cgColor
+        
+        // Wire up interaction callbacks
+        contentView.onClicked = { [weak self] in
+            self?.copyToClipboard()
+        }
+        contentView.onMouseEntered = { [weak self] in
+            self?.pauseTimer()
+        }
+        contentView.onMouseExited = { [weak self] in
+            self?.resumeTimer()
+        }
         
         // Add blur effect for modern look
         let visualEffect = NSVisualEffectView(frame: contentView.bounds)
@@ -172,12 +229,99 @@ class ClipboardNotificationView {
         }
         
         // Auto-dismiss after 2 seconds
-        dismissTimer = Timer.scheduledTimer(withTimeInterval: 2.0, repeats: false) { [weak self] _ in
+        startDismissTimer(interval: 2.0)
+    }
+    
+    // MARK: - Private Methods
+    
+    /// Copies the HEX code to the clipboard (for click-to-copy).
+    private func copyToClipboard() {
+        let pasteboard = NSPasteboard.general
+        pasteboard.clearContents()
+        pasteboard.setString(hexCode, forType: .string)
+        
+        // Show "⌘V to paste" tooltip
+        showPasteTooltip()
+        
+        // Brief visual feedback - flash the checkmark
+        if let contentView = notificationWindow?.contentView {
+            for subview in contentView.subviews {
+                if let textField = subview as? NSTextField, textField.stringValue == "✓" {
+                    // Quick flash animation for feedback
+                    NSAnimationContext.runAnimationGroup { context in
+                        context.duration = 0.1
+                        textField.animator().alphaValue = 0.5
+                    } completionHandler: {
+                        NSAnimationContext.runAnimationGroup { context in
+                            context.duration = 0.1
+                            textField.animator().alphaValue = 1.0
+                        }
+                    }
+                    break
+                }
+            }
+        }
+    }
+    
+    /// Shows a brief "⌘V to paste" tooltip below the notification.
+    private func showPasteTooltip() {
+        guard let contentView = notificationWindow?.contentView else { return }
+        tooltipLabel?.removeFromSuperview()
+        
+        let tooltip = NSTextField(labelWithString: "⌘V to paste")
+        tooltip.font = NSFont.systemFont(ofSize: 11, weight: .medium)
+        tooltip.textColor = NSColor.secondaryLabelColor
+        tooltip.alignment = .center
+        tooltip.alphaValue = 0
+        tooltip.frame = NSRect(x: (contentView.bounds.width - 80) / 2, y: 8, width: 80, height: 16)
+        contentView.addSubview(tooltip)
+        tooltipLabel = tooltip
+        
+        // Fade in, wait 1.2s, fade out
+        NSAnimationContext.runAnimationGroup({ $0.duration = 0.15; tooltip.animator().alphaValue = 1 }) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.2) { [weak self] in
+                NSAnimationContext.runAnimationGroup({ $0.duration = 0.2; self?.tooltipLabel?.animator().alphaValue = 0 }) {
+                    self?.tooltipLabel?.removeFromSuperview()
+                    self?.tooltipLabel = nil
+                }
+            }
+        }
+    }
+    
+    /// Starts the dismiss timer with the specified interval.
+    private func startDismissTimer(interval: TimeInterval) {
+        remainingTime = interval
+        pausedAt = nil
+        dismissTimer?.invalidate()
+        dismissTimer = Timer.scheduledTimer(withTimeInterval: interval, repeats: false) { [weak self] _ in
             self?.dismiss()
         }
     }
     
-    // MARK: - Private Methods
+    /// Pauses the dismiss timer (for hover-to-pause).
+    private func pauseTimer() {
+        guard let timer = dismissTimer, timer.isValid else { return }
+        
+        // Calculate remaining time
+        let fireDate = timer.fireDate
+        remainingTime = max(0.5, fireDate.timeIntervalSinceNow)
+        pausedAt = Date()
+        
+        // Invalidate the timer
+        timer.invalidate()
+        dismissTimer = nil
+    }
+    
+    /// Resumes the dismiss timer after hover ends.
+    private func resumeTimer() {
+        guard pausedAt != nil else { return }
+        
+        // Restart timer with remaining time
+        dismissTimer = Timer.scheduledTimer(withTimeInterval: remainingTime, repeats: false) { [weak self] _ in
+            self?.dismiss()
+        }
+        pausedAt = nil
+    }
     
     /// Dismisses the notification with a fade-out animation.
     private func dismiss() {
