@@ -64,7 +64,7 @@
 ### V1.1 Features - Developer Workflow
 1. **Color History** - Last 10 picks accessible quickly
 2. **Format Toggle** - Quick switch between HEX, RGB, HSL (HEX is default)
-3. **Customizable Hotkey** - User-defined keyboard shortcut
+3. ✅ **Customizable Hotkey** - User-defined keyboard shortcut (IMPLEMENTED)
 4. **Copy Format Options** - With/without #, uppercase/lowercase
 
 ### V2.0 Features - Advanced (If Needed)
@@ -670,33 +670,73 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 
 ---
 
-**Last Updated:** December 30, 2024  
+**Last Updated:** December 30, 2025  
 **Status:** Pre-Setup Complete ✅ | Phase 1 Complete ✅ | Phase 2 Complete ✅ | Phase 3 Complete ✅ | Phase 4 Complete ✅  
 **Next Milestone:** Phase 5 - Polish & Testing
 
 ### ⏭️ Phase 5: Polish & Testing (NEXT)
-**Status:** Ready to begin ⏭️
+**Status:** In Progress 🔄
+
+**Completed Tasks:**
+1. ✅ Remove all debug logging (all files clean)
+2. ✅ Fix About dialog (copyright 2025, no visible window behind modal)
+3. ✅ Implement Preferences window with hotkey customization
+   - ✅ `PreferencesWindowController.swift` (290 lines)
+   - ✅ Hotkey recording UI
+   - ✅ Save/load from UserDefaults
+   - ✅ Reset to default button
+   - ✅ Live hotkey update notification system
+4. ✅ Remove unused legacy code
+   - ✅ Deleted `ColorPickerController.swift` (replaced by NSColorSampler)
+   - ✅ Deleted `ColorPickerOverlayView.swift` (replaced by NSColorSampler)
+   - ✅ Code cleanup complete
+
+5. ✅ UI/UX refinements (High-impact, Low-effort)
+   - ✅ Show hotkey in menu (Pick Color ⌘⇧P)
+   - ✅ Add "Copied!" label to notification
+   - ✅ Fade in/out animation for notification
+   - ✅ Multi-monitor support (notification on correct screen)
 
 **Remaining Tasks:**
-1. ⏳ Remove debug logging from HotkeyManager
-2. ⏳ UI/UX refinements
-   - Menu bar icon design polish
-   - Smooth animations verification
-   - Visual feedback improvements
-3. ⏳ Error handling improvements
+1. ⏳ UI/UX refinements (Medium priority)
+   - Click notification to copy again
+   - Welcome notification on first launch
+   - Launch at login preference
+2. ⏳ Error handling improvements
    - Permission request handling refinement
    - Error messages for users
    - Graceful degradation testing
-4. ⏳ Comprehensive testing
+3. ⏳ Comprehensive testing
    - Test on different macOS versions
    - Test with multiple displays
    - Test with different color profiles
    - Performance testing (verify < 2 second workflow)
    - Hotkey reliability testing
-5. ⏳ Code cleanup
-   - Remove all debug logging
-   - Final code review
-   - Documentation review
+
+### UI/UX Improvement Roadmap
+
+**Implemented (High-Impact, Low-Effort):**
+| Improvement | Description | Status |
+|-------------|-------------|--------|
+| Show hotkey in menu | Display ⌘⇧P next to "Pick Color" | ✅ Done |
+| Add "Copied!" label | Explicit confirmation text in notification | ✅ Done |
+| Fade animation | Smooth fade in/out for notification | ✅ Done |
+| Multi-monitor support | Notification appears on correct screen | ✅ Done |
+
+**Planned (Medium-Impact, Medium-Effort):**
+| Improvement | Description | Status |
+|-------------|-------------|--------|
+| Click to copy | Clicking notification re-copies to clipboard | ⏳ Planned |
+| Hover to pause | Mouse hover pauses dismiss timer | ⏳ Planned |
+| Welcome notification | First-launch "Press ⌘⇧P to pick colors!" | ⏳ Planned |
+| Launch at login | Toggle in preferences | ⏳ Planned |
+
+**Future (Lower Priority):**
+| Improvement | Description | Status |
+|-------------|-------------|--------|
+| Custom About window | Replace NSAlert with custom design | ⏳ Future |
+| Recent Colors submenu | Quick access to color history | ⏳ Future |
+| General preferences tab | Prepare for format preferences | ⏳ Future |
 
 **Deliverables:**
 - Polished, production-ready app
@@ -706,12 +746,20 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 
 ## Code Quality & Compliance Status
 
-### ✅ Code Review Summary (December 30, 2024)
+### ✅ Code Review Summary (December 30, 2025)
 
-**File Size Compliance:**
-- ✅ All Swift files under 400-line limit
-- ✅ Largest file: `ScreenCapture.swift` (310 lines)
-- ✅ All files follow single responsibility principle
+**File Size Compliance (400-line limit):**
+- ✅ `PreferencesWindowController.swift` - 290 lines
+- ✅ `ScreenCapture.swift` - 294 lines
+- ✅ `ClipboardNotificationView.swift` - 246 lines (multi-monitor support, fade animation)
+- ✅ `MenuBarController.swift` - 212 lines (updated with hotkey display)
+- ✅ `HotkeyManager.swift` - 189 lines
+- ✅ `AppDelegate.swift` - 110 lines
+- ✅ `main.swift` - 21 lines
+
+**Unused Code Removed:**
+- ✅ `ColorPickerController.swift` - Deleted (replaced by NSColorSampler)
+- ✅ `ColorPickerOverlayView.swift` - Deleted (replaced by NSColorSampler)
 
 **Documentation Compliance:**
 - ✅ All public APIs have comprehensive doc comments
@@ -744,4 +792,5 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 - ✅ All debug logging removed
 - ✅ No linter errors
 - ✅ Code follows all `.cursor/rules/` standards
-- ✅ Ready for Phase 4 development
+- ✅ Preferences window with hotkey customization implemented
+- ✅ All unused legacy code removed

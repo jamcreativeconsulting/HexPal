@@ -3,7 +3,7 @@
 //  HexPal
 //
 //  Displays a modern, non-intrusive notification when a color is copied to clipboard.
-//  Shows color swatch, HEX code, and auto-dismisses with smooth animation.
+//  Shows color swatch, HEX code, and auto-dismisses with smooth fade animation.
 //
 
 import Cocoa
@@ -11,7 +11,8 @@ import Cocoa
 /// A modern, non-intrusive notification for clipboard copy confirmation.
 ///
 /// Displays a sleek notification in the top-right corner of the screen showing
-/// a color swatch and HEX code that was copied. Automatically dismisses after a short delay.
+/// a color swatch and HEX code that was copied. Automatically dismisses after a short delay
+/// with a smooth fade animation. Appears on the screen where the mouse is located.
 ///
 /// ## Usage
 /// ```swift
@@ -54,15 +55,21 @@ class ClipboardNotificationView {
     
     // MARK: - Public Methods
     
-    /// Shows the notification with a smooth animation.
+    /// Shows the notification with a smooth fade-in animation.
     ///
-    /// Displays the notification in the top-right corner of the main screen
-    /// and automatically dismisses it after 2 seconds.
+    /// Displays the notification in the top-right corner of the screen where the mouse is located
+    /// and automatically dismisses it after 2 seconds with a fade-out animation.
     func show() {
         // Retain self to prevent deallocation during animation lifecycle
         ClipboardNotificationView.activeNotification = self
         
-        guard let mainScreen = NSScreen.main else {
+        // Find the screen containing the current mouse location
+        let mouseLocation = NSEvent.mouseLocation
+        let targetScreen = NSScreen.screens.first { screen in
+            screen.frame.contains(mouseLocation)
+        } ?? NSScreen.main
+        
+        guard let screen = targetScreen else {
             ClipboardNotificationView.activeNotification = nil
             return
         }
@@ -72,7 +79,7 @@ class ClipboardNotificationView {
         let width: CGFloat = 240
         let height: CGFloat = 60
         
-        let screenFrame = mainScreen.visibleFrame
+        let screenFrame = screen.visibleFrame
         let x = screenFrame.maxX - width - padding
         let y = screenFrame.maxY - height - padding
         
@@ -91,9 +98,10 @@ class ClipboardNotificationView {
         window.isOpaque = false
         window.hasShadow = true
         window.ignoresMouseEvents = true
-        window.collectionBehavior = [.canJoinAllSpaces, .stationary]
+        // Don't use .canJoinAllSpaces - it can cause wrong screen placement
+        window.collectionBehavior = [.transient]
         
-        // Create a separate content view (NOT self)
+        // Create content view
         let contentView = NSView(frame: NSRect(x: 0, y: 0, width: width, height: height))
         contentView.wantsLayer = true
         contentView.layer?.cornerRadius = 12
@@ -125,12 +133,28 @@ class ClipboardNotificationView {
         swatchView.layer?.borderColor = NSColor.separatorColor.cgColor
         contentView.addSubview(swatchView)
         
-        // Add HEX code label (positioned to the right of swatch)
+        // Add "Copied!" label with styled text
         let labelX = swatchX + swatchSize + 12
         let labelWidth = width - labelX - swatchPadding
-        let label = NSTextField(labelWithString: "Copied\n\(hexCode)")
-        label.font = NSFont.monospacedSystemFont(ofSize: 13, weight: .medium)
-        label.textColor = .labelColor
+        
+        // Create attributed string with "Copied!" in semibold and HEX in monospace
+        let attributedString = NSMutableAttributedString()
+        
+        // "Copied!" - semibold, secondary color
+        let copiedAttributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.systemFont(ofSize: 12, weight: .semibold),
+            .foregroundColor: NSColor.secondaryLabelColor
+        ]
+        attributedString.append(NSAttributedString(string: "Copied!", attributes: copiedAttributes))
+        
+        // HEX code - monospace, larger, primary color
+        let hexAttributes: [NSAttributedString.Key: Any] = [
+            .font: NSFont.monospacedSystemFont(ofSize: 15, weight: .medium),
+            .foregroundColor: NSColor.labelColor
+        ]
+        attributedString.append(NSAttributedString(string: "\n\(hexCode)", attributes: hexAttributes))
+        
+        let label = NSTextField(labelWithAttributedString: attributedString)
         label.alignment = .left
         label.frame = NSRect(x: labelX, y: 8, width: labelWidth, height: 44)
         label.maximumNumberOfLines = 2
@@ -139,13 +163,14 @@ class ClipboardNotificationView {
         window.contentView = contentView
         notificationWindow = window
         
-        // Animate in - use orderFront since window ignores mouse events
+        // Show window with fade-in animation
         window.alphaValue = 0
         window.orderFront(nil)
         
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.2
             context.timingFunction = CAMediaTimingFunction(name: .easeOut)
+            context.allowsImplicitAnimation = true
             window.animator().alphaValue = 1.0
         }
         
@@ -157,14 +182,15 @@ class ClipboardNotificationView {
     
     // MARK: - Private Methods
     
-    /// Dismisses the notification with animation.
+    /// Dismisses the notification with a fade-out animation.
     private func dismiss() {
         guard let window = notificationWindow else { return }
         
-        // Animate out and close
+        // Simple fade-out animation
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = 0.2
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
+            context.allowsImplicitAnimation = true
             window.animator().alphaValue = 0.0
         }, completionHandler: { [weak self] in
             self?.cleanup()

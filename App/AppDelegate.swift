@@ -54,9 +54,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // LSUIElement is configured in Info.plist
     }
     
-    /// Sets up the global hotkey (Cmd+Shift+P) for activating the color picker.
+    /// Sets up the global hotkey for activating the color picker.
     ///
     /// Registers a system-wide keyboard shortcut that works from any application.
+    /// Loads the user's saved hotkey or falls back to default (Cmd+Shift+P).
     /// If Accessibility permission is not granted, the hotkey will not be registered
     /// but the app will continue to function via menu bar.
     private func setupGlobalHotkey() {
@@ -71,16 +72,34 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             hotkeyManager.requestAccessibilityPermission()
         }
         
-        // Register default hotkey (Cmd+Shift+C)
-        let registered = hotkeyManager.registerDefaultHotkey { [weak self] in
+        // Register saved hotkey (or default if none saved)
+        registerCurrentHotkey()
+        
+        // Listen for hotkey changes from preferences
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(hotkeyDidChange),
+            name: .hotkeyDidChange,
+            object: nil
+        )
+    }
+    
+    /// Registers the current hotkey (saved or default).
+    private func registerCurrentHotkey() {
+        let registered = hotkeyManager?.registerSavedHotkey { [weak self] in
             // Activate color picker when hotkey is pressed
             self?.menuBarController?.activateColorPicker()
         }
         
-        if !registered {
+        if registered != true {
             // Hotkey registration failed - likely due to missing permission or conflict
             // App will still work via menu bar
         }
+    }
+    
+    /// Called when the hotkey is changed in preferences.
+    @objc private func hotkeyDidChange() {
+        registerCurrentHotkey()
     }
     
     /// Requests necessary system permissions for HEXPal functionality.

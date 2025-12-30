@@ -72,6 +72,23 @@ class HotkeyManager {
         )
     }
     
+    /// Registers the user's saved hotkey from preferences.
+    ///
+    /// Loads the hotkey from UserDefaults and registers it.
+    /// Falls back to default if no saved hotkey exists.
+    ///
+    /// - Parameter activationHandler: Closure called when hotkey is pressed
+    /// - Returns: true if registration succeeded, false otherwise
+    func registerSavedHotkey(activationHandler: @escaping () -> Void) -> Bool {
+        let keyCode = PreferencesWindowController.savedKeyCode()
+        let modifiers = PreferencesWindowController.savedModifiers()
+        return registerHotkey(
+            keyCode: keyCode,
+            modifiers: modifiers,
+            activationHandler: activationHandler
+        )
+    }
+    
     /// Registers a custom hotkey combination.
     ///
     /// - Parameters:
