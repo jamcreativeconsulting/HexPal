@@ -51,32 +51,29 @@ class ColorPickerController {
     ///
     /// - Parameter completion: Callback invoked with the selected color, or nil if cancelled
     func activateColorPicker(completion: @escaping (NSColor?) -> Void) {
-        // #region agent log - Using print for immediate console output
-        print("🎨 ColorPickerController: activateColorPicker called")
-        // #endregion
+        debugLog("🎨 ColorPickerController: activateColorPicker called")
         
         // Check if already active
         guard !isActive else {
-            print("⚠️ ColorPickerController: Already active, returning")
+            debugLog("⚠️ ColorPickerController: Already active, returning")
             return
         }
         
         // TEMPORARILY SKIP permission check to debug overlay issue
-        // Permission will be checked when actually capturing color
-        print("🎨 ColorPickerController: Skipping permission check for now")
+        debugLog("🎨 ColorPickerController: Skipping permission check for now")
         
         isActive = true
         colorSelectionCallback = completion
         
         // Create and show overlay window
-        print("🎨 ColorPickerController: Creating overlay window")
+        debugLog("🎨 ColorPickerController: Creating overlay window")
         createOverlayWindow()
         
-        print("🎨 ColorPickerController: overlayWindow = \(String(describing: overlayWindow))")
+        debugLog("🎨 ColorPickerController: overlayWindow = \(overlayWindow != nil ? "created" : "nil")")
         
         if let window = overlayWindow {
-            print("🎨 ColorPickerController: Window frame = \(window.frame)")
-            print("🎨 ColorPickerController: Window level = \(window.level.rawValue)")
+            debugLog("🎨 ColorPickerController: Window frame = \(window.frame)")
+            debugLog("🎨 ColorPickerController: Window level = \(window.level.rawValue)")
             
             // Make window visible
             window.makeKeyAndOrderFront(nil)
@@ -84,15 +81,15 @@ class ColorPickerController {
             // Ensure app is active
             NSApp.activate(ignoringOtherApps: true)
             
-            print("🎨 ColorPickerController: Window visible = \(window.isVisible)")
+            debugLog("🎨 ColorPickerController: Window visible = \(window.isVisible)")
         } else {
-            print("❌ ColorPickerController: overlayWindow is nil!")
+            debugLog("❌ ColorPickerController: overlayWindow is nil!")
         }
         
         // Change cursor to crosshair
         NSCursor.crosshair.push()
         
-        print("✅ ColorPickerController: Color picker activation complete")
+        debugLog("✅ ColorPickerController: Color picker activation complete")
         
         // Start monitoring events
         startEventMonitoring()
@@ -129,19 +126,19 @@ class ColorPickerController {
     /// Creates a transparent, borderless window that covers all screens.
     /// The window is configured to be click-through and capture mouse events.
     private func createOverlayWindow() {
-        print("🎨 createOverlayWindow: Starting")
+        debugLog("🎨 createOverlayWindow: Starting")
         
         // Get the main screen bounds (simpler approach)
         guard let mainScreen = NSScreen.main else {
-            print("❌ createOverlayWindow: No main screen found!")
+            debugLog("❌ createOverlayWindow: No main screen found!")
             return
         }
         
         let screenFrame = mainScreen.frame
-        print("🎨 createOverlayWindow: Main screen frame = \(screenFrame)")
+        debugLog("🎨 createOverlayWindow: Main screen frame = \(screenFrame)")
         
         // Create borderless window
-        print("🎨 createOverlayWindow: Creating NSWindow")
+        debugLog("🎨 createOverlayWindow: Creating NSWindow")
         let window = NSWindow(
             contentRect: screenFrame,
             styleMask: [.borderless],
@@ -149,18 +146,18 @@ class ColorPickerController {
             defer: false
         )
         
-        print("🎨 createOverlayWindow: Configuring window")
+        debugLog("🎨 createOverlayWindow: Configuring window")
         
         // Configure window properties
         window.level = .floating
-        window.backgroundColor = NSColor.black.withAlphaComponent(0.01) // Slightly visible for debugging
+        window.backgroundColor = NSColor.red.withAlphaComponent(0.3) // RED tint for debugging visibility
         window.isOpaque = false
         window.hasShadow = false
         window.ignoresMouseEvents = false
         window.acceptsMouseMovedEvents = true
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
         
-        print("🎨 createOverlayWindow: Creating content view")
+        debugLog("🎨 createOverlayWindow: Creating content view")
         
         // Create content view
         let contentView = ColorPickerOverlayView(frame: screenFrame)
@@ -170,7 +167,7 @@ class ColorPickerController {
         // Make the window key window
         window.makeFirstResponder(contentView)
         
-        print("✅ createOverlayWindow: Window created successfully")
+        debugLog("✅ createOverlayWindow: Window created successfully")
         
         overlayWindow = window
     }
