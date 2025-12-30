@@ -243,9 +243,10 @@ class ScreenCapture {
         }
         
         // Draw the pixel at the specified point into our 1x1 context
+        // Convert width/height to CGFloat for CGRect
         context.draw(
             image,
-            in: CGRect(x: -point.x, y: -point.y, width: width, height: height)
+            in: CGRect(x: -point.x, y: -point.y, width: CGFloat(width), height: CGFloat(height))
         )
         
         // Extract RGB values (pixelData is RGBA)
@@ -261,7 +262,12 @@ class ScreenCapture {
             return NSColor(red: red, green: green, blue: blue, alpha: alpha)
         }
         
-        let sRGBColor = CGColor(colorSpace: sRGBColorSpace, components: [red, green, blue, alpha])
-        return sRGBColor.map { NSColor(cgColor: $0) }
+        // Create CGColor in sRGB color space, then convert to NSColor
+        guard let cgColor = CGColor(colorSpace: sRGBColorSpace, components: [red, green, blue, alpha]) else {
+            // Fallback if sRGB color creation fails
+            return NSColor(red: red, green: green, blue: blue, alpha: alpha)
+        }
+        
+        return NSColor(cgColor: cgColor)
     }
 }
