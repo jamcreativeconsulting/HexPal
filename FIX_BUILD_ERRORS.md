@@ -74,14 +74,37 @@ Unfortunately, `FileSystemSynchronizedRootGroup` doesn't support exclusions in t
    - `.gitignore`
    - `.swiftlint.yml`
 
-3. **Open File Inspector** (right sidebar, first tab with document icon)
-4. **Under "Target Membership"**, uncheck ✅ **HexPal**
-5. **Repeat for Info.plist**:
+3. **Right-click** on the selected files → **Get Info** (or press `Cmd+I`)
+   - OR: Select files → **View** menu → **Inspectors** → **File Inspector**
+   - OR: Select files → Press `Option+Cmd+1` (File Inspector shortcut)
+
+4. **In the File Inspector panel** (right sidebar):
+   - Look for **"Target Membership"** section (may need to scroll down)
+   - If you don't see it, try:
+     - Make sure File Inspector is open (first tab icon in right sidebar)
+     - The section might be collapsed - look for a disclosure triangle
+     - Try selecting just ONE file first to see the panel
+
+5. **Uncheck ✅ HexPal** for all selected files
+
+6. **Repeat for Info.plist**:
    - Select `Resources/Info.plist`
-   - File Inspector → Target Membership → Uncheck HexPal
+   - Get Info (`Cmd+I`)
+   - Target Membership → Uncheck HexPal
    - (It's handled automatically via `INFOPLIST_FILE` build setting)
 
-6. **Build again** (`Cmd+B`) - should succeed ✅
+7. **Build again** (`Cmd+B`) - should succeed ✅
+
+### Alternative: Exclude via Build Phases
+
+If Target Membership isn't visible, you can exclude files via Build Phases:
+
+1. **Select the HexPal target** (in the project navigator, click on "HexPal" project → select "HexPal" target)
+2. **Go to "Build Phases" tab**
+3. **Expand "Copy Bundle Resources"**
+4. **Find and remove** any documentation files (README.md, LICENSE, etc.)
+5. **Remove Info.plist** from Copy Bundle Resources (if present)
+6. **Build again** (`Cmd+B`)
 
 ### Method 2: Use Script to Identify Files
 
