@@ -37,6 +37,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         
         // Request necessary permissions
         requestPermissions()
+        
+        // Show welcome notification on first launch
+        showWelcomeIfFirstLaunch()
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
@@ -106,5 +109,16 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     private func requestPermissions() {
         // Screen Recording permission is requested automatically when attempting to capture
         // Accessibility permission is requested when registering global hotkeys
+    }
+    
+    /// Shows the welcome notification on first launch.
+    ///
+    /// Uses UserDefaults to track whether the app has been launched before.
+    /// Only shows the welcome notification once to introduce new users to the hotkey.
+    private func showWelcomeIfFirstLaunch() {
+        // Delay slightly to ensure menu bar is fully set up
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            WelcomeNotificationView.showIfFirstLaunch()
+        }
     }
 }

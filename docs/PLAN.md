@@ -700,7 +700,6 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 
 **Remaining Tasks:**
 1. ⏳ UI/UX refinements (Medium priority)
-   - Welcome notification on first launch
    - Launch at login preference
 2. ⏳ Error handling improvements
    - Permission request handling refinement
@@ -731,10 +730,14 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 | Hover to pause | Mouse hover pauses dismiss timer | ✅ Done |
 | Paste tooltip | Shows "⌘V to paste" hint on click | ✅ Done |
 
+**Implemented (Medium-Impact, Medium-Effort) - Continued:**
+| Improvement | Description | Status |
+|-------------|-------------|--------|
+| Welcome notification | First-launch onboarding with hotkey hint | ✅ Done |
+
 **Planned (Medium-Impact, Medium-Effort):**
 | Improvement | Description | Status |
 |-------------|-------------|--------|
-| Welcome notification | First-launch "Press ⌘⇧P to pick colors!" | ⏳ Planned |
 | Launch at login | Toggle in preferences | ⏳ Planned |
 
 **Future (Lower Priority):**
@@ -758,9 +761,10 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 - ✅ `PreferencesWindowController.swift` - 290 lines
 - ✅ `ScreenCapture.swift` - 294 lines
 - ✅ `ClipboardNotificationView.swift` - 387 lines (click-to-copy, hover-to-pause, paste tooltip)
+- ✅ `WelcomeNotificationView.swift` - 213 lines (first-launch onboarding)
 - ✅ `MenuBarController.swift` - 212 lines (updated with hotkey display)
 - ✅ `HotkeyManager.swift` - 189 lines
-- ✅ `AppDelegate.swift` - 110 lines
+- ✅ `AppDelegate.swift` - 124 lines (with welcome notification trigger)
 - ✅ `main.swift` - 21 lines
 
 **Unused Code Removed:**
