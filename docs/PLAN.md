@@ -587,10 +587,40 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 
 **After Phase 2:**
 - ✅ Phase 3: HEX Conversion & Display (COMPLETE - HEX conversion and clipboard copy implemented)
-- ⏭️ Phase 4: Global Hotkey Integration (NEXT)
-- ⏭️ Phase 5: Polish & Testing
+- ✅ Phase 4: Global Hotkey Integration (COMPLETE)
+- ⏭️ Phase 5: Polish & Testing (NEXT)
 
 **Note:** Phase 3 functionality (HEX conversion and clipboard copy) was completed as part of Phase 2 implementation using `NSColorSampler`. The core workflow is now functional.
+
+### ✅ Phase 4: Global Hotkey Integration (COMPLETE)
+**Status:** Global hotkey functionality implemented ✅
+
+**Completed:**
+1. ✅ **HotkeyManager implementation**
+   - ✅ Created `HotkeyManager.swift` using Carbon API
+   - ✅ System-wide hotkey registration (no external dependencies)
+   - ✅ Default hotkey: Cmd+Shift+C
+   - ✅ Proper event handling and callback execution on main thread
+   - ✅ Cleanup in deinit
+
+2. ✅ **Hotkey integration**
+   - ✅ Hotkey registered on app launch in AppDelegate
+   - ✅ Wired to color picker activation
+   - ✅ Added `activateColorPicker()` public method to MenuBarController
+   - ✅ Hotkey works from any application when Accessibility permission granted
+
+3. ✅ **Permission handling**
+   - ✅ Accessibility permission checking (macOS 10.14+)
+   - ✅ Permission request on first launch
+   - ✅ Graceful degradation (app still works via menu if permission denied)
+   - ✅ No Info.plist changes needed (permission requested at runtime)
+
+**Implementation Details:**
+- Uses Carbon `RegisterEventHotKey` API for system-wide hotkeys
+- Requires Accessibility permission on macOS 10.14+
+- Hotkey callback executes on main thread for UI safety
+- Proper cleanup prevents memory leaks
+- File size: 236 lines (under 400-line limit)
 
 **For New Chat Sessions:** See `docs/PROJECT_SUMMARY.md` for complete context and overview.
 
@@ -630,8 +660,8 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 ---
 
 **Last Updated:** December 30, 2024  
-**Status:** Pre-Setup Complete ✅ | Phase 1 Complete ✅ | Phase 2 Complete ✅ | Phase 3 Complete ✅ | Notification System Complete ✅  
-**Next Milestone:** Phase 4 - Global Hotkey Integration
+**Status:** Pre-Setup Complete ✅ | Phase 1 Complete ✅ | Phase 2 Complete ✅ | Phase 3 Complete ✅ | Phase 4 Complete ✅  
+**Next Milestone:** Phase 5 - Polish & Testing
 
 ## Code Quality & Compliance Status
 
