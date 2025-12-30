@@ -1,0 +1,119 @@
+# SwiftLint Configuration for HEXPal
+# Aligns with Swift API Design Guidelines and project coding standards
+
+# Included and excluded paths
+included:
+  - HexPal
+  - HexPalTests
+
+excluded:
+  - Pods
+  - .build
+  - DerivedData
+  - build
+  - .swiftpm
+
+# Disabled rules (if needed)
+disabled_rules:
+  - trailing_whitespace  # Let formatter handle this
+
+# Opt-in rules
+opt_in_rules:
+  - empty_count
+  - empty_string
+  - first_where
+  - force_unwrapping
+  - implicitly_unwrapped_optional
+  - overridden_super_call
+  - prohibited_super_call
+  - redundant_nil_coalescing
+  - single_test_class
+  - sorted_first_last
+  - static_operator
+  - strong_iboutlet
+  - toggle_bool
+  - unneeded_parentheses_in_closure_argument
+  - vertical_parameter_alignment_on_call
+  - yoda_condition
+
+# Rule configurations
+line_length:
+  warning: 100
+  error: 120
+  ignores_function_declarations: true
+  ignores_comments: true
+  ignores_urls: true
+
+file_length:
+  warning: 350
+  error: 400
+  ignore_comment_only_lines: true
+
+function_body_length:
+  warning: 50
+  error: 100
+
+function_parameter_count:
+  warning: 5
+  error: 8
+
+type_body_length:
+  warning: 300
+  error: 400
+
+cyclomatic_complexity:
+  warning: 10
+  error: 20
+
+nesting:
+  type_level: 2
+  function_level: 3
+
+identifier_name:
+  min_length:
+    warning: 2
+    error: 1
+  max_length:
+    warning: 50
+    error: 60
+  excluded:
+    - id
+    - x
+    - y
+    - z
+
+type_name:
+  min_length: 3
+  max_length: 60
+
+# Custom rules or overrides
+force_cast: warning
+force_try: warning
+implicitly_unwrapped_optional: warning
+
+# Documentation requirements
+missing_docs:
+  warning: true
+
+# Naming conventions
+trailing_closure: error
+
+# Code organization
+mark: error
+
+# Performance
+unused_optional_binding: warning
+
+# Error handling
+force_unwrapping: warning
+
+# Code style
+semicolon: error
+trailing_semicolon: error
+
+# Comments
+comment_spacing: warning
+
+# Formatting
+indentation_width: 4
+vertical_whitespace: warning
