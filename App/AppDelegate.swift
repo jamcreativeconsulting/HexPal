@@ -23,12 +23,19 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - NSApplicationDelegate
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        print("✅ AppDelegate: applicationDidFinishLaunching called")
+        
         // Configure app to not show in dock (menu bar only)
         configureMenuBarOnlyMode()
         
         // Initialize menu bar controller
+        print("✅ AppDelegate: Creating MenuBarController")
         menuBarController = MenuBarController()
+        
+        print("✅ AppDelegate: Calling setupMenuBar()")
         menuBarController?.setupMenuBar()
+        
+        print("✅ AppDelegate: Setup complete")
         
         // Request necessary permissions
         requestPermissions()
