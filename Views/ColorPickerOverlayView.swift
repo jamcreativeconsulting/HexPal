@@ -57,9 +57,6 @@ class ColorPickerOverlayView: NSView {
         // Make view transparent
         wantsLayer = true
         layer?.backgroundColor = NSColor.clear.cgColor
-        
-        // Enable mouse tracking
-        wantsBestResolutionOpenGLSurface = true
     }
     
     // MARK: - Mouse Tracking
