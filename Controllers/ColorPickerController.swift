@@ -51,28 +51,57 @@ class ColorPickerController {
     ///
     /// - Parameter completion: Callback invoked with the selected color, or nil if cancelled
     func activateColorPicker(completion: @escaping (NSColor?) -> Void) {
+        // #region agent log
+        NSLog("🎨 ColorPickerController: activateColorPicker called")
+        // #endregion
+        
         // Check if already active
         guard !isActive else {
+            // #region agent log
+            NSLog("⚠️ ColorPickerController: Already active, returning")
+            // #endregion
             return
         }
         
+        // #region agent log
+        NSLog("🎨 ColorPickerController: Checking screen recording permission")
+        // #endregion
+        
         // Check screen recording permission
         guard screenCapture.hasScreenRecordingPermission() else {
+            // #region agent log
+            NSLog("❌ ColorPickerController: Screen recording permission not granted")
+            // #endregion
             // Show permission request dialog
             showPermissionAlert()
             completion(nil)
             return
         }
         
+        // #region agent log
+        NSLog("✅ ColorPickerController: Permission granted, activating picker")
+        // #endregion
+        
         isActive = true
         colorSelectionCallback = completion
         
         // Create and show overlay window
+        // #region agent log
+        NSLog("🎨 ColorPickerController: Creating overlay window")
+        // #endregion
         createOverlayWindow()
+        
+        // #region agent log
+        NSLog("🎨 ColorPickerController: Showing overlay window")
+        // #endregion
         overlayWindow?.makeKeyAndOrderFront(nil)
         
         // Change cursor to crosshair
         NSCursor.crosshair.push()
+        
+        // #region agent log
+        NSLog("✅ ColorPickerController: Color picker activated successfully")
+        // #endregion
         
         // Start monitoring events
         startEventMonitoring()
@@ -109,13 +138,24 @@ class ColorPickerController {
     /// Creates a transparent, borderless window that covers all screens.
     /// The window is configured to be click-through and capture mouse events.
     private func createOverlayWindow() {
+        // #region agent log
+        NSLog("🎨 ColorPickerController: Getting screen bounds")
+        // #endregion
+        
         // Get combined screen bounds for all displays
         var combinedRect = CGRect.zero
         for screen in NSScreen.screens {
             combinedRect = combinedRect.union(screen.frame)
         }
         
+        // #region agent log
+        NSLog("🎨 ColorPickerController: Screen bounds: \(combinedRect)")
+        // #endregion
+        
         // Create borderless, transparent window
+        // #region agent log
+        NSLog("🎨 ColorPickerController: Creating NSWindow")
+        // #endregion
         let window = NSWindow(
             contentRect: combinedRect,
             styleMask: [.borderless],
@@ -123,17 +163,30 @@ class ColorPickerController {
             defer: false
         )
         
+        // #region agent log
+        NSLog("🎨 ColorPickerController: Configuring window properties")
+        // #endregion
+        
         // Configure window properties
-        window.level = .screenSaver
+        // Use .floating instead of .screenSaver to avoid permission issues
+        window.level = .floating
         window.backgroundColor = .clear
         window.isOpaque = false
         window.ignoresMouseEvents = false
         window.collectionBehavior = [.canJoinAllSpaces, .stationary]
         
+        // #region agent log
+        NSLog("🎨 ColorPickerController: Creating overlay view")
+        // #endregion
+        
         // Create transparent content view
         let contentView = ColorPickerOverlayView()
         contentView.delegate = self
         window.contentView = contentView
+        
+        // #region agent log
+        NSLog("✅ ColorPickerController: Overlay window created successfully")
+        // #endregion
         
         overlayWindow = window
     }

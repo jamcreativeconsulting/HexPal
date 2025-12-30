@@ -121,6 +121,10 @@ class ScreenCapture {
     ///
     /// - Returns: true if permission is granted, false otherwise
     func hasScreenRecordingPermission() -> Bool {
+        // #region agent log
+        NSLog("🔍 ScreenCapture: Checking screen recording permission")
+        // #endregion
+        
         // Attempt a small capture to check permission
         // If permission is not granted, CGWindowListCreateImage returns nil
         let testRect = CGRect(x: 0, y: 0, width: 1, height: 1)
@@ -130,7 +134,14 @@ class ScreenCapture {
             kCGNullWindowID,
             .bestResolution
         )
-        return testImage != nil
+        
+        let hasPermission = testImage != nil
+        
+        // #region agent log
+        NSLog("🔍 ScreenCapture: Permission check result: \(hasPermission)")
+        // #endregion
+        
+        return hasPermission
     }
     
     // MARK: - Private Methods
