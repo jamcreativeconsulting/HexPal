@@ -67,10 +67,13 @@ The directory structure and initial Swift files have already been created. Add t
 1. **Right-click** on the project navigator
 2. Select **Add Files to "HexPal"...**
 3. Navigate to the project directory
-4. Select these folders/files:
-   - `HexPal/App/AppDelegate.swift`
-   - `HexPal/Controllers/MenuBarController.swift`
-   - `HexPal/Resources/Info.plist`
+4. Select these folders/files (at project root level):
+   - `App/AppDelegate.swift`
+   - `Controllers/MenuBarController.swift`
+   - `Resources/Info.plist`
+   - `Models/` (empty directory)
+   - `Utilities/` (empty directory)
+   - `Views/` (empty directory)
 5. **Important:** Check "Copy items if needed" = **NO** (files are already in place)
 6. Check "Create groups" (not folder references)
 7. Click **Add**
@@ -163,22 +166,25 @@ After successful setup:
 
 ## File Structure Reference
 
+This matches the structure defined in `docs/PLAN.md` (flat structure at project root):
+
 ```
-HexPal/
-├── HexPal.xcodeproj          # Xcode project (created by Xcode)
-├── HexPal/                    # App target
-│   ├── App/
-│   │   └── AppDelegate.swift
-│   ├── Controllers/
-│   │   └── MenuBarController.swift
-│   ├── Models/                # (Empty for now)
-│   ├── Utilities/             # (Empty for now)
-│   ├── Views/                 # (Empty for now)
-│   └── Resources/
-│       └── Info.plist
-├── HexPalTests/               # Test target
+HEXPal/                        # Project root directory
+├── HEXPal.xcodeproj           # Xcode project (created by Xcode)
+├── App/                       # Application entry point (at root level)
+│   └── AppDelegate.swift
+├── Controllers/               # View controllers and managers (at root level)
+│   └── MenuBarController.swift
+├── Models/                    # Data models (at root level, empty for now)
+├── Utilities/                 # Helper classes and utilities (at root level, empty for now)
+├── Views/                     # UI components (at root level, empty for now)
+├── Resources/                 # Assets and configuration (at root level)
+│   └── Info.plist
+├── HEXPalTests/               # Unit tests (at root level)
 └── [Other project files]
 ```
+
+**Note:** This uses a flat structure at the project root level as specified in PLAN.md. When creating the Xcode project, you can organize files into groups (folders) within Xcode without needing nested physical directories.
 
 ---
 
