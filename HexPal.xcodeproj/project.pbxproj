@@ -27,16 +27,61 @@
 		171BB0042F04087B000DE8DF /* HexPal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HexPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		171BB0142F04087D000DE8DF /* HexPalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HexPalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		171BB01E2F04087D000DE8DF /* HexPalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HexPalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		171BB03C2F040D57000DE8DF /* HexPal 2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "HexPal 2.xcodeproj"; sourceTree = "<group>"; };
 		171BB0802F040F23000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 		171BB0812F040F23000DE8DF /* HexPal 2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "HexPal 2.xcodeproj"; sourceTree = "<group>"; };
 		171BB15F2F040F79000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 		171BB1602F040F79000DE8DF /* HexPal 2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "HexPal 2.xcodeproj"; sourceTree = "<group>"; };
+		171BB1D22F040FA1000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
+		171BB2382F04150B000DE8DF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
+		171BB2792F04154E000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		171BB21A2F0413DC000DE8DF /* Exceptions for "." folder in "HexPal" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				".cursor/rules/core-principles.mdc",
+				".cursor/rules/documentation-standards.mdc",
+				".cursor/rules/feature-development.mdc",
+				".cursor/rules/file-size-limits.mdc",
+				".cursor/rules/macos-guidelines.mdc",
+				.cursor/rules/maintenance.mdc,
+				".cursor/rules/performance-requirements.mdc",
+				.cursor/rules/README.md,
+				".cursor/rules/security-privacy.mdc",
+				".cursor/rules/swift-code-standards.mdc",
+				.cursor/rules/testing.mdc,
+				.gitignore,
+				.swiftlint.yml,
+				CODE_OF_CONDUCT.md,
+				CONTRIBUTING.md,
+				docs/CODING_STYLE.md,
+				docs/COMPETITIVE_ANALYSIS.md,
+				docs/MCP_QUICK_REFERENCE.md,
+				docs/MCP_STRATEGY.md,
+				docs/PLAN.md,
+				docs/PLATFORM_STRATEGY.md,
+				docs/PRE_SETUP_CONSIDERATIONS.md,
+				docs/PROJECT_SUMMARY.md,
+				docs/RESEARCH_SUMMARY.md,
+				HexPalTests,
+				LICENSE,
+				README.md,
+				Resources/Info.plist,
+			);
+			target = 171BB0032F04087B000DE8DF /* HexPal */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		171BB0062F04087B000DE8DF /* . */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				171BB21A2F0413DC000DE8DF /* Exceptions for "." folder in "HexPal" target */,
+			);
+			explicitFolders = (
+				HexPalTests,
+			);
 			path = .;
 			sourceTree = "<group>";
 		};
@@ -83,8 +128,8 @@
 				171BB0062F04087B000DE8DF /* . */,
 				171BB0172F04087D000DE8DF /* HexPalTests */,
 				171BB0212F04087D000DE8DF /* HexPalUITests */,
+				171BB2372F04150B000DE8DF /* Frameworks */,
 				171BB0052F04087B000DE8DF /* Products */,
-				171BB03C2F040D57000DE8DF /* HexPal 2.xcodeproj */,
 			);
 			sourceTree = "<group>";
 		};
@@ -114,6 +159,24 @@
 			sourceTree = "<group>";
 		};
 		171BB1682F040F79000DE8DF /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		171BB1DA2F040FA1000DE8DF /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		171BB2372F04150B000DE8DF /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				171BB2382F04150B000DE8DF /* XCTest.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		171BB2822F04154E000DE8DF /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
@@ -232,6 +295,14 @@
 				{
 					ProductGroup = 171BB0872F040F23000DE8DF /* Products */;
 					ProjectRef = 171BB0812F040F23000DE8DF /* HexPal 2.xcodeproj */;
+				},
+				{
+					ProductGroup = 171BB2822F04154E000DE8DF /* Products */;
+					ProjectRef = 171BB2792F04154E000DE8DF /* HexPal.xcodeproj */;
+				},
+				{
+					ProductGroup = 171BB1DA2F040FA1000DE8DF /* Products */;
+					ProjectRef = 171BB1D22F040FA1000DE8DF /* HexPal.xcodeproj */;
 				},
 				{
 					ProductGroup = 171BB1682F040F79000DE8DF /* Products */;
