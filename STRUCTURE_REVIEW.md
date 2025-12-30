@@ -31,10 +31,15 @@ Based on your screenshot, the structure looks **mostly correct**:
   - If you don't need UI tests: Remove the HexPalUITests target from Xcode
   - If you want UI tests: Create the folder: `mkdir -p HexPalUITests`
 
-### 2. "HexPal" Item with Wrench Icon
-- **Status:** Appears in the "." folder list
-- **Likely cause:** This might be a reference to the HexPal target or a leftover reference
-- **Action:** Verify what this is - if it's just a target reference, it's fine. If it's causing issues, remove it.
+### 2. "HexPal" Item with Wrench Icon ✅ NORMAL
+- **Status:** Appears in the "." folder list with a wrench icon
+- **What it is:** This is the **HexPal target** itself, not a file or folder
+- **Why it appears:** When using `FileSystemSynchronizedRootGroup`, Xcode sometimes displays the target that uses those synchronized files in the navigator
+- **Is it a problem?** **No** - This is normal Xcode behavior and harmless
+- **Action:** No action needed - this is just Xcode showing which target uses the synchronized root group
+- **Verification:** 
+  - Click on it - it should show target settings or do nothing (it's not a file)
+  - It's just a visual reference, not an actual file/folder on disk
 
 ## Verification Checklist
 
