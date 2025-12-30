@@ -12,15 +12,9 @@ import Cocoa
 ///
 /// This controller is responsible for:
 /// - Creating and managing the menu bar status item
-/// - Building the menu bar menu
+/// - Building the menu bar menu with Recent Colors submenu
 /// - Handling menu item actions
 /// - Managing the menu bar icon appearance
-///
-/// ## Usage
-/// ```swift
-/// let menuBarController = MenuBarController()
-/// menuBarController.setupMenuBar()
-/// ```
 ///
 /// - Note: Must inherit from NSObject for @objc selectors to work with menu items
 class MenuBarController: NSObject {
@@ -33,10 +27,23 @@ class MenuBarController: NSObject {
     /// The menu displayed when clicking the menu bar icon
     private let menu = NSMenu()
     
+    /// Reference to the Recent Colors submenu for dynamic updates
+    private var recentColorsSubmenu: NSMenu?
+    
     // MARK: - Initialization
     
     override init() {
         super.init()
+        NotificationCenter.default.addObserver(
+            self,
+            selector: #selector(colorHistoryDidChange),
+            name: ColorHistoryManager.historyDidChangeNotification,
+            object: nil
+        )
+    }
+    
+    deinit {
+        NotificationCenter.default.removeObserver(self)
     }
     
     // MARK: - Public Methods
@@ -77,6 +84,13 @@ class MenuBarController: NSObject {
         pickColorItem.target = self
         menu.addItem(pickColorItem)
         
+        // Recent Colors submenu
+        let recentColorsItem = NSMenuItem(title: "Recent Colors", action: nil, keyEquivalent: "")
+        recentColorsSubmenu = NSMenu()
+        recentColorsItem.submenu = recentColorsSubmenu
+        menu.addItem(recentColorsItem)
+        updateRecentColorsSubmenu()
+        
         menu.addItem(NSMenuItem.separator())
         
         // Preferences
@@ -99,6 +113,69 @@ class MenuBarController: NSObject {
         menu.addItem(quitItem)
     }
     
+    /// Updates the Recent Colors submenu with current history.
+    private func updateRecentColorsSubmenu() {
+        guard let submenu = recentColorsSubmenu else { return }
+        submenu.removeAllItems()
+        
+        let history = ColorHistoryManager.shared
+        
+        if history.hasColors {
+            for hex in history.recentColors {
+                let item = createColorMenuItem(hex: hex)
+                submenu.addItem(item)
+            }
+            
+            submenu.addItem(NSMenuItem.separator())
+            
+            let clearItem = NSMenuItem(title: "Clear History", action: #selector(clearHistoryClicked), keyEquivalent: "")
+            clearItem.target = self
+            submenu.addItem(clearItem)
+        } else {
+            let emptyItem = NSMenuItem(title: "No recent colors", action: nil, keyEquivalent: "")
+            emptyItem.isEnabled = false
+            submenu.addItem(emptyItem)
+        }
+    }
+    
+    /// Creates a menu item for a color with a color swatch.
+    private func createColorMenuItem(hex: String) -> NSMenuItem {
+        let item = NSMenuItem(title: hex, action: #selector(recentColorClicked(_:)), keyEquivalent: "")
+        item.target = self
+        item.representedObject = hex
+        
+        let swatchSize = NSSize(width: 16, height: 16)
+        let image = NSImage(size: swatchSize)
+        image.lockFocus()
+        hexToColor(hex).setFill()
+        NSBezierPath(roundedRect: NSRect(origin: .zero, size: swatchSize), xRadius: 3, yRadius: 3).fill()
+        NSColor.separatorColor.setStroke()
+        NSBezierPath(roundedRect: NSRect(origin: .zero, size: swatchSize), xRadius: 3, yRadius: 3).stroke()
+        image.unlockFocus()
+        
+        item.image = image
+        return item
+    }
+    
+    /// Converts a HEX string to NSColor.
+    private func hexToColor(_ hex: String) -> NSColor {
+        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines).uppercased()
+        if hexSanitized.hasPrefix("#") { hexSanitized = String(hexSanitized.dropFirst()) }
+        guard hexSanitized.count == 6 else { return NSColor.gray }
+        var rgb: UInt64 = 0
+        guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else { return NSColor.gray }
+        return NSColor(
+            srgbRed: CGFloat((rgb & 0xFF0000) >> 16) / 255.0,
+            green: CGFloat((rgb & 0x00FF00) >> 8) / 255.0,
+            blue: CGFloat(rgb & 0x0000FF) / 255.0,
+            alpha: 1.0
+        )
+    }
+    
+    @objc private func colorHistoryDidChange() {
+        updateRecentColorsSubmenu()
+    }
+    
     // MARK: - Menu Actions
     
     @objc private func pickColorClicked(_ sender: Any?) {
@@ -112,9 +189,21 @@ class MenuBarController: NSObject {
                 pasteboard.clearContents()
                 pasteboard.setString(hexString, forType: .string)
                 
+                ColorHistoryManager.shared.addColor(hexString)
+                
                 self?.showClipboardNotification(hex: hexString)
             }
         }
+    }
+    
+    @objc private func recentColorClicked(_ sender: NSMenuItem) {
+        guard let hex = sender.representedObject as? String else { return }
+        ColorHistoryManager.shared.copyToClipboard(hex)
+        showClipboardNotification(hex: hex)
+    }
+    
+    @objc private func clearHistoryClicked() {
+        ColorHistoryManager.shared.clearHistory()
     }
     
     private func colorToHex(_ color: NSColor) -> String {
@@ -131,19 +220,15 @@ class MenuBarController: NSObject {
     }
     
     /// Formats the current hotkey for display in the menu.
-    ///
-    /// - Returns: A string like "⌘⇧P" or empty string if no hotkey
     private func formatCurrentHotkey() -> String {
         let keyCode = PreferencesWindowController.savedKeyCode()
         let modifiers = PreferencesWindowController.savedModifiers()
         
         var parts: [String] = []
-        
         if modifiers.contains(.control) { parts.append("⌃") }
         if modifiers.contains(.option) { parts.append("⌥") }
         if modifiers.contains(.shift) { parts.append("⇧") }
         if modifiers.contains(.command) { parts.append("⌘") }
-        
         parts.append(keyCodeToString(keyCode))
         
         return parts.joined()
@@ -159,7 +244,7 @@ class MenuBarController: NSObject {
             30: "]", 31: "O", 32: "U", 33: "[", 34: "I", 35: "P", 36: "↩",
             37: "L", 38: "J", 39: "'", 40: "K", 41: ";", 42: "\\", 43: ",",
             44: "/", 45: "N", 46: "M", 47: ".", 48: "⇥", 49: "Space",
-            50: "`", 51: "⌫", 53: "⎋"
+            50: "\`", 51: "⌫", 53: "⎋"
         ]
         return keyMap[keyCode] ?? "?"
     }
@@ -169,15 +254,12 @@ class MenuBarController: NSObject {
     }
     
     @objc private func aboutClicked() {
-        // Get app version info from bundle
         let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "1.0"
         let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "1"
         let copyright = Bundle.main.infoDictionary?["NSHumanReadableCopyright"] as? String ?? "© 2025 HEXPal"
         
-        // Activate the app to ensure alert appears in front
         NSApp.activate(ignoringOtherApps: true)
         
-        // Create About dialog
         let alert = NSAlert()
         alert.messageText = "HEXPal"
         alert.informativeText = """
@@ -195,10 +277,7 @@ class MenuBarController: NSObject {
         alert.addButton(withTitle: "OK")
         alert.addButton(withTitle: "Visit GitHub")
         
-        // Run modal - works with LSUIElement apps when app is activated
         let response = alert.runModal()
-        
-        // Second button (Visit GitHub)
         if response == .alertSecondButtonReturn {
             if let url = URL(string: "https://github.com/jamcreativeconsulting/HexPal") {
                 NSWorkspace.shared.open(url)

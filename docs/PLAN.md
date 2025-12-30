@@ -740,11 +740,15 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 |-------------|-------------|--------|
 | Launch at login | Toggle in preferences | ⏳ Planned |
 
+**Implemented (High-Value Feature):**
+| Improvement | Description | Status |
+|-------------|-------------|--------|
+| Recent Colors submenu | Quick access to last 10 picked colors | ✅ Done |
+
 **Future (Lower Priority):**
 | Improvement | Description | Status |
 |-------------|-------------|--------|
 | Custom About window | Replace NSAlert with custom design | ⏳ Future |
-| Recent Colors submenu | Quick access to color history | ⏳ Future |
 | General preferences tab | Prepare for format preferences | ⏳ Future |
 
 **Deliverables:**
@@ -761,9 +765,10 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 - ✅ `PreferencesWindowController.swift` - 290 lines
 - ✅ `ScreenCapture.swift` - 294 lines
 - ✅ `ClipboardNotificationView.swift` - 387 lines (click-to-copy, hover-to-pause, paste tooltip)
+- ✅ `MenuBarController.swift` - 270 lines (with Recent Colors submenu)
 - ✅ `WelcomeNotificationView.swift` - 213 lines (first-launch onboarding)
-- ✅ `MenuBarController.swift` - 212 lines (updated with hotkey display)
 - ✅ `HotkeyManager.swift` - 189 lines
+- ✅ `ColorHistoryManager.swift` - 130 lines (color history persistence)
 - ✅ `AppDelegate.swift` - 124 lines (with welcome notification trigger)
 - ✅ `main.swift` - 21 lines
 
