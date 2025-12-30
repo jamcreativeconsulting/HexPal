@@ -51,45 +51,27 @@ class ColorPickerController {
     ///
     /// - Parameter completion: Callback invoked with the selected color, or nil if cancelled
     func activateColorPicker(completion: @escaping (NSColor?) -> Void) {
-        debugLog("🎨 ColorPickerController: activateColorPicker called")
-        
         // Check if already active
         guard !isActive else {
-            debugLog("⚠️ ColorPickerController: Already active, returning")
             return
         }
-        
-        // TEMPORARILY SKIP permission check to debug overlay issue
-        debugLog("🎨 ColorPickerController: Skipping permission check for now")
         
         isActive = true
         colorSelectionCallback = completion
         
         // Create and show overlay window
-        debugLog("🎨 ColorPickerController: Creating overlay window")
         createOverlayWindow()
         
-        debugLog("🎨 ColorPickerController: overlayWindow = \(overlayWindow != nil ? "created" : "nil")")
-        
         if let window = overlayWindow {
-            debugLog("🎨 ColorPickerController: Window frame = \(window.frame)")
-            debugLog("🎨 ColorPickerController: Window level = \(window.level.rawValue)")
-            
             // Make window visible
             window.makeKeyAndOrderFront(nil)
             
             // Ensure app is active
             NSApp.activate(ignoringOtherApps: true)
-            
-            debugLog("🎨 ColorPickerController: Window visible = \(window.isVisible)")
-        } else {
-            debugLog("❌ ColorPickerController: overlayWindow is nil!")
         }
         
         // Change cursor to crosshair
         NSCursor.crosshair.push()
-        
-        debugLog("✅ ColorPickerController: Color picker activation complete")
         
         // Start monitoring events
         startEventMonitoring()
@@ -126,19 +108,14 @@ class ColorPickerController {
     /// Creates a transparent, borderless window that covers all screens.
     /// The window is configured to be click-through and capture mouse events.
     private func createOverlayWindow() {
-        debugLog("🎨 createOverlayWindow: Starting")
-        
-        // Get the main screen bounds (simpler approach)
+        // Get the main screen bounds
         guard let mainScreen = NSScreen.main else {
-            debugLog("❌ createOverlayWindow: No main screen found!")
             return
         }
         
         let screenFrame = mainScreen.frame
-        debugLog("🎨 createOverlayWindow: Main screen frame = \(screenFrame)")
         
         // Create borderless window
-        debugLog("🎨 createOverlayWindow: Creating NSWindow")
         let window = NSWindow(
             contentRect: screenFrame,
             styleMask: [.borderless],
@@ -146,18 +123,14 @@ class ColorPickerController {
             defer: false
         )
         
-        debugLog("🎨 createOverlayWindow: Configuring window")
-        
         // Configure window properties
         window.level = .floating
-        window.backgroundColor = NSColor.red.withAlphaComponent(0.3) // RED tint for debugging visibility
+        window.backgroundColor = NSColor.clear
         window.isOpaque = false
         window.hasShadow = false
         window.ignoresMouseEvents = false
         window.acceptsMouseMovedEvents = true
         window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
-        
-        debugLog("🎨 createOverlayWindow: Creating content view")
         
         // Create content view
         let contentView = ColorPickerOverlayView(frame: screenFrame)
@@ -166,8 +139,6 @@ class ColorPickerController {
         
         // Make the window key window
         window.makeFirstResponder(contentView)
-        
-        debugLog("✅ createOverlayWindow: Window created successfully")
         
         overlayWindow = window
     }
@@ -215,33 +186,24 @@ class ColorPickerController {
     ///
     /// - Parameter point: Screen coordinates where color was selected
     private func handleColorSelection(at point: CGPoint) {
-        debugLog("🎯 handleColorSelection: Starting at point \(point)")
-        
         // Store callback locally before deactivating
         let callback = colorSelectionCallback
         
-        // IMPORTANT: Deactivate picker FIRST to remove overlay
-        // Otherwise we capture the red overlay, not the actual screen
-        debugLog("🎯 handleColorSelection: Deactivating picker first")
+        // Deactivate picker first to remove overlay
         deactivateColorPicker()
         
         // Small delay to let the window close, then capture
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
-            debugLog("🎯 handleColorSelection: Attempting color capture")
-            
             guard let self = self else {
-                debugLog("❌ handleColorSelection: self is nil")
                 callback?(nil)
                 return
             }
             
             guard let color = self.screenCapture.getPixelColor(at: point) else {
-                debugLog("❌ handleColorSelection: Failed to get pixel color")
                 callback?(nil)
                 return
             }
             
-            debugLog("✅ handleColorSelection: Got color \(color)")
             callback?(color)
         }
     }
