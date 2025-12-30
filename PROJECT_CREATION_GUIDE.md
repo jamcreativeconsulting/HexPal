@@ -66,7 +66,10 @@ This will verify all files are in place before creating the project.
 5. **Build Settings Tab:**
    - Search "Info.plist File" → Set to: `Resources/Info.plist` (if using Option A above)
    - Search "Swift Language Version" → Set to: **Swift 5**
-   - Search "Code Signing" → Set to: **Sign to Run Locally** (for development)
+   - Search "Code Signing Style" → Should be: **Automatic** (default)
+   - Search "Development Team" → Leave empty or select your team (for development without a team, Automatic signing will use "Sign to Run Locally" automatically)
+   
+   **Note:** With Code Signing Style set to "Automatic" and no Development Team selected, Xcode will automatically use "Sign to Run Locally" for development builds. This is perfect for local development and testing.
 
 ### Step 4: Add Existing Files
 

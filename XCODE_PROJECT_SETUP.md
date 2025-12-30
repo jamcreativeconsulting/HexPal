@@ -70,8 +70,14 @@ You have two options for managing Info.plist settings:
 1. Go to **Build Settings** tab
 2. Search for "Swift Language Version"
 3. Set to **Swift 5** (or latest)
-4. Search for "Code Signing"
-5. Set **Code Signing Identity** to your team (or "Sign to Run Locally" for development)
+4. Search for "Info.plist File"
+5. Set to: `Resources/Info.plist` (if using existing Info.plist file)
+6. Search for "Code Signing Style"
+   - Should be set to **Automatic** (default)
+   - If you have an Apple Developer team, you can select it in "Development Team"
+   - If no team is selected, Xcode will automatically use "Sign to Run Locally" for development builds
+   
+   **Note:** "Sign to Run Locally" is automatically applied when Code Signing Style is "Automatic" and no Development Team is selected. This is perfect for local development and testing.
 
 ### 4. Add Existing Files to Project
 
