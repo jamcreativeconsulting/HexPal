@@ -500,7 +500,7 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 5. ✅ Create comprehensive project documentation
 6. ✅ Set up project rules and standards
 
-### ✅ Completed Pre-Setup Phase (Partial)
+### ✅ Completed Pre-Setup Phase (Structure Complete)
 1. ✅ Set up GitHub repository (https://github.com/jamcreativeconsulting/HexPal)
 2. ✅ Create open source foundation files:
    - ✅ LICENSE (MIT)
@@ -508,19 +508,24 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
    - ✅ CONTRIBUTING.md
    - ✅ CODE_OF_CONDUCT.md
    - ✅ .gitignore
-3. ✅ Initialize Git repository
-4. ✅ Push code to GitHub
+3. ✅ Initialize Git repository and push to GitHub
+4. ✅ Set up CI/CD workflow (.github/workflows/ci.yml)
+5. ✅ Create GitHub issue templates (.github/ISSUE_TEMPLATE/)
+6. ✅ Set up Xcode project structure (flat structure at root per PLAN.md)
+7. ✅ Configure SwiftLint (.swiftlint.yml)
+8. ✅ Create initial Swift files:
+   - ✅ AppDelegate.swift (with @main entry point)
+   - ✅ MenuBarController.swift (menu bar implementation)
+9. ✅ Create Info.plist with LSUIElement and permissions
 
-### ⏭️ Next Phase: Complete Pre-Setup & Project Initialization
+### ⏭️ Next Phase: Complete Pre-Setup & Create Xcode Project
 **See:** `docs/PRE_SETUP_CONSIDERATIONS.md` for complete checklist
 
 **Immediate Next Steps:**
-1. Set up CI/CD workflow (.github/workflows/ci.yml)
-2. Create GitHub issue templates (.github/ISSUE_TEMPLATE/)
-3. Set up Xcode project with proper structure
-4. Configure SwiftLint and code quality tools (.swiftlint.yml)
-5. Configure code signing
-6. Set up testing framework
+1. Create Xcode project file (.xcodeproj) - Follow `XCODE_PROJECT_SETUP.md`
+2. Configure code signing (requires Xcode project)
+3. Set up testing framework (requires Xcode project)
+4. Verify project builds and runs
 
 **After Pre-Setup:**
 8. Begin Phase 1 implementation (Project Setup & Foundation)
@@ -565,5 +570,5 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 ---
 
 **Last Updated:** December 2024  
-**Status:** Pre-Setup Phase - Open Source Foundation Complete ✅  
-**Next Milestone:** Complete Pre-Setup (CI/CD, Issue Templates) → Xcode Project Setup
+**Status:** Pre-Setup Phase - Structure Complete ✅  
+**Next Milestone:** Create Xcode Project → Begin Phase 1 (Project Setup & Foundation)
