@@ -54,7 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // LSUIElement is configured in Info.plist
     }
     
-    /// Sets up the global hotkey (Cmd+Shift+C) for activating the color picker.
+    /// Sets up the global hotkey (Cmd+Shift+P) for activating the color picker.
     ///
     /// Registers a system-wide keyboard shortcut that works from any application.
     /// If Accessibility permission is not granted, the hotkey will not be registered
