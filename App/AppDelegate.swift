@@ -24,28 +24,41 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     override init() {
         super.init()
+        NSLog("🚀 AppDelegate: init() called")
         print("🚀 AppDelegate: init() called")
-        fflush(stdout) // Force flush output
+        fflush(stdout)
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
+        NSLog("✅ AppDelegate: applicationDidFinishLaunching called")
         print("✅ AppDelegate: applicationDidFinishLaunching called")
-        fflush(stdout) // Force flush output
+        fflush(stdout)
         
         // Configure app to not show in dock (menu bar only)
         configureMenuBarOnlyMode()
         
         // Initialize menu bar controller
+        NSLog("✅ AppDelegate: Creating MenuBarController")
         print("✅ AppDelegate: Creating MenuBarController")
         fflush(stdout)
         menuBarController = MenuBarController()
         
+        NSLog("✅ AppDelegate: Calling setupMenuBar()")
         print("✅ AppDelegate: Calling setupMenuBar()")
         fflush(stdout)
         menuBarController?.setupMenuBar()
         
+        NSLog("✅ AppDelegate: Setup complete")
         print("✅ AppDelegate: Setup complete")
         fflush(stdout)
+        
+        // Visual confirmation that code is running
+        let alert = NSAlert()
+        alert.messageText = "HEXPal Launched"
+        alert.informativeText = "applicationDidFinishLaunching completed successfully"
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
         
         // Request necessary permissions
         requestPermissions()
