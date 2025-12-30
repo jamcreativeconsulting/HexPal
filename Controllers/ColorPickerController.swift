@@ -68,10 +68,12 @@ class ColorPickerController {
         // #endregion
         
         // Check screen recording permission
-        guard screenCapture.hasScreenRecordingPermission() else {
+        if !screenCapture.hasScreenRecordingPermission() {
             // #region agent log
-            NSLog("❌ ColorPickerController: Screen recording permission not granted")
+            NSLog("❌ ColorPickerController: Screen recording permission not granted, requesting...")
             // #endregion
+            // Request permission (will prompt user)
+            screenCapture.requestScreenRecordingPermission()
             // Show permission request dialog
             showPermissionAlert()
             completion(nil)
