@@ -56,14 +56,22 @@ You have two options for managing Info.plist settings:
 3. Set to: `Resources/Info.plist`
 4. Go back to **Info** tab - it will now display values from our existing file
 
-**Option B: Configure in Info Tab Directly**
+**Option B: Configure in Info Tab Directly (Current Method)**
 1. Go to **Info** tab
 2. You'll see "Custom macOS Application Target Properties" table
-3. Click the **+** button to add new keys:
-   - Add `LSUIElement` (Type: Boolean) = `YES` (Menu bar only, no dock icon)
-   - Add `NSScreenCaptureUsageDescription` (Type: String) = "HEXPal needs screen recording permission to capture pixel colors from your screen."
-   - Add `NSHighResolutionCapable` (Type: Boolean) = `YES`
-4. Set **App Category** to: `Utilities`
+3. **Verify App Category** is set to: `Utilities` (should already be set)
+4. **Add required keys** using the **+** button at the bottom of the table:
+   - Click **+** → In the Key field, type or select: `LSUIElement`
+     - Type: Select **Boolean** from dropdown
+     - Value: Check the **YES** checkbox (this hides dock icon, menu bar only)
+   - Click **+** → In the Key field, type or select: `Privacy - Screen Capture Usage Description` (or `NSScreenCaptureUsageDescription`)
+     - Type: Select **String** from dropdown
+     - Value: Enter: `HEXPal needs screen recording permission to capture pixel colors from your screen.`
+   - Click **+** → In the Key field, type or select: `High Resolution Capable` (or `NSHighResolutionCapable`)
+     - Type: Select **Boolean** from dropdown
+     - Value: Check the **YES** checkbox
+   
+   **Tip:** Xcode may show friendly names like "Privacy - Screen Capture Usage Description" instead of the raw key name. Either works!
 
 #### 3.3 Build Settings
 
