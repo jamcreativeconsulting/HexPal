@@ -48,11 +48,22 @@ This guide will help you create the Xcode project for HEXPal and integrate it wi
 
 #### 3.2 Info.plist Configuration
 
+You have two options for managing Info.plist settings:
+
+**Option A: Use Existing Info.plist File (Recommended)**
+1. Go to **Build Settings** tab first
+2. Search for "Info.plist File"
+3. Set to: `Resources/Info.plist`
+4. Go back to **Info** tab - it will now display values from our existing file
+
+**Option B: Configure in Info Tab Directly**
 1. Go to **Info** tab
-2. Verify these keys exist (they should be in the existing `Info.plist`):
-   - `LSUIElement` = `YES` (Menu bar only, no dock icon)
-   - `NSScreenCaptureUsageDescription` = "HEXPal needs screen recording permission to capture pixel colors from your screen."
-   - `NSHighResolutionCapable` = `YES`
+2. You'll see "Custom macOS Application Target Properties" table
+3. Click the **+** button to add new keys:
+   - Add `LSUIElement` (Type: Boolean) = `YES` (Menu bar only, no dock icon)
+   - Add `NSScreenCaptureUsageDescription` (Type: String) = "HEXPal needs screen recording permission to capture pixel colors from your screen."
+   - Add `NSHighResolutionCapable` (Type: Boolean) = `YES`
+4. Set **App Category** to: `Utilities`
 
 #### 3.3 Build Settings
 

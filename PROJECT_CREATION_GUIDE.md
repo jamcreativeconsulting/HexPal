@@ -52,11 +52,19 @@ This will verify all files are in place before creating the project.
    - App Category: **Utilities**
 
 4. **Info Tab:**
-   - Delete the default Info.plist entry (we have our own)
-   - The existing `Resources/Info.plist` will be used
+   - You'll see "Custom macOS Application Target Properties" with key-value pairs
+   - **Option A (Recommended):** Use our existing Info.plist file:
+     - Go to **Build Settings** tab first (see step 5)
+     - Set "Info.plist File" to `Resources/Info.plist`
+     - Return to Info tab - it will now show values from our file
+   - **Option B:** Configure manually in Info tab:
+     - Set **App Category** to: `Utilities`
+     - Add key `LSUIElement` = `YES` (click + button to add)
+     - Add key `NSScreenCaptureUsageDescription` = "HEXPal needs screen recording permission to capture pixel colors from your screen."
+     - Add key `NSHighResolutionCapable` = `YES`
 
 5. **Build Settings Tab:**
-   - Search "Info.plist File" → Set to: `Resources/Info.plist`
+   - Search "Info.plist File" → Set to: `Resources/Info.plist` (if using Option A above)
    - Search "Swift Language Version" → Set to: **Swift 5**
    - Search "Code Signing" → Set to: **Sign to Run Locally** (for development)
 
