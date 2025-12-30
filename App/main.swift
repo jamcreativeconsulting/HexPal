@@ -8,17 +8,14 @@
 
 import Cocoa
 
-// Explicit entry point - app startup runs on main thread
-NSLog("🔵 main.swift: Starting app initialization")
+// Create delegate and keep strong reference
+// NSApplication.delegate is WEAK, so we must retain the delegate ourselves
 let app = NSApplication.shared
-NSLog("🔵 main.swift: NSApplication.shared obtained")
-
 let delegate = AppDelegate()
-NSLog("🔵 main.swift: AppDelegate created")
-
 app.delegate = delegate
-NSLog("🔵 main.swift: Delegate assigned to app")
 
-NSLog("🔵 main.swift: About to call app.run()")
-app.run()
-NSLog("🔵 main.swift: app.run() returned (should not reach here)")
+// Use withExtendedLifetime to prevent ARC from deallocating delegate
+// during app.run() since NSApplication.delegate is a weak reference
+withExtendedLifetime(delegate) {
+    app.run()
+}

@@ -8,7 +8,7 @@
 
 import Cocoa
 
-/// A modern, non-intrusive notification view for clipboard copy confirmation.
+/// A modern, non-intrusive notification for clipboard copy confirmation.
 ///
 /// Displays a sleek notification in the top-right corner of the screen showing
 /// a color swatch and HEX code that was copied. Automatically dismisses after a short delay.
@@ -18,13 +18,7 @@ import Cocoa
 /// let notification = ClipboardNotificationView(hex: "#FF5733")
 /// notification.show()
 /// ```
-///
-/// ## Visual Design
-/// - Color swatch: 32x32 rounded square with border
-/// - HEX code: Monospaced font, two-line layout
-/// - Blur effect: HUD material for modern macOS look
-/// - Animation: Smooth fade in/out transitions
-class ClipboardNotificationView: NSView {
+class ClipboardNotificationView {
     
     // MARK: - Properties
     
@@ -37,18 +31,25 @@ class ClipboardNotificationView: NSView {
     /// Timer for auto-dismissal
     private var dismissTimer: Timer?
     
+    /// Self-reference to prevent deallocation during animation
+    /// Set during show(), cleared after dismiss animation completes
+    private static var activeNotification: ClipboardNotificationView?
+    
+    /// Flag to prevent double cleanup
+    private var hasCleanedUp = false
+    
     // MARK: - Initialization
     
-    /// Creates a clipboard notification view.
+    /// Creates a clipboard notification.
     ///
     /// - Parameter hex: The HEX code that was copied to the clipboard
     init(hex: String) {
         self.hexCode = hex
-        super.init(frame: .zero)
     }
     
-    required init?(coder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+    deinit {
+        // Just invalidate timer if somehow still active
+        dismissTimer?.invalidate()
     }
     
     // MARK: - Public Methods
@@ -58,7 +59,13 @@ class ClipboardNotificationView: NSView {
     /// Displays the notification in the top-right corner of the main screen
     /// and automatically dismisses it after 2 seconds.
     func show() {
-        guard let mainScreen = NSScreen.main else { return }
+        // Retain self to prevent deallocation during animation lifecycle
+        ClipboardNotificationView.activeNotification = self
+        
+        guard let mainScreen = NSScreen.main else {
+            ClipboardNotificationView.activeNotification = nil
+            return
+        }
         
         // Calculate position (top-right corner with padding)
         let padding: CGFloat = 20
@@ -86,9 +93,8 @@ class ClipboardNotificationView: NSView {
         window.ignoresMouseEvents = true
         window.collectionBehavior = [.canJoinAllSpaces, .stationary]
         
-        // Create content view
-        let contentView = self
-        contentView.frame = windowRect
+        // Create a separate content view (NOT self)
+        let contentView = NSView(frame: NSRect(x: 0, y: 0, width: width, height: height))
         contentView.wantsLayer = true
         contentView.layer?.cornerRadius = 12
         contentView.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.95).cgColor
@@ -133,9 +139,9 @@ class ClipboardNotificationView: NSView {
         window.contentView = contentView
         notificationWindow = window
         
-        // Animate in
+        // Animate in - use orderFront since window ignores mouse events
         window.alphaValue = 0
-        window.makeKeyAndOrderFront(nil)
+        window.orderFront(nil)
         
         NSAnimationContext.runAnimationGroup { context in
             context.duration = 0.2
@@ -149,32 +155,43 @@ class ClipboardNotificationView: NSView {
         }
     }
     
+    // MARK: - Private Methods
+    
     /// Dismisses the notification with animation.
     private func dismiss() {
         guard let window = notificationWindow else { return }
         
+        // Animate out and close
         NSAnimationContext.runAnimationGroup({ context in
             context.duration = 0.2
             context.timingFunction = CAMediaTimingFunction(name: .easeIn)
             window.animator().alphaValue = 0.0
-        }, completionHandler: {
-            window.close()
-            self.notificationWindow = nil
+        }, completionHandler: { [weak self] in
+            self?.cleanup()
         })
+    }
+    
+    /// Cleans up resources. Guarded to prevent double cleanup.
+    private func cleanup() {
+        // Guard against double cleanup
+        guard !hasCleanedUp else { return }
+        hasCleanedUp = true
         
         dismissTimer?.invalidate()
         dismissTimer = nil
+        
+        // Hide window instead of closing to avoid Core Animation conflicts
+        notificationWindow?.orderOut(nil)
+        notificationWindow = nil
+        
+        // Release self-reference to allow deallocation
+        ClipboardNotificationView.activeNotification = nil
     }
-    
-    // MARK: - Private Helpers
     
     /// Converts a HEX string to NSColor.
     ///
-    /// Parses a HEX string in the format "#RRGGBB" or "RRGGBB" and converts it
-    /// to an NSColor in sRGB color space.
-    ///
     /// - Parameter hex: The HEX code string (with or without # prefix)
-    /// - Returns: An NSColor representing the HEX code, or black (#000000) if parsing fails
+    /// - Returns: An NSColor representing the HEX code
     private func hexToColor(_ hex: String) -> NSColor {
         var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
         

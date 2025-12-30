@@ -19,37 +19,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// Menu bar controller that manages the menu bar icon and menu
     private var menuBarController: MenuBarController?
     
-    // MARK: - Initialization
-    
-    override init() {
-        NSLog("🟢 AppDelegate: init() called")
-        super.init()
-        NSLog("🟢 AppDelegate: init() completed")
-    }
-    
-    deinit {
-        NSLog("🔴 AppDelegate: deinit() called - DEALLOCATING")
-    }
-    
     // MARK: - NSApplicationDelegate
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        NSLog("🟢 AppDelegate: applicationDidFinishLaunching called")
-        
         // Configure app to not show in dock (menu bar only)
         configureMenuBarOnlyMode()
         
-        NSLog("🟢 AppDelegate: Creating MenuBarController")
         // Initialize menu bar controller
         menuBarController = MenuBarController()
-        NSLog("🟢 AppDelegate: MenuBarController created: \(menuBarController != nil)")
-        
         menuBarController?.setupMenuBar()
-        NSLog("🟢 AppDelegate: setupMenuBar() called")
         
         // Request necessary permissions
         requestPermissions()
-        NSLog("🟢 AppDelegate: applicationDidFinishLaunching completed")
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {
