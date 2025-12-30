@@ -8,32 +8,6 @@
 
 import Cocoa
 
-// #region agent log - File-based logging that bypasses console
-/// Writes debug log directly to file for reliable debugging
-func debugLog(_ message: String, file: String = #file, line: Int = #line) {
-    let logPath = "/Users/jordan/Desktop/Business/JAMCreativeConsulting/Products/HEXPal/.cursor/debug.log"
-    let timestamp = ISO8601DateFormatter().string(from: Date())
-    let fileName = (file as NSString).lastPathComponent
-    let entry = "{\"timestamp\":\"\(timestamp)\",\"location\":\"\(fileName):\(line)\",\"message\":\"\(message)\"}\n"
-    
-    // Append to log file
-    if let data = entry.data(using: .utf8) {
-        if FileManager.default.fileExists(atPath: logPath) {
-            if let fileHandle = FileHandle(forWritingAtPath: logPath) {
-                fileHandle.seekToEndOfFile()
-                fileHandle.write(data)
-                fileHandle.closeFile()
-            }
-        } else {
-            FileManager.default.createFile(atPath: logPath, contents: data, attributes: nil)
-        }
-    }
-    
-    // Also print to console
-    print("[\(fileName):\(line)] \(message)")
-    fflush(stdout)
-}
-// #endregion
 
 /// Main application delegate for HEXPal.
 ///
@@ -49,24 +23,15 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     // MARK: - NSApplicationDelegate
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        debugLog("🚀 AppDelegate: applicationDidFinishLaunching started")
-        
         // Configure app to not show in dock (menu bar only)
         configureMenuBarOnlyMode()
         
-        debugLog("🔧 AppDelegate: Creating MenuBarController")
-        
         // Initialize menu bar controller
         menuBarController = MenuBarController()
-        
-        debugLog("🔧 AppDelegate: Calling setupMenuBar")
         menuBarController?.setupMenuBar()
         
-        debugLog("🔧 AppDelegate: Calling requestPermissions")
         // Request necessary permissions
         requestPermissions()
-        
-        debugLog("✅ AppDelegate: applicationDidFinishLaunching complete")
     }
     
     func applicationWillTerminate(_ aNotification: Notification) {

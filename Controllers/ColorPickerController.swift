@@ -215,19 +215,35 @@ class ColorPickerController {
     ///
     /// - Parameter point: Screen coordinates where color was selected
     private func handleColorSelection(at point: CGPoint) {
-        // Extract color at point
-        guard let color = screenCapture.getPixelColor(at: point) else {
-            // Failed to extract color
-            colorSelectionCallback?(nil)
-            deactivateColorPicker()
-            return
-        }
+        debugLog("🎯 handleColorSelection: Starting at point \(point)")
         
-        // Invoke callback with selected color
-        colorSelectionCallback?(color)
+        // Store callback locally before deactivating
+        let callback = colorSelectionCallback
         
-        // Deactivate picker
+        // IMPORTANT: Deactivate picker FIRST to remove overlay
+        // Otherwise we capture the red overlay, not the actual screen
+        debugLog("🎯 handleColorSelection: Deactivating picker first")
         deactivateColorPicker()
+        
+        // Small delay to let the window close, then capture
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) { [weak self] in
+            debugLog("🎯 handleColorSelection: Attempting color capture")
+            
+            guard let self = self else {
+                debugLog("❌ handleColorSelection: self is nil")
+                callback?(nil)
+                return
+            }
+            
+            guard let color = self.screenCapture.getPixelColor(at: point) else {
+                debugLog("❌ handleColorSelection: Failed to get pixel color")
+                callback?(nil)
+                return
+            }
+            
+            debugLog("✅ handleColorSelection: Got color \(color)")
+            callback?(color)
+        }
     }
 }
 

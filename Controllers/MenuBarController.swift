@@ -21,7 +21,7 @@ import Cocoa
 /// let menuBarController = MenuBarController()
 /// menuBarController.setupMenuBar()
 /// ```
-class MenuBarController {
+class MenuBarController: NSObject {
     
     // MARK: - Properties
     
@@ -31,9 +31,12 @@ class MenuBarController {
     /// The menu displayed when clicking the menu bar icon
     private let menu = NSMenu()
     
+    /// Color picker controller - retained during color picking operation
+    private var colorPickerController: ColorPickerController?
+    
     // MARK: - Initialization
     
-    init() {
+    override init() { super.init()
         // Initialization handled by setupMenuBar()
     }
     
@@ -43,7 +46,7 @@ class MenuBarController {
     ///
     /// Creates a status item in the menu bar and builds the menu structure.
     /// Should be called once during application startup.
-    func setupMenuBar() {
+    func setupMenuBar() { debugLog("📋 MenuBarController: setupMenuBar called")
         // Create status item
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
@@ -70,7 +73,7 @@ class MenuBarController {
         buildMenu()
         
         // Assign menu to status item
-        statusItem.menu = menu
+        statusItem.menu = menu; debugLog("📋 MenuBarController: Menu assigned with \(menu.items.count) items")
     }
     
     // MARK: - Private Methods
@@ -83,15 +86,15 @@ class MenuBarController {
     /// - About (shows about dialog)
     /// - Quit (exits application)
     private func buildMenu() {
-        menu.removeAllItems()
+        menu.autoenablesItems = false; menu.removeAllItems()
         
         // Pick Color
         let pickColorItem = NSMenuItem(
             title: "Pick Color",
-            action: #selector(pickColorClicked),
+            action: #selector(pickColorClicked(_:)),
             keyEquivalent: ""
         )
-        pickColorItem.target = self
+        pickColorItem.target = self; debugLog("📋 Pick Color item: enabled=\(pickColorItem.isEnabled), target=\(String(describing: pickColorItem.target))")
         menu.addItem(pickColorItem)
         
         menu.addItem(NSMenuItem.separator())
@@ -99,7 +102,7 @@ class MenuBarController {
         // Preferences
         let preferencesItem = NSMenuItem(
             title: "Preferences...",
-            action: #selector(preferencesClicked),
+            action: #selector(preferencesClicked(_:)),
             keyEquivalent: ","
         )
         preferencesItem.target = self
@@ -110,7 +113,7 @@ class MenuBarController {
         // About
         let aboutItem = NSMenuItem(
             title: "About HEXPal",
-            action: #selector(aboutClicked),
+            action: #selector(aboutClicked(_:)),
             keyEquivalent: ""
         )
         aboutItem.target = self
@@ -121,7 +124,7 @@ class MenuBarController {
         // Quit
         let quitItem = NSMenuItem(
             title: "Quit HEXPal",
-            action: #selector(quitClicked),
+            action: #selector(quitClicked(_:)),
             keyEquivalent: "q"
         )
         quitItem.target = self
@@ -140,16 +143,66 @@ class MenuBarController {
     ///
     /// Activates the color picker overlay.
     /// This will be implemented in Phase 2 of development.
-    @objc private func pickColorClicked() {
-        // TODO: Implement color picker activation
-        // This will be implemented in Phase 2: Screen Capture & Color Picking
+    @objc func pickColorClicked(_ sender: Any?) {
+        debugLog("🎨 pickColorClicked: Starting color picker")
+        
+        // Use Apple's native color sampler (macOS 10.15+)
+        // This is simpler and more reliable than custom overlay
+        NSColorSampler().show { [weak self] selectedColor in
+            DispatchQueue.main.async {
+                guard let color = selectedColor else {
+                    debugLog("⚠️ pickColorClicked: Color selection cancelled")
+                    return
+                }
+                
+                debugLog("✅ pickColorClicked: Color selected: \(color)")
+                
+                // Convert to HEX and copy to clipboard
+                let hexString = self?.colorToHex(color) ?? "#000000"
+                debugLog("✅ pickColorClicked: HEX code: \(hexString)")
+                
+                // Copy to clipboard
+                let pasteboard = NSPasteboard.general
+                pasteboard.clearContents()
+                pasteboard.setString(hexString, forType: .string)
+                
+                // Show confirmation
+                self?.showColorConfirmation(hex: hexString)
+            }
+        }
+    }
+    
+    /// Converts NSColor to HEX string
+    private func colorToHex(_ color: NSColor) -> String {
+        // Convert to sRGB color space for accurate HEX representation
+        guard let rgbColor = color.usingColorSpace(.sRGB) else {
+            return "#000000"
+        }
+        
+        let red = Int(rgbColor.redComponent * 255)
+        let green = Int(rgbColor.greenComponent * 255)
+        let blue = Int(rgbColor.blueComponent * 255)
+        
+        return String(format: "#%02X%02X%02X", red, green, blue)
+    }
+    
+    /// Shows a confirmation that the color was copied
+    private func showColorConfirmation(hex: String) {
+        debugLog("📋 Showing confirmation for \(hex)")
+        
+        let alert = NSAlert()
+        alert.messageText = "Color Copied!"
+        alert.informativeText = "\(hex) has been copied to your clipboard."
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
     
     /// Handles "Preferences" menu item click.
     ///
     /// Opens the preferences window.
     /// This will be implemented in Phase 4 of development.
-    @objc private func preferencesClicked() {
+    @objc func preferencesClicked(_ sender: Any?) {
         // TODO: Implement preferences window
         // This will be implemented in Phase 4: Global Hotkey Integration
     }
@@ -157,7 +210,7 @@ class MenuBarController {
     /// Handles "About" menu item click.
     ///
     /// Shows the about dialog with version and license information.
-    @objc private func aboutClicked() {
+    @objc func aboutClicked(_ sender: Any?) {
         // TODO: Implement about dialog
         // This will be implemented in Phase 5: Polish & Testing
     }
@@ -165,7 +218,7 @@ class MenuBarController {
     /// Handles "Quit" menu item click.
     ///
     /// Terminates the application.
-    @objc private func quitClicked() {
+    @objc func quitClicked(_ sender: Any?) {
         NSApplication.shared.terminate(nil)
     }
 }
