@@ -100,11 +100,11 @@ Create groups in Xcode to match our directory structure:
 1. Select the **HexPal** target
 2. Go to **Build Settings**
 3. Search for "Info.plist File"
-4. Set to: `HexPal/Resources/Info.plist`
+4. Set to: `Resources/Info.plist` (flat structure at root level)
 
 ### 7. Configure AppDelegate Entry Point
 
-1. Open `HexPal/App/AppDelegate.swift`
+1. Open `App/AppDelegate.swift` (at project root level)
 2. Verify it has `@main` attribute (it does)
 3. Remove any default `AppDelegate.swift` Xcode created
 
