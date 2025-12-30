@@ -42,6 +42,15 @@ class MenuBarController: NSObject {
     
     // MARK: - Public Methods
     
+    /// Activates the color picker.
+    ///
+    /// This method can be called from anywhere (e.g., global hotkey) to activate
+    /// the color picker. It performs the same action as clicking "Pick Color" in the menu.
+    func activateColorPicker() {
+        pickColorClicked(nil)
+    }
+    
+    
     /// Sets up the menu bar icon and menu.
     ///
     /// Creates a status item in the menu bar and builds the menu structure.
