@@ -15,15 +15,6 @@ import Cocoa
 @main
 class AppDelegate: NSObject, NSApplicationDelegate {
     
-    // Force immediate execution test
-    static func main() {
-        NSLog("🚀🚀🚀 AppDelegate.main() called - App is starting!")
-        print("🚀🚀🚀 AppDelegate.main() called - App is starting!")
-        fflush(stdout)
-        NSApplication.shared.delegate = AppDelegate()
-        NSApplication.shared.run()
-    }
-    
     // MARK: - Properties
     
     /// Menu bar controller that manages the menu bar icon and menu
@@ -33,12 +24,9 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     override init() {
         super.init()
-        NSLog("🚀🚀🚀 AppDelegate: init() called")
-        print("🚀🚀🚀 AppDelegate: init() called")
+        NSLog("🚀🚀🚀 AppDelegate: init() called - THIS SHOULD APPEAR IN LOGS")
+        print("🚀🚀🚀 AppDelegate: init() called - THIS SHOULD APPEAR IN LOGS")
         fflush(stdout)
-        
-        // Set as delegate immediately
-        NSApplication.shared.delegate = self
     }
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
