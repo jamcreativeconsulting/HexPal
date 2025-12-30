@@ -124,18 +124,10 @@ class ScreenCapture {
     ///
     /// - Returns: true if permission is granted, false otherwise
     func hasScreenRecordingPermission() -> Bool {
-        // #region agent log
-        NSLog("🔍 ScreenCapture: Checking screen recording permission")
-        // #endregion
-        
         // Use modern API to check permission (macOS 10.15+)
         // This avoids the "task name port right" error from CGWindowListCreateImage
         if #available(macOS 10.15, *) {
-            let hasPermission = CGPreflightScreenCaptureAccess()
-            // #region agent log
-            NSLog("🔍 ScreenCapture: CGPreflightScreenCaptureAccess result: \(hasPermission)")
-            // #endregion
-            return hasPermission
+            return CGPreflightScreenCaptureAccess()
         } else {
             // Fallback for older macOS versions
             // Attempt a small capture to check permission
@@ -147,11 +139,7 @@ class ScreenCapture {
                 .bestResolution
             )
             
-            let hasPermission = testImage != nil
-            // #region agent log
-            NSLog("🔍 ScreenCapture: Fallback permission check result: \(hasPermission)")
-            // #endregion
-            return hasPermission
+            return testImage != nil
         }
     }
     
@@ -160,10 +148,6 @@ class ScreenCapture {
     /// On macOS 10.15+, this will prompt the user to grant permission.
     /// The user must restart the app after granting permission.
     func requestScreenRecordingPermission() {
-        // #region agent log
-        NSLog("🔍 ScreenCapture: Requesting screen recording permission")
-        // #endregion
-        
         if #available(macOS 10.15, *) {
             // This will prompt the user to grant permission
             CGRequestScreenCaptureAccess()
