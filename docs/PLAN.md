@@ -593,34 +593,45 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 **Note:** Phase 3 functionality (HEX conversion and clipboard copy) was completed as part of Phase 2 implementation using `NSColorSampler`. The core workflow is now functional.
 
 ### ✅ Phase 4: Global Hotkey Integration (COMPLETE)
-**Status:** Global hotkey functionality implemented ✅
+**Status:** Global hotkey functionality implemented and tested ✅
 
 **Completed:**
 1. ✅ **HotkeyManager implementation**
-   - ✅ Created `HotkeyManager.swift` using Carbon API
+   - ✅ Created `HotkeyManager.swift` using NSEvent monitoring API
    - ✅ System-wide hotkey registration (no external dependencies)
-   - ✅ Default hotkey: Cmd+Shift+C
+   - ✅ Default hotkey: Cmd+Shift+P (changed from C to avoid conflicts)
+   - ✅ Both global and local event monitors implemented
    - ✅ Proper event handling and callback execution on main thread
-   - ✅ Cleanup in deinit
+   - ✅ Cleanup in deinit prevents memory leaks
 
 2. ✅ **Hotkey integration**
    - ✅ Hotkey registered on app launch in AppDelegate
-   - ✅ Wired to color picker activation
-   - ✅ Added `activateColorPicker()` public method to MenuBarController
-   - ✅ Hotkey works from any application when Accessibility permission granted
+   - ✅ Wired to color picker activation via `MenuBarController.activateColorPicker()`
+   - ✅ Hotkey works reliably from any application
+   - ✅ App activation on hotkey press prevents system shortcut conflicts
 
 3. ✅ **Permission handling**
    - ✅ Accessibility permission checking (macOS 10.14+)
    - ✅ Permission request on first launch
    - ✅ Graceful degradation (app still works via menu if permission denied)
-   - ✅ No Info.plist changes needed (permission requested at runtime)
+   - ✅ Local monitor works even without Accessibility permission (when app is active)
+
+4. ✅ **Testing and verification**
+   - ✅ Hotkey tested and confirmed working (Cmd+Shift+P)
+   - ✅ Color picker activates correctly from hotkey
+   - ✅ No conflicts with system shortcuts
+   - ✅ Debug logging added and verified functionality
 
 **Implementation Details:**
-- Uses Carbon `RegisterEventHotKey` API for system-wide hotkeys
-- Requires Accessibility permission on macOS 10.14+
-- Hotkey callback executes on main thread for UI safety
+- Uses `NSEvent.addGlobalMonitorForEvents` for system-wide hotkey detection
+- Uses `NSEvent.addLocalMonitorForEvents` for local event consumption
+- Requires Accessibility permission for global monitoring (macOS 10.14+)
+- Local monitor works without permission when app is active
+- App activation on hotkey press helps prevent system shortcut conflicts
 - Proper cleanup prevents memory leaks
-- File size: 236 lines (under 400-line limit)
+- File size: ~160 lines (under 400-line limit)
+
+**Note:** Changed from Carbon API to NSEvent monitoring for better Swift compatibility and simpler implementation. Global monitors cannot consume events, but app activation helps prevent conflicts.
 
 **For New Chat Sessions:** See `docs/PROJECT_SUMMARY.md` for complete context and overview.
 
@@ -662,6 +673,36 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 **Last Updated:** December 30, 2024  
 **Status:** Pre-Setup Complete ✅ | Phase 1 Complete ✅ | Phase 2 Complete ✅ | Phase 3 Complete ✅ | Phase 4 Complete ✅  
 **Next Milestone:** Phase 5 - Polish & Testing
+
+### ⏭️ Phase 5: Polish & Testing (NEXT)
+**Status:** Ready to begin ⏭️
+
+**Remaining Tasks:**
+1. ⏳ Remove debug logging from HotkeyManager
+2. ⏳ UI/UX refinements
+   - Menu bar icon design polish
+   - Smooth animations verification
+   - Visual feedback improvements
+3. ⏳ Error handling improvements
+   - Permission request handling refinement
+   - Error messages for users
+   - Graceful degradation testing
+4. ⏳ Comprehensive testing
+   - Test on different macOS versions
+   - Test with multiple displays
+   - Test with different color profiles
+   - Performance testing (verify < 2 second workflow)
+   - Hotkey reliability testing
+5. ⏳ Code cleanup
+   - Remove all debug logging
+   - Final code review
+   - Documentation review
+
+**Deliverables:**
+- Polished, production-ready app
+- Comprehensive error handling
+- Tested across scenarios
+- Clean, production-ready codebase
 
 ## Code Quality & Compliance Status
 

@@ -98,12 +98,8 @@ class HotkeyManager {
             // Extract only the modifiers we care about
             let relevantModifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
             
-            // Debug logging
-            NSLog("HotkeyManager: Global monitor detected keyCode=\(event.keyCode), modifiers=\(relevantModifiers.rawValue), expected keyCode=\(keyCode), expected modifiers=\(modifiers.rawValue)")
-            
             // Check if this is our hotkey combination
             if event.keyCode == keyCode && relevantModifiers == modifiers {
-                NSLog("HotkeyManager: Hotkey match! Activating color picker...")
                 // Activate the app immediately to make it key
                 // This helps prevent the system from handling the shortcut
                 NSApplication.shared.activate(ignoringOtherApps: true)
@@ -122,12 +118,8 @@ class HotkeyManager {
             // Extract only the modifiers we care about
             let relevantModifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
             
-            // Debug logging
-            NSLog("HotkeyManager: Local monitor detected keyCode=\(event.keyCode), modifiers=\(relevantModifiers.rawValue), expected keyCode=\(keyCode), expected modifiers=\(modifiers.rawValue)")
-            
             // Check if this is our hotkey combination
             if event.keyCode == keyCode && relevantModifiers == modifiers {
-                NSLog("HotkeyManager: Hotkey match! Activating color picker (local)...")
                 // Call activation callback
                 self.activationCallback?()
                 // Consume the event to prevent default behavior (like Finder opening)
@@ -136,8 +128,6 @@ class HotkeyManager {
             
             return event
         }
-        
-        NSLog("HotkeyManager: Registered hotkey - globalMonitor=\(globalEventMonitor != nil), localMonitor=\(localEventMonitor != nil), hasAccessibilityPermission=\(hasAccessibilityPermission())")
         
         return globalEventMonitor != nil || localEventMonitor != nil
     }
