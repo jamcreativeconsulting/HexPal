@@ -3,7 +3,7 @@
 //  HexPal
 //
 //  Displays a modern, non-intrusive notification when a color is copied to clipboard.
-//  Shows color swatch, HEX code, and auto-dismisses with smooth fade animation.
+//  Shows color swatch, checkmark, and HEX code. Auto-dismisses with smooth fade animation.
 //
 
 import Cocoa
@@ -11,7 +11,8 @@ import Cocoa
 /// A modern, non-intrusive notification for clipboard copy confirmation.
 ///
 /// Displays a sleek notification in the top-right corner of the screen showing
-/// a color swatch and HEX code that was copied. Automatically dismisses after a short delay
+/// a color swatch, checkmark indicator, and HEX code. Uses minimal text with
+/// universal visual language (✓ = success). Automatically dismisses after a short delay
 /// with a smooth fade animation. Appears on the screen where the mouse is located.
 ///
 /// ## Usage
@@ -76,8 +77,8 @@ class ClipboardNotificationView {
         
         // Calculate position (top-right corner with padding)
         let padding: CGFloat = 20
-        let width: CGFloat = 240
-        let height: CGFloat = 60
+        let width: CGFloat = 180
+        let height: CGFloat = 50
         
         let screenFrame = screen.visibleFrame
         let x = screenFrame.maxX - width - padding
@@ -120,7 +121,7 @@ class ClipboardNotificationView {
         let color = hexToColor(hexCode)
         
         // Create color swatch
-        let swatchSize: CGFloat = 32
+        let swatchSize: CGFloat = 28
         let swatchPadding: CGFloat = 12
         let swatchX = swatchPadding
         let swatchY = (height - swatchSize) / 2
@@ -133,32 +134,28 @@ class ClipboardNotificationView {
         swatchView.layer?.borderColor = NSColor.separatorColor.cgColor
         contentView.addSubview(swatchView)
         
-        // Add "Copied!" label with styled text
-        let labelX = swatchX + swatchSize + 12
-        let labelWidth = width - labelX - swatchPadding
+        // Create checkmark indicator (success confirmation)
+        let checkmarkSize: CGFloat = 16
+        let checkmarkX = swatchX + swatchSize + 10
+        let checkmarkY = (height - checkmarkSize) / 2
         
-        // Create attributed string with "Copied!" in semibold and HEX in monospace
-        let attributedString = NSMutableAttributedString()
+        let checkmarkLabel = NSTextField(labelWithString: "✓")
+        checkmarkLabel.font = NSFont.systemFont(ofSize: 14, weight: .semibold)
+        checkmarkLabel.textColor = NSColor.systemGreen
+        checkmarkLabel.frame = NSRect(x: checkmarkX, y: checkmarkY, width: checkmarkSize, height: checkmarkSize)
+        checkmarkLabel.alignment = .center
+        contentView.addSubview(checkmarkLabel)
         
-        // "Copied!" - semibold, secondary color
-        let copiedAttributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.systemFont(ofSize: 12, weight: .semibold),
-            .foregroundColor: NSColor.secondaryLabelColor
-        ]
-        attributedString.append(NSAttributedString(string: "Copied!", attributes: copiedAttributes))
+        // HEX code label - monospace, clean, primary color
+        let hexLabelX = checkmarkX + checkmarkSize + 8
+        let hexLabelWidth = width - hexLabelX - swatchPadding
         
-        // HEX code - monospace, larger, primary color
-        let hexAttributes: [NSAttributedString.Key: Any] = [
-            .font: NSFont.monospacedSystemFont(ofSize: 15, weight: .medium),
-            .foregroundColor: NSColor.labelColor
-        ]
-        attributedString.append(NSAttributedString(string: "\n\(hexCode)", attributes: hexAttributes))
-        
-        let label = NSTextField(labelWithAttributedString: attributedString)
-        label.alignment = .left
-        label.frame = NSRect(x: labelX, y: 8, width: labelWidth, height: 44)
-        label.maximumNumberOfLines = 2
-        contentView.addSubview(label)
+        let hexLabel = NSTextField(labelWithString: hexCode)
+        hexLabel.font = NSFont.monospacedSystemFont(ofSize: 16, weight: .medium)
+        hexLabel.textColor = NSColor.labelColor
+        hexLabel.frame = NSRect(x: hexLabelX, y: (height - 20) / 2, width: hexLabelWidth, height: 20)
+        hexLabel.alignment = .left
+        contentView.addSubview(hexLabel)
         
         window.contentView = contentView
         notificationWindow = window
