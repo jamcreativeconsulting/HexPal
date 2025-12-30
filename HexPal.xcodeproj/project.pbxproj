@@ -28,12 +28,16 @@
 		171BB0142F04087D000DE8DF /* HexPalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HexPalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		171BB01E2F04087D000DE8DF /* HexPalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HexPalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		171BB03C2F040D57000DE8DF /* HexPal 2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "HexPal 2.xcodeproj"; sourceTree = "<group>"; };
+		171BB0802F040F23000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
+		171BB0812F040F23000DE8DF /* HexPal 2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "HexPal 2.xcodeproj"; sourceTree = "<group>"; };
+		171BB15F2F040F79000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
+		171BB1602F040F79000DE8DF /* HexPal 2.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = "HexPal 2.xcodeproj"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		171BB0062F04087B000DE8DF /* HexPal */ = {
+		171BB0062F04087B000DE8DF /* . */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = ".";
+			path = .;
 			sourceTree = "<group>";
 		};
 		171BB0172F04087D000DE8DF /* HexPalTests */ = {
@@ -76,7 +80,7 @@
 		171BAFFB2F04087B000DE8DF = {
 			isa = PBXGroup;
 			children = (
-				171BB0062F04087B000DE8DF /* HexPal */,
+				171BB0062F04087B000DE8DF /* . */,
 				171BB0172F04087D000DE8DF /* HexPalTests */,
 				171BB0212F04087D000DE8DF /* HexPalUITests */,
 				171BB0052F04087B000DE8DF /* Products */,
@@ -91,6 +95,26 @@
 				171BB0142F04087D000DE8DF /* HexPalTests.xctest */,
 				171BB01E2F04087D000DE8DF /* HexPalUITests.xctest */,
 			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		171BB0872F040F23000DE8DF /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		171BB0892F040F23000DE8DF /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		171BB1662F040F79000DE8DF /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		171BB1682F040F79000DE8DF /* Products */ = {
+			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
 		};
@@ -110,7 +134,7 @@
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				171BB0062F04087B000DE8DF /* HexPal */,
+				171BB0062F04087B000DE8DF /* . */,
 			);
 			name = HexPal;
 			packageProductDependencies = (
@@ -200,6 +224,24 @@
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 171BB0052F04087B000DE8DF /* Products */;
 			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 171BB1662F040F79000DE8DF /* Products */;
+					ProjectRef = 171BB1602F040F79000DE8DF /* HexPal 2.xcodeproj */;
+				},
+				{
+					ProductGroup = 171BB0872F040F23000DE8DF /* Products */;
+					ProjectRef = 171BB0812F040F23000DE8DF /* HexPal 2.xcodeproj */;
+				},
+				{
+					ProductGroup = 171BB1682F040F79000DE8DF /* Products */;
+					ProjectRef = 171BB15F2F040F79000DE8DF /* HexPal.xcodeproj */;
+				},
+				{
+					ProductGroup = 171BB0892F040F23000DE8DF /* Products */;
+					ProjectRef = 171BB0802F040F23000DE8DF /* HexPal.xcodeproj */;
+				},
+			);
 			projectRoot = "";
 			targets = (
 				171BB0032F04087B000DE8DF /* HexPal */,
