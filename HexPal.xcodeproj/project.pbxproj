@@ -35,6 +35,7 @@
 		171BB2382F04150B000DE8DF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		171BB2792F04154E000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 		171BB34F2F04166E000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
+		171BB3B92F041B6A000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -187,6 +188,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		171BB3BE2F041B6A000DE8DF /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -303,8 +309,8 @@
 					ProjectRef = 171BB0812F040F23000DE8DF /* HexPal 2.xcodeproj */;
 				},
 				{
-					ProductGroup = 171BB0892F040F23000DE8DF /* Products */;
-					ProjectRef = 171BB0802F040F23000DE8DF /* HexPal.xcodeproj */;
+					ProductGroup = 171BB1682F040F79000DE8DF /* Products */;
+					ProjectRef = 171BB15F2F040F79000DE8DF /* HexPal.xcodeproj */;
 				},
 				{
 					ProductGroup = 171BB3542F04166E000DE8DF /* Products */;
@@ -315,12 +321,16 @@
 					ProjectRef = 171BB1D22F040FA1000DE8DF /* HexPal.xcodeproj */;
 				},
 				{
+					ProductGroup = 171BB3BE2F041B6A000DE8DF /* Products */;
+					ProjectRef = 171BB3B92F041B6A000DE8DF /* HexPal.xcodeproj */;
+				},
+				{
 					ProductGroup = 171BB2822F04154E000DE8DF /* Products */;
 					ProjectRef = 171BB2792F04154E000DE8DF /* HexPal.xcodeproj */;
 				},
 				{
-					ProductGroup = 171BB1682F040F79000DE8DF /* Products */;
-					ProjectRef = 171BB15F2F040F79000DE8DF /* HexPal.xcodeproj */;
+					ProductGroup = 171BB0892F040F23000DE8DF /* Products */;
+					ProjectRef = 171BB0802F040F23000DE8DF /* HexPal.xcodeproj */;
 				},
 			);
 			projectRoot = "";
