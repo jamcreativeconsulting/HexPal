@@ -46,7 +46,6 @@ class MenuBarController: NSObject {
     ///
     /// Creates a status item in the menu bar and builds the menu structure.
     /// Should be called once during application startup.
-    func setupMenuBar() { debugLog("📋 MenuBarController: setupMenuBar called")
         // Create status item
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.variableLength)
         
@@ -73,7 +72,6 @@ class MenuBarController: NSObject {
         buildMenu()
         
         // Assign menu to status item
-        statusItem.menu = menu; debugLog("📋 MenuBarController: Menu assigned with \(menu.items.count) items")
     }
     
     // MARK: - Private Methods
@@ -94,7 +92,6 @@ class MenuBarController: NSObject {
             action: #selector(pickColorClicked(_:)),
             keyEquivalent: ""
         )
-        pickColorItem.target = self; debugLog("📋 Pick Color item: enabled=\(pickColorItem.isEnabled), target=\(String(describing: pickColorItem.target))")
         menu.addItem(pickColorItem)
         
         menu.addItem(NSMenuItem.separator())
@@ -144,22 +141,18 @@ class MenuBarController: NSObject {
     /// Activates the color picker overlay.
     /// This will be implemented in Phase 2 of development.
     @objc func pickColorClicked(_ sender: Any?) {
-        debugLog("🎨 pickColorClicked: Starting color picker")
         
         // Use Apple's native color sampler (macOS 10.15+)
         // This is simpler and more reliable than custom overlay
         NSColorSampler().show { [weak self] selectedColor in
             DispatchQueue.main.async {
                 guard let color = selectedColor else {
-                    debugLog("⚠️ pickColorClicked: Color selection cancelled")
                     return
                 }
                 
-                debugLog("✅ pickColorClicked: Color selected: \(color)")
                 
                 // Convert to HEX and copy to clipboard
                 let hexString = self?.colorToHex(color) ?? "#000000"
-                debugLog("✅ pickColorClicked: HEX code: \(hexString)")
                 
                 // Copy to clipboard
                 let pasteboard = NSPasteboard.general
@@ -188,7 +181,6 @@ class MenuBarController: NSObject {
     
     /// Shows a confirmation that the color was copied
     private func showColorConfirmation(hex: String) {
-        debugLog("📋 Showing confirmation for \(hex)")
         
         let alert = NSAlert()
         alert.messageText = "Color Copied!"
