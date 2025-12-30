@@ -35,7 +35,10 @@ class HotkeyManager {
     private var activationCallback: (() -> Void)?
     
     /// Global event monitor for hotkey detection
-    private var eventMonitor: Any?
+    private var globalEventMonitor: Any?
+    
+    /// Local event monitor for hotkey detection (when app is key)
+    private var localEventMonitor: Any?
     
     /// Default hotkey: Cmd+Shift+C
     static let defaultModifiers: NSEvent.ModifierFlags = [.command, .shift]
@@ -86,8 +89,8 @@ class HotkeyManager {
         // Store callback
         activationCallback = activationHandler
         
-        // Register global event monitor
-        eventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
+        // Register global event monitor (requires Accessibility permission)
+        globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
             guard let self = self else { return }
             
             // Check if this is our hotkey combination
@@ -100,7 +103,7 @@ class HotkeyManager {
         }
         
         // Also monitor local events (when app is key)
-        NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
+        localEventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
             guard let self = self else { return event }
             
             // Check if this is our hotkey combination
@@ -114,14 +117,18 @@ class HotkeyManager {
             return event
         }
         
-        return eventMonitor != nil
+        return globalEventMonitor != nil || localEventMonitor != nil
     }
     
     /// Unregisters the currently active hotkey.
     func unregisterHotkey() {
-        if let monitor = eventMonitor {
+        if let monitor = globalEventMonitor {
             NSEvent.removeMonitor(monitor)
-            eventMonitor = nil
+            globalEventMonitor = nil
+        }
+        if let monitor = localEventMonitor {
+            NSEvent.removeMonitor(monitor)
+            localEventMonitor = nil
         }
         activationCallback = nil
     }
