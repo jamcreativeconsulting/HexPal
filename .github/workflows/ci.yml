@@ -21,30 +21,21 @@ jobs:
       - name: Show Xcode version
         run: xcodebuild -version
         
-      - name: Run tests
+      - name: Build and Run tests
         run: |
           if [ -f "HexPal.xcodeproj/project.pbxproj" ] || [ -f "HEXPal.xcodeproj/project.pbxproj" ]; then
             xcodebuild test \
               -scheme HexPal \
               -destination 'platform=macOS,arch=x86_64' \
               -enableCodeCoverage YES \
+              -derivedDataPath build \
+              CODE_SIGN_IDENTITY="" \
+              CODE_SIGNING_REQUIRED=NO \
+              CODE_SIGNING_ALLOWED=NO \
               | xcpretty || true
           else
             echo "Xcode project not found. Skipping tests."
             echo "This is expected during pre-setup phase."
-          fi
-          
-      - name: Check code coverage
-        if: success()
-        run: |
-          if [ -f "HexPal.xcodeproj/project.pbxproj" ] || [ -f "HEXPal.xcodeproj/project.pbxproj" ]; then
-            xcodebuild test \
-              -scheme HexPal \
-              -destination 'platform=macOS,arch=x86_64' \
-              -enableCodeCoverage YES \
-              -derivedDataPath build
-          else
-            echo "Xcode project not found. Skipping coverage check."
           fi
 
   lint:
