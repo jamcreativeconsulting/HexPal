@@ -12,7 +12,7 @@ import Cocoa
 ///
 /// Manages application lifecycle events and initializes the menu bar interface.
 /// Configures the app to run as a menu bar-only application (no dock icon).
-class AppDelegate: NSObject, NSApplicationDelegate {
+nonisolated(unsafe) class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Properties
     
