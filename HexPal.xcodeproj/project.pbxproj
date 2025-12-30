@@ -37,6 +37,7 @@
 		171BB2792F04154E000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 		171BB34F2F04166E000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 		171BB3B92F041B6A000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
+		17FB908C2F043B2000AA65B4 /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -199,6 +200,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		17FB90902F043B2000AA65B4 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -317,6 +323,10 @@
 				{
 					ProductGroup = 1702D95A2F04382C00DB145B /* Products */;
 					ProjectRef = 1702D9562F04382C00DB145B /* HexPal.xcodeproj */;
+				},
+				{
+					ProductGroup = 17FB90902F043B2000AA65B4 /* Products */;
+					ProjectRef = 17FB908C2F043B2000AA65B4 /* HexPal.xcodeproj */;
 				},
 				{
 					ProductGroup = 171BB1682F040F79000DE8DF /* Products */;
