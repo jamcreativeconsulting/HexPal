@@ -34,6 +34,7 @@
 		171BB1D22F040FA1000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 		171BB2382F04150B000DE8DF /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/MacOSX.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		171BB2792F04154E000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
+		171BB34F2F04166E000DE8DF /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -181,6 +182,11 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		171BB3542F04166E000DE8DF /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -297,20 +303,24 @@
 					ProjectRef = 171BB0812F040F23000DE8DF /* HexPal 2.xcodeproj */;
 				},
 				{
-					ProductGroup = 171BB2822F04154E000DE8DF /* Products */;
-					ProjectRef = 171BB2792F04154E000DE8DF /* HexPal.xcodeproj */;
+					ProductGroup = 171BB0892F040F23000DE8DF /* Products */;
+					ProjectRef = 171BB0802F040F23000DE8DF /* HexPal.xcodeproj */;
+				},
+				{
+					ProductGroup = 171BB3542F04166E000DE8DF /* Products */;
+					ProjectRef = 171BB34F2F04166E000DE8DF /* HexPal.xcodeproj */;
 				},
 				{
 					ProductGroup = 171BB1DA2F040FA1000DE8DF /* Products */;
 					ProjectRef = 171BB1D22F040FA1000DE8DF /* HexPal.xcodeproj */;
 				},
 				{
-					ProductGroup = 171BB1682F040F79000DE8DF /* Products */;
-					ProjectRef = 171BB15F2F040F79000DE8DF /* HexPal.xcodeproj */;
+					ProductGroup = 171BB2822F04154E000DE8DF /* Products */;
+					ProjectRef = 171BB2792F04154E000DE8DF /* HexPal.xcodeproj */;
 				},
 				{
-					ProductGroup = 171BB0892F040F23000DE8DF /* Products */;
-					ProjectRef = 171BB0802F040F23000DE8DF /* HexPal.xcodeproj */;
+					ProductGroup = 171BB1682F040F79000DE8DF /* Products */;
+					ProjectRef = 171BB15F2F040F79000DE8DF /* HexPal.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -533,7 +543,6 @@
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
@@ -569,7 +578,6 @@
 				REGISTER_APP_GROUPS = YES;
 				STRING_CATALOG_GENERATE_SYMBOLS = YES;
 				SWIFT_APPROACHABLE_CONCURRENCY = YES;
-				SWIFT_DEFAULT_ACTOR_ISOLATION = MainActor;
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_UPCOMING_FEATURE_MEMBER_IMPORT_VISIBILITY = YES;
 				SWIFT_VERSION = 5.0;
