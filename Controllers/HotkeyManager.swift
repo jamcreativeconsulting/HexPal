@@ -90,27 +90,38 @@ class HotkeyManager {
         activationCallback = activationHandler
         
         // Register global event monitor (requires Accessibility permission)
+        // Note: Global monitors cannot consume events, so we need to handle this carefully
         globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
             guard let self = self else { return }
             
+            // Extract only the modifiers we care about
+            let relevantModifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
+            
             // Check if this is our hotkey combination
-            if event.keyCode == keyCode && event.modifierFlags.intersection([.command, .shift, .option, .control]) == modifiers {
-                // Call activation callback on main thread
+            if event.keyCode == keyCode && relevantModifiers == modifiers {
+                // Activate the app immediately to make it key
+                // This helps prevent the system from handling the shortcut
+                NSApplication.shared.activate(ignoringOtherApps: true)
+                
+                // Call activation callback immediately
                 DispatchQueue.main.async {
                     self.activationCallback?()
                 }
             }
         }
         
-        // Also monitor local events (when app is key)
+        // Also monitor local events (when app is key) - this can consume events
         localEventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
             guard let self = self else { return event }
             
+            // Extract only the modifiers we care about
+            let relevantModifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
+            
             // Check if this is our hotkey combination
-            if event.keyCode == keyCode && event.modifierFlags.intersection([.command, .shift, .option, .control]) == modifiers {
+            if event.keyCode == keyCode && relevantModifiers == modifiers {
                 // Call activation callback
                 self.activationCallback?()
-                // Consume the event to prevent default behavior
+                // Consume the event to prevent default behavior (like Finder opening)
                 return nil
             }
             
