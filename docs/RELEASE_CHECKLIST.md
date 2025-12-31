@@ -118,10 +118,10 @@
 - [ ] Stapled to app bundle
 
 ### Archive & Build
-- [ ] Archive created in Xcode
-- [ ] Release build successful
-- [ ] App bundle verified
-- [ ] Size reasonable (< 10MB expected)
+- [x] Archive created in Xcode ✅
+- [x] Release build successful ✅
+- [x] App bundle verified ✅
+- [x] Size reasonable (< 10MB expected) ✅ (1.7 MB compressed)
 
 ### Distribution Format
 - [ ] **Option A: Direct Download**
@@ -133,8 +133,8 @@
 - [x] **Option B: GitHub Releases**
   - [x] Release created on GitHub ✅ (https://github.com/jamcreativeconsulting/HexPal/releases/tag/v1.0)
   - [x] Release notes added ✅ (from RELEASE_NOTES.md)
-  - [ ] App bundle attached (pending archive creation)
-  - [ ] Checksums provided (optional but recommended) (pending archive)
+  - [x] App bundle attached ✅ (HexPal-v1.0.zip, 1.7 MB)
+  - [x] Checksums provided ✅ (SHA256 and MD5 in checksums.txt)
 
 - [ ] **Option C: Mac App Store** (Future)
   - [ ] App Store Connect account set up
