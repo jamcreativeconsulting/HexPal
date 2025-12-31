@@ -18,9 +18,12 @@ HEXPal is a free, open-source macOS menu bar application for quickly picking col
 ### Installation
 
 1. **Download** the latest release from [Releases](https://github.com/jamcreativeconsulting/HEXPal/releases)
-2. **Open** the downloaded `.dmg` file
-3. **Drag** HEXPal to your Applications folder
-4. **Launch** HEXPal from Applications
+2. **Extract** `HexPal-v1.0.zip`
+3. **Drag** `HexPal.app` to your Applications folder
+4. **Launch** HEXPal:
+   - **First launch**: Right-click `HexPal.app` → **Open** → Click **Open** in security dialog
+   - This is required because the app is unsigned (open-source distribution)
+   - See [Installation Troubleshooting](docs/INSTALLATION_TROUBLESHOOTING.md) for details
 5. **Grant Permissions** when prompted:
    - Screen Recording (required for color picking)
    - Accessibility (required for global hotkey)

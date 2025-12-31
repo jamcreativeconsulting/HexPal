@@ -68,11 +68,14 @@ HEXPal is now available! A free, open-source macOS menu bar application for quic
 ## 🚀 Getting Started
 
 1. **Download** HEXPal from [GitHub Releases](https://github.com/jamcreativeconsulting/HexPal/releases)
-2. **Open** the app
-3. **Grant Permissions** when prompted:
+2. **Extract** `HexPal-v1.0.zip` and drag `HexPal.app` to Applications
+3. **First Launch**: Right-click `HexPal.app` → **Open** → Click **Open** in security dialog
+   - This bypasses macOS Gatekeeper (app is unsigned for open-source distribution)
+   - See [Installation Troubleshooting](docs/INSTALLATION_TROUBLESHOOTING.md) for details
+4. **Grant Permissions** when prompted:
    - Screen Recording (required for color picking)
    - Accessibility (required for global hotkeys, optional but recommended)
-4. **Press ⌘⇧P** or click the menu bar icon to pick colors!
+5. **Press ⌘⇧P** or click the menu bar icon to pick colors!
 
 ### Quick Workflow
 
