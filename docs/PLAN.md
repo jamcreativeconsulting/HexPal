@@ -716,12 +716,21 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
    - ✅ Actionable guidance with step-by-step instructions
 
 **Remaining Tasks:**
-1. ⏳ Comprehensive testing
+1. ⏳ Comprehensive testing (see `docs/TESTING_CHECKLIST.md`)
    - Test on different macOS versions
    - Test with multiple displays
    - Test with different color profiles
    - Performance testing (verify < 2 second workflow)
    - Hotkey reliability testing
+   - Error handling verification
+   - Stress testing
+
+2. ⏳ Prepare for v1.0 release (see `docs/RELEASE_CHECKLIST.md`)
+   - Complete testing checklist
+   - Update version numbers
+   - Prepare release notes
+   - Create release tag
+   - Distribution preparation
 
 ### UI/UX Improvement Roadmap
 
