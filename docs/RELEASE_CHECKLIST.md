@@ -74,10 +74,11 @@
 - [ ] Update version in About dialog (if hardcoded)
 
 ### Build Configuration
-- [ ] Release build configuration set
+- [x] Release build configuration set
 - [ ] Code signing configured (if distributing)
-- [ ] Deployment target set correctly (macOS 10.15+)
-- [ ] App icon configured (if available)
+- [x] Deployment target set correctly (macOS 10.15+)
+- [x] Menu bar icon configured (using SF Symbol "eyedropper")
+- [ ] Custom app icon (optional - see APP_ICON_GUIDE.md)
 
 ---
 
