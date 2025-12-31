@@ -1,6 +1,6 @@
 # HEXPal v1.0 Release Notes
 
-**Release Date:** TBD  
+**Release Date:** December 31, 2024  
 **Version:** 1.0  
 **Build:** 1
 
@@ -162,7 +162,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 **Version:** 1.0  
 **Build:** 1  
-**Release Date:** TBD  
+**Release Date:** December 31, 2024  
 **Minimum macOS:** 10.15 (Catalina)  
 **Architecture:** Universal (Intel & Apple Silicon)
 
