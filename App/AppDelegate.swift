@@ -69,18 +69,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Check if Accessibility permission is granted
         guard let hotkeyManager = hotkeyManager else { return }
         
-        if !hotkeyManager.hasAccessibilityPermission() {
+        let hasPermission = hotkeyManager.hasAccessibilityPermission()
+        
+        if !hasPermission {
             // Permission not granted - request it with user-friendly guidance
             hotkeyManager.requestAccessibilityPermission()
-            
-            // Show helpful error message after a brief delay (non-blocking)
+        }
+        
+        // Register saved hotkey (or default if none saved)
+        // This will register local monitor (app-focused) if permission not granted,
+        // or global monitor (system-wide) if permission is granted
+        registerCurrentHotkey()
+        
+        // If permission not granted, show error after registration completes
+        // This ensures user knows why global hotkey doesn't work
+        if !hasPermission {
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 ErrorHandler.showPermissionError(.accessibility)
             }
         }
-        
-        // Register saved hotkey (or default if none saved)
-        registerCurrentHotkey()
         
         // Listen for hotkey changes from preferences
         NotificationCenter.default.addObserver(
@@ -92,22 +99,25 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
     
     /// Registers the current hotkey (saved or default).
+    ///
+    /// Registers the hotkey with the HotkeyManager. If Accessibility permission is granted,
+    /// this will register a global hotkey that works from any app. If not granted, it will
+    /// register a local hotkey that only works when HEXPal is in focus.
     private func registerCurrentHotkey() {
-        let registered = hotkeyManager?.registerSavedHotkey { [weak self] in
+        guard let hotkeyManager = hotkeyManager else { return }
+        
+        let registered = hotkeyManager.registerSavedHotkey { [weak self] in
             // Activate color picker when hotkey is pressed
             self?.menuBarController?.activateColorPicker()
         }
         
         if registered != true {
-            // Hotkey registration failed - check why and inform user
-            let hasPermission = hotkeyManager?.hasAccessibilityPermission() ?? false
-            let reason = hasPermission ? "The hotkey may be in use by another app." : "Accessibility permission is required."
-            
-            // Only show error if permission is granted (otherwise we already showed permission error)
-            if hasPermission {
-                ErrorHandler.showError(.hotkeyRegistrationFailed, additionalInfo: reason)
-            }
+            // Hotkey registration failed completely - shouldn't happen
+            // Local monitor should always succeed, so this indicates a serious issue
+            NSLog("HEXPal: Critical - Hotkey registration failed completely")
+            ErrorHandler.showError(.hotkeyRegistrationFailed, additionalInfo: "Unable to register hotkey. Please restart HEXPal.")
         }
+        // Permission error handling is done in setupGlobalHotkey() to avoid duplicates
     }
     
     /// Called when the hotkey is changed in preferences.

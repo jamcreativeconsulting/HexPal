@@ -95,7 +95,9 @@ class HotkeyManager {
     ///   - keyCode: Virtual key code (see NSEvent.keyCode)
     ///   - modifiers: Modifier keys combination
     ///   - activationHandler: Closure called when hotkey is pressed
-    /// - Returns: true if registration succeeded, false otherwise
+    /// - Returns: true if registration succeeded (global or local), false otherwise
+    /// - Note: Global hotkey registration requires Accessibility permission.
+    ///   If permission is not granted, only local monitor (app-focused) will work.
     func registerHotkey(
         keyCode: UInt16,
         modifiers: NSEvent.ModifierFlags,
@@ -107,28 +109,45 @@ class HotkeyManager {
         // Store callback
         activationCallback = activationHandler
         
+        // Check if Accessibility permission is granted before attempting global monitor
+        let hasPermission = hasAccessibilityPermission()
+        
         // Register global event monitor (requires Accessibility permission)
         // Note: Global monitors cannot consume events, so we need to handle this carefully
-        globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
-            guard let self = self else { return }
-            
-            // Extract only the modifiers we care about
-            let relevantModifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
-            
-            // Check if this is our hotkey combination
-            if event.keyCode == keyCode && relevantModifiers == modifiers {
-                // Activate the app immediately to make it key
-                // This helps prevent the system from handling the shortcut
-                NSApplication.shared.activate(ignoringOtherApps: true)
+        if hasPermission {
+            globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
+                guard let self = self else { return }
                 
-                // Call activation callback immediately
-                DispatchQueue.main.async {
-                    self.activationCallback?()
+                // Extract only the modifiers we care about
+                let relevantModifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
+                
+                // Check if this is our hotkey combination
+                if event.keyCode == keyCode && relevantModifiers == modifiers {
+                    // Activate the app immediately to make it key
+                    // This helps prevent the system from handling the shortcut
+                    NSApplication.shared.activate(ignoringOtherApps: true)
+                    
+                    // Call activation callback immediately
+                    DispatchQueue.main.async {
+                        self.activationCallback?()
+                    }
                 }
             }
+            
+            // Verify global monitor was actually created
+            // If permission check passed but monitor is nil, something went wrong
+            if globalEventMonitor == nil {
+                // This shouldn't happen if permission is granted, but handle gracefully
+                NSLog("HEXPal: Warning - Global event monitor failed to register despite permission check")
+            }
+        } else {
+            // Permission not granted - global monitor will be nil
+            // This is expected, we'll only use local monitor
+            globalEventMonitor = nil
         }
         
-        // Also monitor local events (when app is key) - this can consume events
+        // Always register local event monitor (works when app is key)
+        // This can consume events and works even without Accessibility permission
         localEventMonitor = NSEvent.addLocalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
             guard let self = self else { return event }
             
@@ -146,7 +165,21 @@ class HotkeyManager {
             return event
         }
         
-        return globalEventMonitor != nil || localEventMonitor != nil
+        // Return true if at least one monitor was registered
+        // Local monitor should always succeed, so this should return true
+        let success = globalEventMonitor != nil || localEventMonitor != nil
+        
+        // Log registration status for debugging
+        if hasPermission && globalEventMonitor != nil {
+            NSLog("HEXPal: Global hotkey registered successfully (works from any app)")
+        } else if localEventMonitor != nil {
+            NSLog("HEXPal: Local hotkey registered (works when app is in focus)")
+            if !hasPermission {
+                NSLog("HEXPal: Accessibility permission required for global hotkeys")
+            }
+        }
+        
+        return success
     }
     
     /// Unregisters the currently active hotkey.

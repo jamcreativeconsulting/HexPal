@@ -211,11 +211,13 @@ class ErrorHandler {
             alert.informativeText = """
             HEXPal needs Accessibility permission to use keyboard shortcuts from anywhere.
             
-            How to enable:
+            Currently, the hotkey (⌘⇧P) only works when HEXPal is in focus.
+            
+            To enable global hotkeys:
             1. Click "Open System Settings" below
             2. Find HEXPal in the list
             3. Turn on the toggle next to HEXPal
-            4. Restart HEXPal if needed
+            4. Restart HEXPal (required for changes to take effect)
             
             Without this permission, you can still use HEXPal by clicking the menu bar icon.
             """
