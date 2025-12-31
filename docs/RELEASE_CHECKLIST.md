@@ -93,7 +93,7 @@
 ### Release Tagging
 - [x] Create annotated tag: `git tag -a v1.0 -m "Release v1.0"` ✅
 - [x] Push tag: `git push origin v1.0` ✅
-- [ ] Verify tag on GitHub (manual verification needed)
+- [x] Verify tag on GitHub (manual verification needed)
 
 ### Release Branch (Optional)
 - [x] **Decision: Skip release branch** ✅
@@ -130,11 +130,11 @@
   - [ ] ZIP archive created (alternative)
   - [ ] Release notes included
   
-- [ ] **Option B: GitHub Releases**
-  - [ ] Release created on GitHub
-  - [ ] Release notes added
-  - [ ] App bundle attached
-  - [ ] Checksums provided (optional but recommended)
+- [x] **Option B: GitHub Releases**
+  - [x] Release created on GitHub ✅ (https://github.com/jamcreativeconsulting/HexPal/releases/tag/v1.0)
+  - [x] Release notes added ✅ (from RELEASE_NOTES.md)
+  - [ ] App bundle attached (pending archive creation)
+  - [ ] Checksums provided (optional but recommended) (pending archive)
 
 - [ ] **Option C: Mac App Store** (Future)
   - [ ] App Store Connect account set up
