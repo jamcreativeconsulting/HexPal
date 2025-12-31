@@ -109,41 +109,38 @@ class HotkeyManager {
         // Store callback
         activationCallback = activationHandler
         
-        // Check if Accessibility permission is granted before attempting global monitor
-        let hasPermission = hasAccessibilityPermission()
-        
-        // Register global event monitor (requires Accessibility permission)
-        // Note: Global monitors cannot consume events, so we need to handle this carefully
-        if hasPermission {
-            globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
-                guard let self = self else { return }
+        // Always attempt to register global event monitor
+        // This is important: macOS only shows the app in Accessibility settings
+        // after it attempts to use Accessibility APIs (like addGlobalMonitorForEvents)
+        // Even if permission isn't granted, attempting registration triggers the system prompt
+        globalEventMonitor = NSEvent.addGlobalMonitorForEvents(matching: [.keyDown]) { [weak self] event in
+            guard let self = self else { return }
+            
+            // Extract only the modifiers we care about
+            let relevantModifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
+            
+            // Check if this is our hotkey combination
+            if event.keyCode == keyCode && relevantModifiers == modifiers {
+                // Activate the app immediately to make it key
+                // This helps prevent the system from handling the shortcut
+                NSApplication.shared.activate(ignoringOtherApps: true)
                 
-                // Extract only the modifiers we care about
-                let relevantModifiers = event.modifierFlags.intersection([.command, .shift, .option, .control])
-                
-                // Check if this is our hotkey combination
-                if event.keyCode == keyCode && relevantModifiers == modifiers {
-                    // Activate the app immediately to make it key
-                    // This helps prevent the system from handling the shortcut
-                    NSApplication.shared.activate(ignoringOtherApps: true)
-                    
-                    // Call activation callback immediately
-                    DispatchQueue.main.async {
-                        self.activationCallback?()
-                    }
+                // Call activation callback immediately
+                DispatchQueue.main.async {
+                    self.activationCallback?()
                 }
             }
-            
-            // Verify global monitor was actually created
-            // If permission check passed but monitor is nil, something went wrong
-            if globalEventMonitor == nil {
-                // This shouldn't happen if permission is granted, but handle gracefully
-                NSLog("HEXPal: Warning - Global event monitor failed to register despite permission check")
-            }
-        } else {
-            // Permission not granted - global monitor will be nil
-            // This is expected, we'll only use local monitor
-            globalEventMonitor = nil
+        }
+        
+        // Check if global monitor was successfully created
+        // If nil, Accessibility permission is not granted (or was denied)
+        let hasPermission = globalEventMonitor != nil
+        
+        if !hasPermission {
+            // Permission not granted - this is expected on first run
+            // The attempt above will trigger macOS to add the app to Accessibility settings
+            NSLog("HEXPal: Global event monitor registration failed - Accessibility permission required")
+            NSLog("HEXPal: App should now appear in System Settings → Privacy & Security → Accessibility")
         }
         
         // Always register local event monitor (works when app is key)
@@ -170,13 +167,11 @@ class HotkeyManager {
         let success = globalEventMonitor != nil || localEventMonitor != nil
         
         // Log registration status for debugging
-        if hasPermission && globalEventMonitor != nil {
+        if hasPermission {
             NSLog("HEXPal: Global hotkey registered successfully (works from any app)")
         } else if localEventMonitor != nil {
             NSLog("HEXPal: Local hotkey registered (works when app is in focus)")
-            if !hasPermission {
-                NSLog("HEXPal: Accessibility permission required for global hotkeys")
-            }
+            NSLog("HEXPal: Grant Accessibility permission to enable global hotkeys")
         }
         
         return success

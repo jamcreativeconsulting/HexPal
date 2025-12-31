@@ -69,21 +69,22 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Check if Accessibility permission is granted
         guard let hotkeyManager = hotkeyManager else { return }
         
+        // Request Accessibility permission first (triggers system prompt if needed)
+        // This must be called before attempting to register global monitor
+        hotkeyManager.requestAccessibilityPermission()
+        
+        // Register saved hotkey (or default if none saved)
+        // IMPORTANT: Always attempt to register global monitor, even without permission
+        // This attempt triggers macOS to add the app to Accessibility settings list
+        registerCurrentHotkey()
+        
+        // Check permission status after registration attempt
+        // The registration attempt will trigger macOS to add app to Accessibility list
         let hasPermission = hotkeyManager.hasAccessibilityPermission()
         
         if !hasPermission {
-            // Permission not granted - request it with user-friendly guidance
-            hotkeyManager.requestAccessibilityPermission()
-        }
-        
-        // Register saved hotkey (or default if none saved)
-        // This will register local monitor (app-focused) if permission not granted,
-        // or global monitor (system-wide) if permission is granted
-        registerCurrentHotkey()
-        
-        // If permission not granted, show error after registration completes
-        // This ensures user knows why global hotkey doesn't work
-        if !hasPermission {
+            // Show helpful error message after a brief delay
+            // This gives time for the system prompt to appear if it's going to
             DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                 ErrorHandler.showPermissionError(.accessibility)
             }
