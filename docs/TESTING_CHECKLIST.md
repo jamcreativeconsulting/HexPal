@@ -15,7 +15,7 @@
 
 ## Pre-Testing Setup
 
-- [ ] Clean build (⇧⌘K in Xcode)
+- [x] Clean build (⇧⌘K in Xcode)
 - [ ] Latest code pulled from main branch
 - [ ] All dependencies resolved
 - [ ] No linter errors
