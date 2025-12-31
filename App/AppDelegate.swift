@@ -61,7 +61,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     ///
     /// Registers a system-wide keyboard shortcut that works from any application.
     /// Loads the user's saved hotkey or falls back to default (Cmd+Shift+P).
-    /// If Accessibility permission is not granted, the hotkey will not be registered
+    /// If Accessibility permission is not granted, shows a user-friendly error message
     /// but the app will continue to function via menu bar.
     private func setupGlobalHotkey() {
         hotkeyManager = HotkeyManager()
@@ -70,9 +70,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         guard let hotkeyManager = hotkeyManager else { return }
         
         if !hotkeyManager.hasAccessibilityPermission() {
-            // Permission not granted - request it
-            // Note: User must grant permission in System Settings
+            // Permission not granted - request it with user-friendly guidance
             hotkeyManager.requestAccessibilityPermission()
+            
+            // Show helpful error message after a brief delay (non-blocking)
+            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
+                ErrorHandler.showPermissionError(.accessibility)
+            }
         }
         
         // Register saved hotkey (or default if none saved)
@@ -95,8 +99,14 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         }
         
         if registered != true {
-            // Hotkey registration failed - likely due to missing permission or conflict
-            // App will still work via menu bar
+            // Hotkey registration failed - check why and inform user
+            let hasPermission = hotkeyManager?.hasAccessibilityPermission() ?? false
+            let reason = hasPermission ? "The hotkey may be in use by another app." : "Accessibility permission is required."
+            
+            // Only show error if permission is granted (otherwise we already showed permission error)
+            if hasPermission {
+                ErrorHandler.showError(.hotkeyRegistrationFailed, additionalInfo: reason)
+            }
         }
     }
     

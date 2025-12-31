@@ -44,6 +44,9 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
     /// Record button reference
     private var recordButton: NSButton?
     
+    /// Launch at login checkbox reference
+    private var launchAtLoginCheckbox: NSButton?
+    
     // MARK: - UserDefaults Keys
     
     private static let hotkeyKeyCodeKey = "HotkeyKeyCode"
@@ -58,13 +61,24 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
     // MARK: - Public Methods
     
     /// Shows the preferences window.
+    ///
+    /// Ensures the window appears in front of all other windows by activating
+    /// the app first, then bringing the window to the front.
     func showWindow() {
         if window == nil {
             createWindow()
         }
         
-        window?.makeKeyAndOrderFront(nil)
+        // Sync launch at login checkbox state
+        launchAtLoginCheckbox?.state = LaunchAtLoginManager.shared.isEnabled ? .on : .off
+        
+        // Activate app first to ensure window can appear in front
         NSApp.activate(ignoringOtherApps: true)
+        
+        // Bring window to front regardless of other windows
+        window?.orderFrontRegardless()
+        window?.makeKey()
+        window?.center()
     }
     
     /// Gets the saved hotkey key code, or default if not set.
@@ -91,8 +105,8 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
     // MARK: - Private Methods
     
     private func createWindow() {
-        // Create window
-        let windowRect = NSRect(x: 0, y: 0, width: 400, height: 200)
+        // Create window - increased height for Launch at Login section
+        let windowRect = NSRect(x: 0, y: 0, width: 400, height: 260)
         window = NSWindow(
             contentRect: windowRect,
             styleMask: [.titled, .closable],
@@ -104,56 +118,69 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
         window?.center()
         window?.delegate = self
         window?.isReleasedWhenClosed = false
+        window?.level = .normal  // Ensure window appears at normal level (above background windows)
+        window?.collectionBehavior = [.moveToActiveSpace]  // Move to active space when shown
         
         // Create content view
         let contentView = NSView(frame: windowRect)
         contentView.wantsLayer = true
         
-        // Title label
-        let titleLabel = NSTextField(labelWithString: "Global Hotkey")
-        titleLabel.font = NSFont.boldSystemFont(ofSize: 14)
-        titleLabel.frame = NSRect(x: 20, y: 150, width: 200, height: 24)
-        contentView.addSubview(titleLabel)
+        // Global Hotkey Section
+        let hotkeyTitleLabel = NSTextField(labelWithString: "Global Hotkey")
+        hotkeyTitleLabel.font = NSFont.boldSystemFont(ofSize: 14)
+        hotkeyTitleLabel.frame = NSRect(x: 20, y: 210, width: 200, height: 24)
+        contentView.addSubview(hotkeyTitleLabel)
         
-        // Description
-        let descLabel = NSTextField(labelWithString: "Press the hotkey combination to activate the color picker from anywhere.")
-        descLabel.font = NSFont.systemFont(ofSize: 12)
-        descLabel.textColor = .secondaryLabelColor
-        descLabel.frame = NSRect(x: 20, y: 120, width: 360, height: 30)
-        descLabel.lineBreakMode = .byWordWrapping
-        descLabel.maximumNumberOfLines = 2
-        contentView.addSubview(descLabel)
+        let hotkeyDescLabel = NSTextField(labelWithString: "Press the hotkey combination to activate the color picker from anywhere.")
+        hotkeyDescLabel.font = NSFont.systemFont(ofSize: 12)
+        hotkeyDescLabel.textColor = .secondaryLabelColor
+        hotkeyDescLabel.frame = NSRect(x: 20, y: 180, width: 360, height: 30)
+        hotkeyDescLabel.lineBreakMode = .byWordWrapping
+        hotkeyDescLabel.maximumNumberOfLines = 2
+        contentView.addSubview(hotkeyDescLabel)
         
-        // Current hotkey label
         let currentLabel = NSTextField(labelWithString: "Current Hotkey:")
         currentLabel.font = NSFont.systemFont(ofSize: 13)
-        currentLabel.frame = NSRect(x: 20, y: 80, width: 110, height: 24)
+        currentLabel.frame = NSRect(x: 20, y: 140, width: 110, height: 24)
         contentView.addSubview(currentLabel)
         
-        // Hotkey display field
         hotkeyField = NSTextField(labelWithString: formatHotkey(
             keyCode: PreferencesWindowController.savedKeyCode(),
             modifiers: PreferencesWindowController.savedModifiers()
         ))
         hotkeyField?.font = NSFont.monospacedSystemFont(ofSize: 13, weight: .medium)
-        hotkeyField?.frame = NSRect(x: 130, y: 80, width: 140, height: 24)
+        hotkeyField?.frame = NSRect(x: 130, y: 140, width: 140, height: 24)
         hotkeyField?.alignment = .center
         hotkeyField?.backgroundColor = NSColor.controlBackgroundColor
         hotkeyField?.isBordered = true
         hotkeyField?.isEditable = false
         contentView.addSubview(hotkeyField!)
         
-        // Record button
         recordButton = NSButton(title: "Record New Hotkey", target: self, action: #selector(recordButtonClicked))
-        recordButton?.frame = NSRect(x: 20, y: 40, width: 150, height: 28)
+        recordButton?.frame = NSRect(x: 20, y: 100, width: 150, height: 28)
         recordButton?.bezelStyle = .rounded
         contentView.addSubview(recordButton!)
         
-        // Reset button
         let resetButton = NSButton(title: "Reset to Default", target: self, action: #selector(resetButtonClicked))
-        resetButton.frame = NSRect(x: 180, y: 40, width: 120, height: 28)
+        resetButton.frame = NSRect(x: 180, y: 100, width: 120, height: 28)
         resetButton.bezelStyle = .rounded
         contentView.addSubview(resetButton)
+        
+        // Separator
+        let separator = NSBox(frame: NSRect(x: 20, y: 70, width: 360, height: 1))
+        separator.boxType = .separator
+        contentView.addSubview(separator)
+        
+        // Launch at Login Section
+        let launchTitleLabel = NSTextField(labelWithString: "Launch at Login")
+        launchTitleLabel.font = NSFont.boldSystemFont(ofSize: 14)
+        launchTitleLabel.frame = NSRect(x: 20, y: 40, width: 200, height: 24)
+        contentView.addSubview(launchTitleLabel)
+        
+        launchAtLoginCheckbox = NSButton(checkboxWithTitle: "Launch HEXPal automatically when you log in", target: self, action: #selector(launchAtLoginChanged))
+        launchAtLoginCheckbox?.frame = NSRect(x: 20, y: 10, width: 360, height: 24)
+        launchAtLoginCheckbox?.state = LaunchAtLoginManager.shared.isEnabled ? .on : .off
+        contentView.addSubview(launchAtLoginCheckbox!)
         
         window?.contentView = contentView
     }
@@ -180,6 +207,11 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
         
         // Notify to re-register hotkey
         NotificationCenter.default.post(name: .hotkeyDidChange, object: nil)
+    }
+    
+    @objc private func launchAtLoginChanged() {
+        let enabled = launchAtLoginCheckbox?.state == .on
+        LaunchAtLoginManager.shared.isEnabled = enabled
     }
     
     private func startRecording() {

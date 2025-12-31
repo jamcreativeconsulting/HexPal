@@ -84,10 +84,12 @@ class ColorHistoryManager {
     /// Copies a HEX code to the clipboard.
     ///
     /// - Parameter hex: The HEX code to copy
-    func copyToClipboard(_ hex: String) {
+    /// - Returns: True if copy succeeded, false otherwise
+    @discardableResult
+    func copyToClipboard(_ hex: String) -> Bool {
         let pasteboard = NSPasteboard.general
         pasteboard.clearContents()
-        pasteboard.setString(hex, forType: .string)
+        return pasteboard.setString(hex, forType: .string)
     }
     
     /// Clears all color history.

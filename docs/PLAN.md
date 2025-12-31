@@ -698,10 +698,12 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
    - ✅ Multi-monitor support (notification on correct screen)
    - ✅ Compact notification design (180×50, cleaner layout)
 
+6. ✅ UI/UX refinements (Medium priority)
+   - ✅ Launch at login toggle in Preferences (off by default)
+   - ✅ Uses SMAppService (macOS 13+) and SMLoginItemSetEnabled (legacy)
+
 **Remaining Tasks:**
-1. ⏳ UI/UX refinements (Medium priority)
-   - Launch at login preference
-2. ⏳ Error handling improvements
+1. ⏳ Error handling improvements
    - Permission request handling refinement
    - Error messages for users
    - Graceful degradation testing
@@ -729,16 +731,8 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 | Click to copy | Clicking notification re-copies to clipboard | ✅ Done |
 | Hover to pause | Mouse hover pauses dismiss timer | ✅ Done |
 | Paste tooltip | Shows "⌘V to paste" hint on click | ✅ Done |
-
-**Implemented (Medium-Impact, Medium-Effort) - Continued:**
-| Improvement | Description | Status |
-|-------------|-------------|--------|
 | Welcome notification | First-launch onboarding with hotkey hint | ✅ Done |
-
-**Planned (Medium-Impact, Medium-Effort):**
-| Improvement | Description | Status |
-|-------------|-------------|--------|
-| Launch at login | Toggle in preferences | ⏳ Planned |
+| Launch at login | Toggle in preferences (off by default) | ✅ Done |
 
 **Implemented (High-Value Feature):**
 | Improvement | Description | Status |
@@ -762,12 +756,13 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 ### ✅ Code Review Summary (December 30, 2025)
 
 **File Size Compliance (400-line limit):**
-- ✅ `PreferencesWindowController.swift` - 290 lines
+- ✅ `PreferencesWindowController.swift` - 309 lines (with Launch at Login toggle)
 - ✅ `ScreenCapture.swift` - 294 lines
 - ✅ `ClipboardNotificationView.swift` - 387 lines (click-to-copy, hover-to-pause, paste tooltip)
 - ✅ `MenuBarController.swift` - 270 lines (with Recent Colors submenu)
 - ✅ `WelcomeNotificationView.swift` - 213 lines (first-launch onboarding)
 - ✅ `HotkeyManager.swift` - 189 lines
+- ✅ `LaunchAtLoginManager.swift` - 147 lines (launch at login management)
 - ✅ `ColorHistoryManager.swift` - 130 lines (color history persistence)
 - ✅ `AppDelegate.swift` - 124 lines (with welcome notification trigger)
 - ✅ `main.swift` - 21 lines

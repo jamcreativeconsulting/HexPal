@@ -179,6 +179,13 @@ class MenuBarController: NSObject {
     // MARK: - Menu Actions
     
     @objc private func pickColorClicked(_ sender: Any?) {
+        // Check Screen Recording permission before showing color picker
+        let screenCapture = ScreenCapture()
+        if !screenCapture.hasScreenRecordingPermission() {
+            ErrorHandler.showPermissionError(.screenRecording)
+            return
+        }
+        
         NSColorSampler().show { [weak self] selectedColor in
             DispatchQueue.main.async {
                 guard let color = selectedColor else { return }
@@ -187,10 +194,14 @@ class MenuBarController: NSObject {
                 
                 let pasteboard = NSPasteboard.general
                 pasteboard.clearContents()
-                pasteboard.setString(hexString, forType: .string)
+                let copySuccess = pasteboard.setString(hexString, forType: .string)
+                
+                if !copySuccess {
+                    ErrorHandler.showError(.clipboardCopyFailed)
+                    return
+                }
                 
                 ColorHistoryManager.shared.addColor(hexString)
-                
                 self?.showClipboardNotification(hex: hexString)
             }
         }
@@ -198,7 +209,13 @@ class MenuBarController: NSObject {
     
     @objc private func recentColorClicked(_ sender: NSMenuItem) {
         guard let hex = sender.representedObject as? String else { return }
-        ColorHistoryManager.shared.copyToClipboard(hex)
+        
+        let copySuccess = ColorHistoryManager.shared.copyToClipboard(hex)
+        if !copySuccess {
+            ErrorHandler.showError(.clipboardCopyFailed)
+            return
+        }
+        
         showClipboardNotification(hex: hex)
     }
     
@@ -244,7 +261,7 @@ class MenuBarController: NSObject {
             30: "]", 31: "O", 32: "U", 33: "[", 34: "I", 35: "P", 36: "↩",
             37: "L", 38: "J", 39: "'", 40: "K", 41: ";", 42: "\\", 43: ",",
             44: "/", 45: "N", 46: "M", 47: ".", 48: "⇥", 49: "Space",
-            50: "\`", 51: "⌫", 53: "⎋"
+            50: "`", 51: "⌫", 53: "⎋"
         ]
         return keyMap[keyCode] ?? "?"
     }
