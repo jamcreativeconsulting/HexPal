@@ -87,18 +87,20 @@
 ### Pre-Release
 - [x] All changes committed ✅
 - [x] All changes pushed to main branch ✅
-- [ ] No uncommitted changes (need to check - AppIcon assets may be uncommitted)
-- [ ] Git status clean (need to verify)
+- [x] No uncommitted changes ✅ (project.pbxproj committed)
+- [x] Git status clean ✅
 
 ### Release Tagging
-- [ ] Create annotated tag: `git tag -a v1.0 -m "Release v1.0"`
-- [ ] Push tag: `git push origin v1.0`
-- [ ] Verify tag on GitHub
+- [x] Create annotated tag: `git tag -a v1.0 -m "Release v1.0"` ✅
+- [x] Push tag: `git push origin v1.0` ✅
+- [ ] Verify tag on GitHub (manual verification needed)
 
 ### Release Branch (Optional)
-- [ ] Create release branch: `git checkout -b release/v1.0`
-- [ ] Final testing on release branch
-- [ ] Merge to main when ready
+- [x] **Decision: Skip release branch** ✅
+  - **Rationale:** Aligns with HEXPal's simplicity principle
+  - **Context:** Single maintainer, first release (v1.0), simple project
+  - **Best Practice:** Release branches recommended for complex projects/teams
+  - **Approach:** Direct tagging from main (simpler, faster workflow)
 
 ---
 
