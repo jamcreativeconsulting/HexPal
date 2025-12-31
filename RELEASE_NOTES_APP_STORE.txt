@@ -1,0 +1,57 @@
+HEXPal v1.0 - First Release
+
+🎉 Welcome to HEXPal!
+
+HEXPal is a free, open-source macOS menu bar application for quickly picking colors and getting HEX codes. Built with speed and simplicity in mind.
+
+✨ What's New
+
+• Color Picking - Pick any color from your screen with Apple's native color picker. Works system-wide across all applications and windows.
+
+• HEX Codes - Automatically copy HEX codes to clipboard in #RRGGBB format. Ready to paste into your code or design tools instantly.
+
+• Global Hotkey - Activate from anywhere with ⌘⇧P (customizable). Works from any application without switching windows.
+
+• Recent Colors - Quick access to your last 10 picked colors with visual swatches. One-click copy to clipboard.
+
+• Multi-Monitor Support - Works seamlessly across all displays. Automatically detects the active screen.
+
+• Modern Notifications - Clean, non-intrusive clipboard confirmations with smooth animations. Click to re-copy or hover to pause.
+
+• Preferences - Customize your hotkey and enable launch at login (macOS 13+). All settings persist across launches.
+
+• Welcome Screen - First-launch onboarding shows you the default hotkey to get started quickly.
+
+🚀 Getting Started
+
+1. Press ⌘⇧P or click the menu bar icon to activate
+2. Move your cursor over any color and click to select
+3. HEX code is automatically copied to clipboard
+4. Paste with ⌘V wherever you need it
+
+📋 Requirements
+
+• macOS 10.15 (Catalina) or later
+• Screen Recording permission (required)
+• Accessibility permission (optional, for global hotkeys)
+
+🐛 Known Limitations
+
+• Launch at login requires manual setup on macOS < 13
+• Some hotkey combinations may conflict with system shortcuts
+• Color results converted to sRGB color space
+
+🙏 Credits
+
+Built with ❤️ by the HEXPal contributors. Free and open source forever.
+
+📄 License
+
+MIT License - See LICENSE file for details.
+
+🔗 Links
+
+GitHub: https://github.com/jamcreativeconsulting/HexPal
+Issues: https://github.com/jamcreativeconsulting/HexPal/issues
+
+Made with ❤️ for developers and designers who need HEX codes fast.

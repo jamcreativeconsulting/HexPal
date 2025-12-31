@@ -47,7 +47,7 @@
 - [x] README.md updated and accurate ✅ (hotkey corrected)
 - [x] Installation instructions clear ✅
 - [x] Usage instructions clear ✅
-- [ ] Troubleshooting section (if needed) (not added, but GRANTING_PERMISSIONS.md covers it)
+- [x] Troubleshooting section (if needed) (not added, but GRANTING_PERMISSIONS.md covers it)
 - [ ] Screenshots/GIFs (optional but recommended) (not added)
 
 ### Developer Documentation
@@ -58,10 +58,10 @@
 - [x] Code comments comprehensive ✅
 
 ### Release Notes
-- [ ] Release notes prepared
-- [ ] Features listed
-- [ ] Known limitations documented
-- [ ] Credits/acknowledgments (if any)
+- [x] Release notes prepared ✅ (RELEASE_NOTES.md & RELEASE_NOTES_APP_STORE.txt)
+- [x] Features listed ✅
+- [x] Known limitations documented ✅
+- [x] Credits/acknowledgments (if any) ✅
 
 ---
 
