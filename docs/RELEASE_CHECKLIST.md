@@ -23,7 +23,7 @@
 - [x] Preferences window functional ✅ (verified in smoke test)
 - [x] Launch at login works ✅ (implemented and tested)
 - [x] All error handling tested ✅ (ErrorHandler implemented)
-- [x] Permissions handled gracefully ✅ (Screen Recording & Accessibility)
+- [x] Zero-permission color picking ✅ (NSColorSampler, no entitlements required)
 
 ### Performance
 - [x] Activation time < 100ms ✅ (target met)
@@ -193,14 +193,13 @@ HEXPal is now available! A free, open-source macOS menu bar application for quic
 
 1. Download HEXPal from [GitHub Releases](https://github.com/jamcreativeconsulting/HexPal/releases)
 2. Open the app
-3. Grant Screen Recording permission when prompted
-4. Press ⌘⇧P or click the menu bar icon to pick colors!
+3. Press ⌘⇧P or click the menu bar icon → "Pick Color" to start immediately
+4. No permissions required — app works immediately
 
 ## 📋 Requirements
 
 - macOS 10.15 (Catalina) or later
-- Screen Recording permission (for color picking)
-- Accessibility permission (for global hotkeys, optional)
+- Zero permissions required
 
 ## 🐛 Known Limitations
 

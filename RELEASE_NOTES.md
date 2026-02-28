@@ -1,4 +1,24 @@
-# HEXPal v1.0 Release Notes
+# HEXPal Release Notes
+
+---
+
+## v2.0 — Zero Permissions (Current)
+
+**Release Date:** February 28, 2025  
+**Version:** 2.0  
+**Build:** 2
+
+### Zero Permissions Required
+
+HEXPal v2.0 launches and works immediately with no setup. No permissions required.
+
+- **Replaced custom color picker** with Apple's native `NSColorSampler` — built-in magnifier loupe, no Screen Recording permission
+- **Replaced permission-based hotkey** with KeyboardShortcuts package (Carbon APIs) — no system permissions needed
+- The app now launches and works immediately with no setup
+
+---
+
+## v1.0 Release Notes
 
 **Release Date:** December 31, 2024  
 **Version:** 1.0  
@@ -59,8 +79,6 @@ HEXPal is now available! A free, open-source macOS menu bar application for quic
   - Settings persist across launches
 
 - **Error Handling**: Clear, user-friendly error messages
-  - Permission guidance with links to System Settings
-  - Graceful degradation when permissions not granted
   - Helpful troubleshooting information
 
 ---
@@ -72,10 +90,7 @@ HEXPal is now available! A free, open-source macOS menu bar application for quic
 3. **First Launch**: Right-click `HexPal.app` → **Open** → Click **Open** in security dialog
    - This bypasses macOS Gatekeeper (app is unsigned for open-source distribution)
    - See [Installation Troubleshooting](docs/INSTALLATION_TROUBLESHOOTING.md) for details
-4. **Grant Permissions** when prompted:
-   - Screen Recording (required for color picking)
-   - Accessibility (required for global hotkeys, optional but recommended)
-5. **Press ⌘⇧P** or click the menu bar icon to pick colors!
+4. **Press ⌘⇧P** or click the menu bar icon to pick colors!
 
 ### Quick Workflow
 
@@ -89,9 +104,7 @@ HEXPal is now available! A free, open-source macOS menu bar application for quic
 ## 📋 Requirements
 
 - **macOS**: 10.15 (Catalina) or later
-- **Permissions**:
-  - Screen Recording (required for color picking)
-  - Accessibility (required for global hotkeys, optional)
+- **Permissions**: None required (uses NSColorSampler and KeyboardShortcuts)
 
 ---
 

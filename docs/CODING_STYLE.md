@@ -22,13 +22,13 @@ When a file grows large:
 5. Move utility functions to dedicated utility files
 
 ### Example Refactoring
-**Before:** `ColorPickerController.swift` (500 lines)
-- Contains: core logic, screen capture, UI handling, error handling
+**Before:** `MenuBarController.swift` (500 lines)
+- Contains: menu logic, color history, hotkey formatting, clipboard, notifications
 
 **After:**
-- `ColorPickerController.swift` (core logic, ~200 lines)
-- `ColorPickerController+ScreenCapture.swift` (screen capture, ~150 lines)
-- `ColorPickerController+UI.swift` (UI handling, ~150 lines)
+- `MenuBarController.swift` (core menu logic, ~200 lines)
+- `MenuBarController+History.swift` (recent colors, ~150 lines)
+- `MenuBarController+Formatting.swift` (key code display helpers, ~150 lines)
 
 ---
 
@@ -155,9 +155,9 @@ let capturePoint = convertDisplayToCapture(point: mouseLocation)
 
 ### Single Responsibility
 Each class/struct should have one clear purpose:
-- `ColorConverter` - converts colors to strings
-- `ScreenCapture` - captures screen pixels
-- `HotkeyManager` - manages global hotkeys
+- `ColorPickerManager` - presents NSColorSampler and fires callback
+- `ColorHistoryManager` - stores and retrieves recent colors
+- `ErrorHandler` - shows user-facing error alerts
 
 ### Separation of Concerns
 - **Controllers:** Handle user interaction and coordination
@@ -183,17 +183,17 @@ extension NSColor: ColorConvertible {
 Avoid singletons - inject dependencies:
 ```swift
 // Good: Dependency injection
-class ColorPickerController {
-    let screenCapture: ScreenCaptureProtocol
+class MenuBarController {
+    let colorPicker: ColorPickerManager
     
-    init(screenCapture: ScreenCaptureProtocol) {
-        self.screenCapture = screenCapture
+    init(colorPicker: ColorPickerManager = .shared) {
+        self.colorPicker = colorPicker
     }
 }
 
-// Bad: Singleton dependency
-class ColorPickerController {
-    let screenCapture = ScreenCapture.shared
+// Bad: Hardcoded singleton access scattered throughout code
+class MenuBarController {
+    func pick() { ColorPickerManager.shared.pickColor() }
 }
 ```
 

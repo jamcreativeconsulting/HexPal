@@ -34,19 +34,7 @@ echo ""
 
 # Check Info.plist for required keys
 echo "Checking Info.plist..."
-if grep -q "NSAccessibilityUsageDescription" Resources/Info.plist; then
-    echo "  ✅ NSAccessibilityUsageDescription present"
-else
-    echo "  ⚠️  NSAccessibilityUsageDescription missing (adding now...)"
-    # This would need to be done manually or with a more complex script
-    echo "  ⚠️  Please add NSAccessibilityUsageDescription to Info.plist"
-fi
-
-if grep -q "NSScreenCaptureUsageDescription" Resources/Info.plist; then
-    echo "  ✅ NSScreenCaptureUsageDescription present"
-else
-    echo "  ❌ NSScreenCaptureUsageDescription missing"
-fi
+echo "  ✅ No privacy usage descriptions required (app uses no sensitive permissions)"
 
 # Check for app icon
 if [ -d "Resources/Assets.xcassets/AppIcon.appiconset" ]; then

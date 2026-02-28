@@ -9,7 +9,7 @@ HEXPal is a free, open-source macOS menu bar application for quickly picking col
 - **⚡ Lightning Fast** - Get HEX codes in under 2 seconds
 - **🌐 System-Wide** - Pick colors from any app, window, or image
 - **⌨️ Global Hotkey** - Activate instantly with `Cmd+Shift+P` (customizable)
-- **🎯 Precise** - Magnifying glass with pixel grid for accurate selection
+- **🎯 Precise** - Apple's native color sampler with built-in system loupe for accurate selection
 - **📋 Auto-Copy** - HEX code automatically copied to clipboard
 - **🆓 Free & Open Source** - No paywalls, no subscriptions, forever
 
@@ -24,9 +24,7 @@ HEXPal is a free, open-source macOS menu bar application for quickly picking col
    - **First launch**: Right-click `HexPal.app` → **Open** → Click **Open** in security dialog
    - This is required because the app is unsigned (open-source distribution)
    - See [Installation Troubleshooting](docs/INSTALLATION_TROUBLESHOOTING.md) for details
-5. **Grant Permissions** when prompted:
-   - Screen Recording (required for color picking)
-   - Accessibility (required for global hotkey)
+5. **No permissions required** — HEXPal works immediately. Pick colors and use the global hotkey with zero setup.
 
 ### First Use
 

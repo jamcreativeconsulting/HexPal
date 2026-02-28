@@ -28,14 +28,14 @@ Quick validation of core functionality before comprehensive testing.
 
 **Steps:**
 1. Click menu bar icon → "Pick Color"
-2. Color picker (magnifying glass) should appear
+2. System color sampler loupe should appear
 3. Move mouse over screen
 4. Click to select a color
 5. Check clipboard
 
 **Expected:**
 - ✅ Color picker appears immediately
-- ✅ Magnifying glass shows correctly
+- ✅ System loupe shows correctly
 - ✅ Can pick color from screen
 - ✅ HEX code copied to clipboard (format: #RRGGBB)
 - ✅ Notification appears with HEX code and color swatch

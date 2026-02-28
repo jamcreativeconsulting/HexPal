@@ -107,7 +107,7 @@
 ### MVP (Week 1) - Core Features
 - Menu bar icon
 - Global hotkey (Cmd+Shift+C)
-- Screen color picker with magnifying glass
+- System color picker (NSColorSampler, zero permissions)
 - HEX code display
 - Automatic clipboard copy
 - Visual confirmation
@@ -128,7 +128,7 @@
 ### V2.1+ (Future) - AI-Enhanced Features
 - Color name detection (local ML)
 - Color palette suggestions
-- Accessibility checker
+- WCAG contrast checker
 - Color harmony detection
 - Smart color matching
 - Color blindness simulation
@@ -271,14 +271,12 @@ Based on `docs/PRE_SETUP_CONSIDERATIONS.md`, the next phase includes:
 - Create Xcode project
 - Configure menu bar app (no dock icon)
 - Set up project structure
-- Configure permissions (Screen Recording, Accessibility)
+- No permissions required (NSColorSampler + KeyboardShortcuts)
 - Create basic menu bar icon and menu
 
-### Phase 2: Screen Capture & Color Picking (Day 2-3)
-- Implement screen capture functionality
-- Create color picker overlay
-- Implement magnifying glass view
-- Extract pixel color from captured image
+### Phase 2: Color Picking (Day 2-3)
+- ✅ Implement color picker using NSColorSampler (zero permissions)
+- ✅ Wire callback chain: picked color → HEX → clipboard → notification
 
 ### Phase 3: HEX Conversion & Display (Day 3-4)
 - Implement color to HEX conversion

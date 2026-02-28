@@ -27,11 +27,10 @@ agentRequested: true
 3. Check for conflicts
 4. Provide fallback activation method
 
-### If Screen Capture Fails
-1. Check Screen Recording permission
-2. Verify display configuration
-3. Handle errors gracefully
-4. Provide user guidance
+### If Color Picker Fails
+1. NSColorSampler is system-provided — check macOS version (requires 10.15+)
+2. Handle nil result from sampler (user pressed Escape) gracefully
+3. Verify ColorPickerManager.shared.onColorPicked callback is set
 
 ### If App Crashes
 1. Check error logs

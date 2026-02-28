@@ -58,20 +58,28 @@ private class InteractiveNotificationView: NSView {
 /// notification.show()
 /// ```
 class ClipboardNotificationView {
-    
+
+    // MARK: - Layout Constants
+
+    private static let dismissInterval: TimeInterval = 2.0
+    private static let width: CGFloat = 180
+    private static let height: CGFloat = 56
+    private static let padding: CGFloat = 20
+    private static let cornerRadius: CGFloat = 12
+
     // MARK: - Properties
-    
+
     /// The HEX code to display
     private let hexCode: String
-    
+
     /// The notification window
     private var notificationWindow: NSWindow?
-    
+
     /// Timer for auto-dismissal
     private var dismissTimer: Timer?
-    
+
     /// Time remaining when timer was paused (for hover-to-pause)
-    private var remainingTime: TimeInterval = 2.0
+    private var remainingTime: TimeInterval = ClipboardNotificationView.dismissInterval
     
     /// Timestamp when timer was paused
     private var pausedAt: Date?
@@ -122,15 +130,11 @@ class ClipboardNotificationView {
         }
         
         // Calculate position (top-right corner with padding)
-        let padding: CGFloat = 20
-        let width: CGFloat = 180
-        let height: CGFloat = 56
-        
         let screenFrame = screen.visibleFrame
-        let x = screenFrame.maxX - width - padding
-        let y = screenFrame.maxY - height - padding
-        
-        let windowRect = NSRect(x: x, y: y, width: width, height: height)
+        let x = screenFrame.maxX - ClipboardNotificationView.width - ClipboardNotificationView.padding
+        let y = screenFrame.maxY - ClipboardNotificationView.height - ClipboardNotificationView.padding
+
+        let windowRect = NSRect(x: x, y: y, width: ClipboardNotificationView.width, height: ClipboardNotificationView.height)
         
         // Create borderless window
         let window = NSWindow(
@@ -149,9 +153,9 @@ class ClipboardNotificationView {
         window.collectionBehavior = [.transient]
         
         // Create interactive content view for click and hover support
-        let contentView = InteractiveNotificationView(frame: NSRect(x: 0, y: 0, width: width, height: height))
+        let contentView = InteractiveNotificationView(frame: NSRect(x: 0, y: 0, width: ClipboardNotificationView.width, height: ClipboardNotificationView.height))
         contentView.wantsLayer = true
-        contentView.layer?.cornerRadius = 12
+        contentView.layer?.cornerRadius = ClipboardNotificationView.cornerRadius
         contentView.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.95).cgColor
         
         // Wire up interaction callbacks
@@ -165,14 +169,18 @@ class ClipboardNotificationView {
             self?.resumeTimer()
         }
         
-        // Add blur effect for modern look
+        // Add blur effect - defer to next run loop to avoid layout recursion
+        // (NSVisualEffectView can trigger layoutSubtreeIfNeeded during parent's layout pass)
         let visualEffect = NSVisualEffectView(frame: contentView.bounds)
         visualEffect.material = .hudWindow
         visualEffect.state = .active
         visualEffect.blendingMode = .behindWindow
         visualEffect.wantsLayer = true
         visualEffect.layer?.cornerRadius = 12
-        contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
+        visualEffect.autoresizingMask = [.width, .height]
+        DispatchQueue.main.async {
+            contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
+        }
         
         // Parse HEX code to NSColor for swatch
         let color = hexToColor(hexCode)
@@ -181,7 +189,7 @@ class ClipboardNotificationView {
         let swatchSize: CGFloat = 28
         let swatchPadding: CGFloat = 12
         let swatchX = swatchPadding
-        let swatchY = (height - swatchSize) / 2
+        let swatchY = (ClipboardNotificationView.height - swatchSize) / 2
         
         let swatchView = NSView(frame: NSRect(x: swatchX, y: swatchY, width: swatchSize, height: swatchSize))
         swatchView.wantsLayer = true
@@ -194,7 +202,7 @@ class ClipboardNotificationView {
         // Create checkmark indicator (success confirmation)
         let checkmarkSize: CGFloat = 16
         let checkmarkX = swatchX + swatchSize + 10
-        let checkmarkY = (height - checkmarkSize) / 2
+        let checkmarkY = (ClipboardNotificationView.height - checkmarkSize) / 2
         
         let checkmarkLabel = NSTextField(labelWithString: "✓")
         checkmarkLabel.font = NSFont.systemFont(ofSize: 14, weight: .semibold)
@@ -205,12 +213,12 @@ class ClipboardNotificationView {
         
         // HEX code label - monospace, clean, primary color
         let hexLabelX = checkmarkX + checkmarkSize + 8
-        let hexLabelWidth = width - hexLabelX - swatchPadding
+        let hexLabelWidth = ClipboardNotificationView.width - hexLabelX - swatchPadding
         
         let hexLabel = NSTextField(labelWithString: hexCode)
         hexLabel.font = NSFont.monospacedSystemFont(ofSize: 16, weight: .medium)
         hexLabel.textColor = NSColor.labelColor
-        hexLabel.frame = NSRect(x: hexLabelX, y: (height - 20) / 2, width: hexLabelWidth, height: 20)
+        hexLabel.frame = NSRect(x: hexLabelX, y: (ClipboardNotificationView.height - 20) / 2, width: hexLabelWidth, height: 20)
         hexLabel.alignment = .left
         contentView.addSubview(hexLabel)
         
@@ -229,7 +237,7 @@ class ClipboardNotificationView {
         }
         
         // Auto-dismiss after 2 seconds
-        startDismissTimer(interval: 2.0)
+        startDismissTimer(interval: ClipboardNotificationView.dismissInterval)
     }
     
     // MARK: - Private Methods

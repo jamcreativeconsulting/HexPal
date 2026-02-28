@@ -40,18 +40,18 @@ that needs to capture screen pixels and display results quickly?
 
 ## Common Development Scenarios
 
-### Scenario 1: Implementing Screen Capture
+### Scenario 1: Color Picking
 
 **Query Context7:**
 ```
-@context7 How to use CGWindowListCreateImage to capture screen 
-and extract pixel color data in Swift?
+@context7 How to use NSColorSampler in Swift to let users pick
+a color from anywhere on screen without any permissions?
 ```
 
 **Then use Sequential Thinking:**
 ```
-@sequential-thinking What's the best approach for capturing screen 
-pixels accurately across multiple displays with different resolutions?
+@sequential-thinking What's the best approach for wiring NSColorSampler
+into a menu bar app callback chain with proper memory management?
 ```
 
 ### Scenario 2: Global Hotkey Implementation

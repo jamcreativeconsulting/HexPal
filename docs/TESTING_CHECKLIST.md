@@ -40,7 +40,7 @@
   
 - [ ] **Color Selection**
   - [ ] NSColorSampler appears when activated
-  - [ ] Magnifying glass shows correctly
+  - [ ] System loupe shows correctly
   - [ ] Can pick color from any screen location
   - [ ] Can pick color from browser content
   - [ ] Can pick color from desktop apps
@@ -112,40 +112,11 @@
 
 ## 4. Permission Testing
 
-### Screen Recording Permission
-- [ ] **Permission Request**
-  - [ ] Permission requested when needed
-  - [ ] Clear instructions shown if denied
-  - [ ] "Open System Settings" button works
-  - [ ] App handles denial gracefully
-  
-- [ ] **Without Permission**
-  - [ ] Error message appears when trying to pick color
-  - [ ] Error message is clear and helpful
-  - [ ] App doesn't crash
-  - [ ] Can still use app (menu works)
-  
-- [ ] **With Permission**
-  - [ ] Color picker works normally
-  - [ ] No error messages
-  - [ ] Smooth operation
-
-### Accessibility Permission
-- [ ] **Permission Request**
-  - [ ] Permission requested on app launch (if needed)
-  - [ ] Clear instructions shown
-  - [ ] "Open System Settings" button works
-  
-- [ ] **Without Permission**
-  - [ ] Hotkey doesn't work globally
-  - [ ] Error message explains situation
-  - [ ] App still works via menu bar
-  - [ ] No crashes
-  
-- [ ] **With Permission**
-  - [ ] Hotkey works from any app
-  - [ ] No error messages
-  - [ ] Smooth operation
+### Color Picker (No Permission Required)
+- [ ] Color picker activates immediately with no permission prompt
+- [ ] NSColorSampler loupe appears on screen
+- [ ] Escape key cancels without error
+- [ ] Selecting a color fires the callback correctly
 
 ---
 
@@ -199,12 +170,6 @@
 
 ## 8. Error Handling Testing
 
-- [ ] **Permission Errors**
-  - [ ] Screen Recording denied → clear error message
-  - [ ] Accessibility denied → clear error message
-  - [ ] Error messages are user-friendly
-  - [ ] System Settings links work
-  
 - [ ] **Operation Errors**
   - [ ] Clipboard copy failure → error shown
   - [ ] Hotkey registration failure → error shown
@@ -214,7 +179,6 @@
 - [ ] **Edge Cases**
   - [ ] No displays connected (shouldn't happen, but handle gracefully)
   - [ ] Invalid color data (shouldn't happen, but handle gracefully)
-  - [ ] App launched without permissions (should request)
 
 ---
 
@@ -293,7 +257,7 @@ Test on different macOS versions if available:
   - [ ] App doesn't interfere with other apps
   - [ ] Hotkey doesn't conflict with system shortcuts
   - [ ] App respects system dark mode
-  - [ ] App respects system accessibility settings
+  - [ ] App respects system display and interaction settings
 
 ---
 

@@ -40,8 +40,7 @@ This guide walks you through submitting HEXPal to the Mac App Store.
 - ✅ **Hardened Runtime**: Must be enabled (already enabled)
 
 **Your app needs these entitlements:**
-- Screen Recording (for color picking)
-- Accessibility (for global hotkeys)
+- None beyond standard App Sandbox — no additional permissions required
 
 **Check entitlements:**
 1. In "Signing & Capabilities" tab
@@ -54,15 +53,10 @@ This guide walks you through submitting HEXPal to the Mac App Store.
 ### 1.3 Verify Info.plist
 
 Your `Info.plist` should have:
-- ✅ `NSScreenCaptureUsageDescription` (already present)
 - ✅ `NSHumanReadableCopyright` (already present)
 - ✅ `LSApplicationCategoryType`: `public.app-category.utilities` (already set in build settings)
 
-**Note:** For App Store, you may need to add `NSAccessibilityUsageDescription`:
-```xml
-<key>NSAccessibilityUsageDescription</key>
-<string>HEXPal needs Accessibility permission to register global keyboard shortcuts for quick color picking.</string>
-```
+**Note:** No usage description keys required — HEXPal uses NSColorSampler and KeyboardShortcuts, neither of which require privacy permissions.
 
 ---
 
@@ -146,8 +140,7 @@ HEXPal is a free, open-source macOS menu bar application for quickly picking col
 📋 Requirements
 
 • macOS 10.15 (Catalina) or later
-• Screen Recording permission (required)
-• Accessibility permission (optional, for global hotkeys)
+• Zero permissions required
 
 HEXPal is free and open source forever. No paywalls, no subscriptions.
 
@@ -156,7 +149,7 @@ Built with ❤️ for developers and designers who need HEX codes fast.
 
 **Keywords** (up to 100 characters, comma-separated):
 ```
-color picker,hex code,color tool,design tool,developer tool,menu bar,utility,color palette,clipboard,accessibility
+color picker,hex code,color tool,design tool,developer tool,menu bar,utility,color palette,clipboard
 ```
 
 **Promotional Text** (optional, up to 170 characters):
@@ -365,14 +358,13 @@ For HEXPal, likely **"No"** since it's a local-only app.
 ### 8.2 Common Rejection Reasons
 
 **For menu bar apps:**
-- Missing Accessibility usage description
-- Missing Screen Recording usage description
+- Unnecessary usage description keys in Info.plist (HEXPal needs none)
 - App doesn't function as described
 - Missing app icon (may be required)
 - Privacy policy missing (if collecting data)
 
 **HEXPal should be fine** since:
-- ✅ Has usage descriptions
+- ✅ No privacy permissions required
 - ✅ Functions as described
 - ✅ Doesn't collect data
 - ✅ Open source

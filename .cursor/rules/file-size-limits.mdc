@@ -42,10 +42,10 @@ When a file approaches or exceeds 400 lines:
 ```
 
 ### Refactoring Example
-Instead of one large `ColorPickerController.swift` (500 lines):
-- `ColorPickerController.swift` (core logic, ~200 lines)
-- `ColorPickerController+ScreenCapture.swift` (screen capture, ~150 lines)
-- `ColorPickerController+UI.swift` (UI handling, ~150 lines)
+Instead of one large `MenuBarController.swift` (500 lines):
+- `MenuBarController.swift` (core menu logic, ~200 lines)
+- `MenuBarController+History.swift` (recent colors, ~150 lines)
+- `MenuBarController+Formatting.swift` (key code formatting, ~150 lines)
 
 ## Enforcement
 - Code review must check file sizes

@@ -19,31 +19,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     /// Menu bar controller that manages the menu bar icon and menu
     private var menuBarController: MenuBarController?
     
-    /// Hotkey manager for global keyboard shortcuts
-    private var hotkeyManager: HotkeyManager?
     
     // MARK: - NSApplicationDelegate
     
     func applicationDidFinishLaunching(_ aNotification: Notification) {
-        // Configure app to not show in dock (menu bar only)
-        configureMenuBarOnlyMode()
-        
+        removeLegacyHotkeyKeys()
+        // LSUIElement in Info.plist provides menu-bar-only mode (no dock icon)
+
         // Initialize menu bar controller
         menuBarController = MenuBarController()
         menuBarController?.setupMenuBar()
         
-        // Initialize and register global hotkey
-        setupGlobalHotkey()
-        
-        // Request necessary permissions
-        requestPermissions()
+        HotkeyManager.shared.start()
         
         // Show welcome notification on first launch
         showWelcomeIfFirstLaunch()
-    }
-    
-    func applicationWillTerminate(_ aNotification: Notification) {
-        // Cleanup if needed
     }
     
     func applicationSupportsSecureRestorableState(_ app: NSApplication) -> Bool {
@@ -52,86 +42,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     
     // MARK: - Private Methods
     
-    /// Configures the app to run as a menu bar-only application.
-    private func configureMenuBarOnlyMode() {
-        // LSUIElement is configured in Info.plist
+    /// Removes legacy hotkey UserDefaults keys from pre–KeyboardShortcuts versions.
+    private func removeLegacyHotkeyKeys() {
+        let defaults = UserDefaults.standard
+        defaults.removeObject(forKey: "HotkeyKeyCode")
+        defaults.removeObject(forKey: "HotkeyModifiers")
     }
-    
-    /// Sets up the global hotkey for activating the color picker.
-    ///
-    /// Registers a system-wide keyboard shortcut that works from any application.
-    /// Loads the user's saved hotkey or falls back to default (Cmd+Shift+P).
-    /// If Accessibility permission is not granted, shows a user-friendly error message
-    /// but the app will continue to function via menu bar.
-    private func setupGlobalHotkey() {
-        hotkeyManager = HotkeyManager()
-        
-        // Check if Accessibility permission is granted
-        guard let hotkeyManager = hotkeyManager else { return }
-        
-        // Request Accessibility permission first (triggers system prompt if needed)
-        // This must be called before attempting to register global monitor
-        hotkeyManager.requestAccessibilityPermission()
-        
-        // Register saved hotkey (or default if none saved)
-        // IMPORTANT: Always attempt to register global monitor, even without permission
-        // This attempt triggers macOS to add the app to Accessibility settings list
-        registerCurrentHotkey()
-        
-        // Check permission status after registration attempt
-        // The registration attempt will trigger macOS to add app to Accessibility list
-        let hasPermission = hotkeyManager.hasAccessibilityPermission()
-        
-        if !hasPermission {
-            // Show helpful error message after a brief delay
-            // This gives time for the system prompt to appear if it's going to
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                ErrorHandler.showPermissionError(.accessibility)
-            }
-        }
-        
-        // Listen for hotkey changes from preferences
-        NotificationCenter.default.addObserver(
-            self,
-            selector: #selector(hotkeyDidChange),
-            name: .hotkeyDidChange,
-            object: nil
-        )
-    }
-    
-    /// Registers the current hotkey (saved or default).
-    ///
-    /// Registers the hotkey with the HotkeyManager. If Accessibility permission is granted,
-    /// this will register a global hotkey that works from any app. If not granted, it will
-    /// register a local hotkey that only works when HEXPal is in focus.
-    private func registerCurrentHotkey() {
-        guard let hotkeyManager = hotkeyManager else { return }
-        
-        let registered = hotkeyManager.registerSavedHotkey { [weak self] in
-            // Activate color picker when hotkey is pressed
-            self?.menuBarController?.activateColorPicker()
-        }
-        
-        if registered != true {
-            // Hotkey registration failed completely - shouldn't happen
-            // Local monitor should always succeed, so this indicates a serious issue
-            NSLog("HEXPal: Critical - Hotkey registration failed completely")
-            ErrorHandler.showError(.hotkeyRegistrationFailed, additionalInfo: "Unable to register hotkey. Please restart HEXPal.")
-        }
-        // Permission error handling is done in setupGlobalHotkey() to avoid duplicates
-    }
-    
-    /// Called when the hotkey is changed in preferences.
-    @objc private func hotkeyDidChange() {
-        registerCurrentHotkey()
-    }
-    
-    /// Requests necessary system permissions for HEXPal functionality.
-    private func requestPermissions() {
-        // Screen Recording permission is requested automatically when attempting to capture
-        // Accessibility permission is requested when registering global hotkeys
-    }
-    
+
     /// Shows the welcome notification on first launch.
     ///
     /// Uses UserDefaults to track whether the app has been launched before.
@@ -140,6 +57,13 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         // Delay slightly to ensure menu bar is fully set up
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
             WelcomeNotificationView.showIfFirstLaunch()
+        }
+        
+        // Show menu bar hint after welcome
+        // Delay so it doesn't overlap the welcome notification
+        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+            let hotkey = PreferencesWindowController.formattedHotkeyForDisplay()
+            MenuBarHintView.showIfFirstLaunch(hotkeyString: hotkey)
         }
     }
 }

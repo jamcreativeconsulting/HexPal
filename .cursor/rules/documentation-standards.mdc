@@ -51,13 +51,12 @@ let capturePoint = convertDisplayToCapture(point: mouseLocation)
 Document any edge cases, limitations, or non-obvious behavior:
 
 ```swift
-/// Captures the screen and extracts pixel color.
+/// Presents the system color sampler and fires the onColorPicked callback.
 ///
-/// - Warning: Requires Screen Recording permission. Will fail silently if not granted.
-/// - Note: Color accuracy may vary based on display color profile. Results are converted to sRGB.
-/// - Parameter point: Screen coordinates (origin at top-left)
-/// - Returns: NSColor at the specified point, or nil if capture fails
-func capturePixelColor(at point: CGPoint) -> NSColor? {
+/// - Note: Uses NSColorSampler — no permissions required. The callback receives
+///   the selected color in the display's native color space; convert to sRGB
+///   before producing a HEX string. Does nothing if the user presses Escape.
+func pickColor() {
     // Implementation
 }
 ```
@@ -165,7 +164,7 @@ Before committing code:
 /// ## Thread Safety
 /// All methods must be called from the main thread.
 ///
-/// - Warning: Requires Accessibility permission on macOS 10.14+
+/// - Note: Uses KeyboardShortcuts package — no permissions required
 class HotkeyManager {
     // Implementation
 }

@@ -249,7 +249,7 @@ Ask these questions:
 
 - Menu bar icon
 - Global hotkey (Cmd+Shift+C)
-- Screen color picker with magnifying glass
+- System color picker with built-in loupe (NSColorSampler)
 - HEX code display
 - Automatic clipboard copy
 - Visual confirmation

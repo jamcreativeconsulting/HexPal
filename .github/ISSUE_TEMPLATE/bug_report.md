@@ -40,7 +40,4 @@ Add any other context about the problem here.
 - [ ] Other (please describe)
 
 ## Permissions Status
-- [ ] Screen Recording permission granted
-- [ ] Accessibility permission granted
-- [ ] Both permissions granted
-- [ ] Not sure / Unknown
+- [ ] No permissions required — HEXPal works with zero setup

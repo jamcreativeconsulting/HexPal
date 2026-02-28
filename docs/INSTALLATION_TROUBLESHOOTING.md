@@ -2,7 +2,7 @@
 
 ## macOS Security Alert: "HexPal" Not Opened
 
-If you see an alert saying **"Apple could not verify 'HexPal' is free of malware"**, this is macOS Gatekeeper protecting your system. Since HEXPal is currently distributed unsigned (as an open-source project), macOS requires an extra step to run it.
+If you see **"Apple could not verify 'HexPal' is free of malware"**, this is macOS Gatekeeper. Since HEXPal is currently distributed unsigned (open-source), macOS requires an extra step on first launch.
 
 ### Solution: Bypass Gatekeeper (First Launch Only)
 
@@ -10,52 +10,44 @@ If you see an alert saying **"Apple could not verify 'HexPal' is free of malware
 
 1. **Right-click** (or Control+click) on `HexPal.app`
 2. Select **Open** from the context menu
-3. Click **Open** in the security dialog that appears
+3. Click **Open** in the security dialog
 4. The app will launch and be added to your security exceptions
 
 **Method 2: System Settings**
 
 1. Open **System Settings** → **Privacy & Security**
-2. Scroll down to the **Security** section
-3. You should see a message: *"HexPal was blocked from use because it is not from an identified developer"*
-4. Click **Open Anyway**
-5. Confirm by clicking **Open** in the dialog
+2. Scroll to the **Security** section
+3. Click **Open Anyway** next to the HexPal message
+4. Confirm by clicking **Open**
 
 **Method 3: Command Line (Advanced)**
 
 ```bash
-# Remove quarantine attribute
 xattr -d com.apple.quarantine /path/to/HexPal.app
-
-# Or remove all extended attributes
-xattr -cr /path/to/HexPal.app
 ```
 
 ### Why This Happens
 
 HEXPal v1.0 is distributed **unsigned** because:
 - Code signing requires an **Apple Developer account** ($99/year)
-- Notarization requires code signing
 - For open-source projects, unsigned distribution is common
-- Users can still run the app with the steps above
 
 ### Future: Code Signing & Notarization
 
-For future releases, we plan to:
-- ✅ Sign the app with an Apple Developer ID
+For future releases:
+- ✅ Sign with Apple Developer ID
 - ✅ Notarize with Apple
 - ✅ Eliminate Gatekeeper warnings
-- ✅ Provide seamless installation experience
 
 ### Security Note
 
-HEXPal is **open-source** - you can review all code at:
+HEXPal is **open-source** — review all code at:
 https://github.com/jamcreativeconsulting/HexPal
 
 The app:
 - ✅ Runs entirely locally (no network requests)
 - ✅ Doesn't collect or transmit any data
-- ✅ Only requests necessary permissions (Screen Recording, Accessibility)
+- ✅ Requires zero privacy permissions for color picking
 - ✅ Source code is publicly available for review
 
 ---
@@ -64,86 +56,60 @@ The app:
 
 ### App Won't Launch After Installation
 
-1. **Check Permissions**: Make sure you granted Screen Recording permission
-2. **Check Menu Bar**: Look for the HEXPal icon (eyedropper) in your menu bar
-3. **Restart**: Quit and relaunch the app
-4. **Check Console**: Open Console.app and filter for "HexPal" to see error messages
+1. **Check Menu Bar**: Look for the HEXPal eyedropper icon in your menu bar
+2. **Restart**: Quit and relaunch the app
+3. **Check Console**: Open Console.app and filter for "HexPal" to see error messages
 
 ### Hotkey Doesn't Work
 
-1. **Check Accessibility Permission**: 
-   - System Settings → Privacy & Security → Accessibility
-   - Make sure HEXPal is enabled
-2. **Check Hotkey Conflicts**:
-   - Open Preferences in HEXPal
-   - Try changing the hotkey to something else
+1. **Check Hotkey Conflicts**:
+   - Open Preferences in HEXPal and try a different hotkey
+2. **Use Menu Bar**: Click the menu bar icon → "Pick Color" as an alternative
+
+### Color Picker Doesn't Activate
+
+1. **Click the menu bar icon** → "Pick Color" — this always works
+2. **Check macOS Version**: Requires macOS 11.5 or later
 3. **Restart App**: Quit and relaunch HEXPal
-
-### Color Picker Doesn't Work
-
-1. **Check Screen Recording Permission**:
-   - System Settings → Privacy & Security → Screen Recording
-   - Make sure HEXPal is enabled
-2. **Restart App**: Quit and relaunch HEXPal
-3. **Check macOS Version**: Requires macOS 10.15 (Catalina) or later
 
 ### Menu Bar Icon Missing
 
-1. **Check Menu Bar**: Look in the right side of your menu bar
-2. **Check Hidden Icons**: Click the arrow to show hidden menu bar items
-3. **Restart App**: Quit and relaunch HEXPal
+1. **Check hidden icons**: Click the arrow to show hidden menu bar items
+2. **Restart App**: Quit and relaunch HEXPal
+
+---
+
+## Development Console Messages (Harmless)
+
+When running from Xcode:
+
+- **"layoutSubtreeIfNeeded on a view which is already being laid out"** — Layout timing quirk with `NSVisualEffectView`. Safe to ignore.
+- **"Interrupted 0x… _connection … _server 0x0"** — Internal XPC message from the system color sampler or debugger. Safe to ignore.
 
 ---
 
 ## Getting Help
 
-If you continue to experience issues:
-
 1. **Check GitHub Issues**: https://github.com/jamcreativeconsulting/HexPal/issues
-2. **Create an Issue**: Include:
-   - macOS version
-   - Steps to reproduce
-   - Error messages (if any)
-   - Console logs (if applicable)
+2. **Create an Issue** with: macOS version, steps to reproduce, error messages
 3. **Email Support**: jordan@jamcreative.co
 
 ---
 
 ## Verification: Is HEXPal Safe?
 
-Since HEXPal is unsigned, you may want to verify its safety:
-
 ### Check the Source Code
 
 ```bash
-# Clone the repository
 git clone https://github.com/jamcreativeconsulting/HexPal.git
-
-# Review the code
 cd HexPal
-# Inspect the Swift files in App/, Controllers/, Utilities/, etc.
-```
-
-### Check File Integrity
-
-After downloading `HexPal-v1.0.zip`:
-
-```bash
-# Verify SHA256 checksum
-shasum -a 256 HexPal-v1.0.zip
-# Should match: 8a0d452808974b2355d2c7ecdccef174af9845f3355a42c8010ea6fbb0f2de9c
-
-# Verify MD5 checksum
-md5 HexPal-v1.0.zip
-# Should match: 6024860bf811e2eea528f04649e747ef
+# Inspect Swift files in App/, Controllers/, Utilities/, etc.
 ```
 
 ### What HEXPal Does
 
 HEXPal is a simple menu bar utility that:
-- ✅ Uses Apple's native `NSColorSampler` API for color picking
+- ✅ Uses Apple's native `NSColorSampler` API for color picking (zero permissions)
 - ✅ Copies HEX codes to clipboard
 - ✅ Stores recent colors locally (UserDefaults)
 - ✅ No network access, no data collection, no analytics
-
-All functionality is visible in the open-source code.

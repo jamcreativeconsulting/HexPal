@@ -7,10 +7,7 @@ alwaysApply: true
 # macOS-Specific Guidelines
 
 ## Permissions
-- Request Screen Recording permission on first launch
-- Request Accessibility permission if needed for hotkeys
-- Provide clear instructions if permission denied
-- Link to System Preferences when needed
+- HEXPal requires zero system permissions — color picking uses NSColorSampler, hotkey uses KeyboardShortcuts (no entitlements needed)
 
 ## Menu Bar App Best Practices
 - No dock icon (LSUIElement = true)
@@ -18,17 +15,16 @@ alwaysApply: true
 - Respect macOS design guidelines
 - Support dark mode
 
-## Screen Capture
-- Handle multiple displays correctly
-- Support different color profiles
-- Convert to sRGB for HEX representation
-- Document color accuracy limitations
+## Color Picking
+- Use NSColorSampler exclusively — Apple's system API handles all color sampling internally
+- NSColorSampler provides its own magnifier loupe and requires no permissions
+- Convert NSColor to sRGB for accurate HEX representation
 
 ## Global Hotkeys
-- Default: Cmd+Shift+C (non-conflicting)
-- Allow customization
+- Use KeyboardShortcuts package (Carbon RegisterEventHotKey) — App Store approved, no Accessibility required
+- Default: Cmd+Shift+P (customizable)
 - Handle conflicts gracefully
-- Provide alternative activation methods
+- Provide alternative activation via menu bar click
 
 ## UI/UX Guidelines
 - Minimal and clean design
@@ -38,10 +34,8 @@ alwaysApply: true
 - Support keyboard navigation
 - Provide clear labels
 - Support VoiceOver
-- Follow macOS accessibility guidelines
+- Follow macOS Human Interface Guidelines
 
 ## Critical Error Handling
-- Screen capture failures: Check Screen Recording permission, verify display configuration
-- Hotkey registration failures: Check permission status, verify registration, check for conflicts
-- Permission denials: Provide clear user guidance and links to System Preferences
+- Hotkey registration failures: Check for key conflicts, provide fallback (menu bar click)
 - Memory issues: Monitor memory usage, optimize caching strategies

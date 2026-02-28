@@ -143,8 +143,7 @@ HEXPal is a free, open-source macOS menu bar application for quickly picking col
 📋 Requirements
 
 • macOS 10.15 (Catalina) or later
-• Screen Recording permission (required)
-• Accessibility permission (optional, for global hotkeys)
+• Zero permissions required
 
 HEXPal is free and open source forever. No paywalls, no subscriptions.
 
@@ -153,7 +152,7 @@ Built with ❤️ for developers and designers who need HEX codes fast.
 
 **Keywords** (up to 100 characters, comma-separated):
 ```
-color picker,hex code,color tool,design tool,developer tool,menu bar,utility,color palette,clipboard,accessibility
+color picker,hex code,color tool,design tool,developer tool,menu bar,utility,color palette,clipboard
 ```
 
 **Promotional Text** (optional, up to 170 characters):
@@ -395,13 +394,12 @@ Free, open-source color picker for macOS. Get HEX codes instantly with a global 
 ### 10.3 Common Rejection Reasons
 
 **For menu bar apps:**
-- Missing Accessibility usage description ✅ (you have it)
-- Missing Screen Recording usage description ✅ (you have it)
+- Unnecessary usage description keys in Info.plist (none present — correct for HEXPal)
 - App doesn't function as described
 - Missing app icon (may be required)
 
 **HEXPal should be fine** since:
-- ✅ Has usage descriptions
+- ✅ No privacy permissions required (NSColorSampler, KeyboardShortcuts)
 - ✅ Functions as described
 - ✅ Doesn't collect data
 - ✅ Open source

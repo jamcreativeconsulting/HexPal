@@ -24,14 +24,20 @@ import Cocoa
 /// WelcomeNotificationView.showIfFirstLaunch()
 /// ```
 class WelcomeNotificationView {
-    
+
     // MARK: - Constants
-    
+
     /// UserDefaults key to track if welcome has been shown
     private static let hasShownWelcomeKey = "HexPal.hasShownWelcome"
-    
+
+    /// Layout constants for the welcome notification
+    private static let width: CGFloat = 280
+    private static let height: CGFloat = 100
+    private static let padding: CGFloat = 60
+    private static let cornerRadius: CGFloat = 16
+
     // MARK: - Properties
-    
+
     private var notificationWindow: NSWindow?
     private var dismissTimer: Timer?
     private static var activeNotification: WelcomeNotificationView?
@@ -71,15 +77,11 @@ class WelcomeNotificationView {
         }
         
         // Calculate position (center-top of screen)
-        let padding: CGFloat = 60
-        let width: CGFloat = 280
-        let height: CGFloat = 100
-        
         let screenFrame = screen.visibleFrame
-        let x = screenFrame.midX - (width / 2)
-        let y = screenFrame.maxY - height - padding
-        
-        let windowRect = NSRect(x: x, y: y, width: width, height: height)
+        let x = screenFrame.midX - (WelcomeNotificationView.width / 2)
+        let y = screenFrame.maxY - WelcomeNotificationView.height - WelcomeNotificationView.padding
+
+        let windowRect = NSRect(x: x, y: y, width: WelcomeNotificationView.width, height: WelcomeNotificationView.height)
         
         // Create borderless window
         let window = NSWindow(
@@ -97,45 +99,49 @@ class WelcomeNotificationView {
         window.collectionBehavior = [.transient]
         
         // Create interactive content view
-        let contentView = ClickableView(frame: NSRect(x: 0, y: 0, width: width, height: height))
+        let contentView = ClickableView(frame: NSRect(x: 0, y: 0, width: WelcomeNotificationView.width, height: WelcomeNotificationView.height))
         contentView.wantsLayer = true
-        contentView.layer?.cornerRadius = 16
+        contentView.layer?.cornerRadius = WelcomeNotificationView.cornerRadius
         contentView.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.98).cgColor
         contentView.onClicked = { [weak self] in
             self?.dismiss()
         }
         
-        // Add blur effect
+        // Add blur effect - defer to next run loop to avoid layout recursion
+        // (NSVisualEffectView can trigger layoutSubtreeIfNeeded during parent's layout pass)
         let visualEffect = NSVisualEffectView(frame: contentView.bounds)
         visualEffect.material = .hudWindow
         visualEffect.state = .active
         visualEffect.blendingMode = .behindWindow
         visualEffect.wantsLayer = true
-        visualEffect.layer?.cornerRadius = 16
-        contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
+        visualEffect.layer?.cornerRadius = WelcomeNotificationView.cornerRadius
+        visualEffect.autoresizingMask = [.width, .height]
+        DispatchQueue.main.async {
+            contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
+        }
         
         // App icon/emoji
         let iconLabel = NSTextField(labelWithString: "🎨")
         iconLabel.font = NSFont.systemFont(ofSize: 28)
-        iconLabel.frame = NSRect(x: 20, y: height - 50, width: 40, height: 36)
+        iconLabel.frame = NSRect(x: 20, y: WelcomeNotificationView.height - 50, width: 40, height: 36)
         contentView.addSubview(iconLabel)
         
         // Welcome text
         let welcomeLabel = NSTextField(labelWithString: "Welcome to HEXPal")
         welcomeLabel.font = NSFont.systemFont(ofSize: 16, weight: .semibold)
         welcomeLabel.textColor = NSColor.labelColor
-        welcomeLabel.frame = NSRect(x: 62, y: height - 42, width: 200, height: 22)
+        welcomeLabel.frame = NSRect(x: 62, y: WelcomeNotificationView.height - 42, width: 200, height: 22)
         contentView.addSubview(welcomeLabel)
         
         // Tagline
         let taglineLabel = NSTextField(labelWithString: "Pick colors. Get HEX. Instantly.")
         taglineLabel.font = NSFont.systemFont(ofSize: 12, weight: .regular)
         taglineLabel.textColor = NSColor.secondaryLabelColor
-        taglineLabel.frame = NSRect(x: 62, y: height - 62, width: 200, height: 18)
+        taglineLabel.frame = NSRect(x: 62, y: WelcomeNotificationView.height - 62, width: 200, height: 18)
         contentView.addSubview(taglineLabel)
         
         // Hotkey hint with styled background
-        let hotkeyContainer = NSView(frame: NSRect(x: 20, y: 12, width: width - 40, height: 28))
+        let hotkeyContainer = NSView(frame: NSRect(x: 20, y: 12, width: WelcomeNotificationView.width - 40, height: 28))
         hotkeyContainer.wantsLayer = true
         hotkeyContainer.layer?.cornerRadius = 8
         hotkeyContainer.layer?.backgroundColor = NSColor.quaternaryLabelColor.cgColor
@@ -146,7 +152,7 @@ class WelcomeNotificationView {
         hotkeyLabel.font = NSFont.systemFont(ofSize: 13, weight: .medium)
         hotkeyLabel.textColor = NSColor.labelColor
         hotkeyLabel.alignment = .center
-        hotkeyLabel.frame = NSRect(x: 0, y: 4, width: width - 40, height: 20)
+        hotkeyLabel.frame = NSRect(x: 0, y: 4, width: WelcomeNotificationView.width - 40, height: 20)
         hotkeyContainer.addSubview(hotkeyLabel)
         
         window.contentView = contentView

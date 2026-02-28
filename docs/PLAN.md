@@ -58,7 +58,7 @@
 3. **Screen Color Picker** - Click anywhere on screen to select pixel
 4. **HEX Code Display** - Show HEX code immediately (primary format)
 5. **Automatic Clipboard Copy** - Copy HEX to clipboard instantly (no manual step)
-6. **Visual Feedback** - Magnifying glass with pixel grid for precise selection
+6. **Visual Feedback** - System color sampler loupe (built into NSColorSampler)
 7. **Instant Activation** - < 100ms response time from hotkey to picker ready
 
 ### V1.1 Features - Developer Workflow
@@ -69,7 +69,7 @@
 
 ### V2.0 Features - Advanced (If Needed)
 1. **Color Palette Management** - Save and organize colors
-2. **Contrast Checker** - WCAG accessibility checking
+2. **Contrast Checker** - WCAG contrast checking
 3. **Export Options** - Copy as CSS variables, Swift UIColor, etc.
 4. **Color Name Detection** - Show closest named color
 
@@ -77,7 +77,7 @@
 See `docs/PRE_SETUP_CONSIDERATIONS.md` for detailed AI enhancement ideas:
 - Color name detection (local ML)
 - Color palette suggestions
-- Accessibility checker
+- WCAG contrast checker
 - Color harmony detection
 - Smart color matching
 - Color blindness simulation
@@ -95,9 +95,8 @@ See `docs/PRE_SETUP_CONSIDERATIONS.md` for detailed AI enhancement ideas:
    - Handles menu item clicks and state
 
 2. **ColorPickerController**
-   - Manages screen capture and pixel selection
-   - Handles mouse tracking and cursor overlay
-   - Implements magnifying glass view
+   - Presents NSColorSampler and fires onColorPicked callback
+   - Converts NSColor to sRGB HEX string
 
 3. **ColorConverter**
    - Converts pixel color data to HEX format
@@ -109,9 +108,9 @@ See `docs/PRE_SETUP_CONSIDERATIONS.md` for detailed AI enhancement ideas:
    - Manages clipboard state
 
 5. **HotkeyManager**
-   - Registers global keyboard shortcut
+   - Registers global keyboard shortcut via KeyboardShortcuts package
    - Handles hotkey activation
-   - Manages accessibility permissions
+   - No permissions required
 
 6. **ColorHistoryManager** (Post-MVP)
    - Stores recent colors
@@ -121,10 +120,8 @@ See `docs/PRE_SETUP_CONSIDERATIONS.md` for detailed AI enhancement ideas:
 ### Key macOS APIs
 
 - **AppKit** - Menu bar, windows, UI components
-- **Core Graphics** - Screen capture (`CGWindowListCreateImage`)
-- **Quartz** - Pixel color extraction
-- **Carbon/Cocoa** - Global hotkey registration
-- **Accessibility** - Screen capture permissions
+- **AppKit (NSColorSampler)** - System color picker, zero permissions
+- **Carbon** - Global hotkey via KeyboardShortcuts package, zero permissions
 
 ---
 
@@ -136,9 +133,8 @@ See `docs/PRE_SETUP_CONSIDERATIONS.md` for detailed AI enhancement ideas:
 1. ✅ Create new Xcode project (macOS App)
 2. ✅ Configure app for menu bar only (no dock icon) - LSUIElement in Info.plist
 3. ✅ Set up project structure and file organization (flat structure at root)
-4. ✅ Configure Info.plist for necessary permissions:
-   - ✅ Screen Recording permission (NSScreenCaptureUsageDescription)
-   - ✅ Accessibility permission (for global hotkeys - will be requested when needed)
+4. ✅ Configure Info.plist:
+   - ✅ No privacy entitlements required — color picking uses NSColorSampler, hotkey uses KeyboardShortcuts
 5. ✅ Create basic menu bar icon and menu
 6. ✅ Remove debugging code and ensure best practices
 7. ✅ Clean up temporary documentation files
@@ -158,29 +154,15 @@ See `docs/PRE_SETUP_CONSIDERATIONS.md` for detailed AI enhancement ideas:
 ### Phase 2: Screen Capture & Color Picking (Day 2-3)
 
 **Tasks:**
-1. ✅ Implement screen capture functionality
-   - ✅ Use `CGWindowListCreateImage` to capture screen
-   - ✅ Handle multiple displays correctly
-   - ✅ Extract pixel colors at specific coordinates
-   - ✅ Convert colors to sRGB for HEX representation
-   - ✅ Add comprehensive test suite
-2. Create color picker overlay
-   - Full-screen overlay window
-   - Mouse tracking
-   - Cursor change to crosshair
-3. Implement magnifying glass view
-   - Zoom around cursor (e.g., 10x magnification)
-   - Show pixel grid
-   - Display current pixel color preview
-4. ✅ Extract pixel color from captured image
-   - ✅ Get color at cursor position
-   - ✅ Handle color space conversion
+1. ✅ Implement color picker using `NSColorSampler`
+   - ✅ Zero permissions — no entitlements required
+   - ✅ Multi-display and loupe handled by the system
+   - ✅ sRGB conversion for accurate HEX output
+   - ✅ Callback chain: picked color → HEX → clipboard → notification
 
 **Deliverables:**
-- ✅ Screen capture utility (`ScreenCapture.swift`)
-- ✅ Test suite for screen capture (`ScreenCaptureTests.swift`)
-- ⏳ Color picker overlay (in progress)
-- ⏳ Magnifying glass overlay (pending)
+- ✅ Color picker (`ColorPickerManager.swift`) using NSColorSampler — zero permissions
+- ✅ System loupe provided by NSColorSampler
 - ✅ Accurate pixel color extraction
 
 ---
@@ -301,10 +283,8 @@ HEXPal/                          # Project root directory
 ├── Utilities/                    # Helper classes and utilities
 │   ├── ColorConverter.swift
 │   ├── ClipboardManager.swift
-│   └── ScreenCapture.swift
+│   └── ErrorHandler.swift
 ├── Views/                        # UI components
-│   ├── ColorPickerOverlay.swift
-│   ├── MagnifyingGlassView.swift
 │   └── ColorResultView.swift
 ├── Resources/                    # Assets and configuration
 │   ├── Assets.xcassets/
@@ -350,9 +330,12 @@ HEXPal/                          # Project root directory
 ### Screen Capture
 ```swift
 // Pseudo-code for screen capture
-func captureScreen() -> CGImage? {
-    let displayID = CGMainDisplayID()
-    return CGDisplayCreateImage(displayID)
+func pickColor() {
+    let sampler = NSColorSampler()
+    sampler.show { [weak self] color in
+        guard let color else { return }
+        self?.onColorPicked?(color)
+    }
 }
 ```
 
@@ -372,8 +355,7 @@ func getColorAt(point: CGPoint, from image: CGImage) -> NSColor {
 - Handle activation callback
 
 ### Permissions Required
-- **Screen Recording**: Required for capturing screen content
-- **Accessibility**: Required for global hotkey registration (on newer macOS)
+- **None** — NSColorSampler and KeyboardShortcuts require no permissions
 
 ---
 
@@ -390,11 +372,9 @@ func getColorAt(point: CGPoint, from image: CGImage) -> NSColor {
    - Instant activation, no delay
 
 3. **Select Color** (< 1 second)
-   - Full-screen overlay appears instantly
-   - Cursor changes to crosshair
-   - Magnifying glass follows cursor (10x zoom, pixel grid)
-   - Real-time HEX preview as cursor moves
-   - User clicks to select pixel
+   - System loupe appears instantly (provided by NSColorSampler)
+   - User clicks any pixel to select
+   - HEX code copied to clipboard immediately
 
 4. **Get HEX Code** (< 0.5 seconds)
    - HEX code displayed prominently in popover/notification
@@ -413,12 +393,9 @@ func getColorAt(point: CGPoint, from image: CGImage) -> NSColor {
 
 ## Potential Challenges & Solutions
 
-### Challenge 1: Screen Recording Permissions
-**Issue:** macOS requires explicit user permission for screen recording  
-**Solution:** 
-- Request permission on first launch
-- Show clear instructions if permission denied
-- Provide settings link to System Preferences
+### Challenge 1: Color Picking Without Permissions
+**Issue:** App Store rejects apps that request privacy entitlements for color picking
+**Solution:** Use NSColorSampler (Apple's native API) — zero permissions required
 
 ### Challenge 2: Global Hotkey Conflicts
 **Issue:** Hotkey might conflict with other apps  
@@ -547,17 +524,13 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 **Status:** All core functionality implemented ✅
 
 **Completed:**
-1. ✅ **Screen capture functionality**
-   - ✅ `ScreenCapture.swift` utility class created
-   - ✅ Multi-display support implemented
-   - ✅ Pixel color extraction working
+1. ✅ **Color picker (zero permissions)**
+   - ✅ `ColorPickerManager.swift` using Apple's native `NSColorSampler` API (macOS 10.15+)
+   - ✅ Built-in magnifying glass and multi-display support handled automatically
    - ✅ sRGB color conversion for HEX accuracy
-   - ✅ Comprehensive test suite (`ScreenCaptureTests.swift`)
+   - ✅ No privacy entitlements required
 
-2. ✅ **Color picker implementation**
-   - ✅ Using Apple's native `NSColorSampler` API (macOS 10.15+)
-   - ✅ Built-in magnifying glass and UI handled automatically
-   - ✅ Color selection working reliably
+2. ✅ **Color picker integration**
    - ✅ HEX conversion and clipboard copy implemented
    - ✅ Modern notification system with color swatch
 
@@ -610,28 +583,16 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
    - ✅ Hotkey works reliably from any application
    - ✅ App activation on hotkey press prevents system shortcut conflicts
 
-3. ✅ **Permission handling**
-   - ✅ Accessibility permission checking (macOS 10.14+)
-   - ✅ Permission request on first launch
-   - ✅ Graceful degradation (app still works via menu if permission denied)
-   - ✅ Local monitor works even without Accessibility permission (when app is active)
-
-4. ✅ **Testing and verification**
+3. ✅ **Testing and verification**
    - ✅ Hotkey tested and confirmed working (Cmd+Shift+P)
    - ✅ Color picker activates correctly from hotkey
    - ✅ No conflicts with system shortcuts
    - ✅ Debug logging added and verified functionality
 
 **Implementation Details:**
-- Uses `NSEvent.addGlobalMonitorForEvents` for system-wide hotkey detection
-- Uses `NSEvent.addLocalMonitorForEvents` for local event consumption
-- Requires Accessibility permission for global monitoring (macOS 10.14+)
-- Local monitor works without permission when app is active
+- Uses KeyboardShortcuts package (Carbon RegisterEventHotKey)
+- Zero permissions required — works immediately on first launch
 - App activation on hotkey press helps prevent system shortcut conflicts
-- Proper cleanup prevents memory leaks
-- File size: ~160 lines (under 400-line limit)
-
-**Note:** Changed from Carbon API to NSEvent monitoring for better Swift compatibility and simpler implementation. Global monitors cannot consume events, but app activation helps prevent conflicts.
 
 **For New Chat Sessions:** See `docs/PROJECT_SUMMARY.md` for complete context and overview.
 
@@ -657,7 +618,7 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 
 **Primary Sources:**
 - [Apple AppKit Documentation](https://developer.apple.com/documentation/appkit)
-- [Core Graphics Screen Capture](https://developer.apple.com/documentation/coregraphics/quartz_window_services)
+- [Core Graphics / Quartz](https://developer.apple.com/documentation/coregraphics)
 - [Swift Language Documentation](https://docs.swift.org/) - Via Context7 MCP
 
 **Code Libraries:**
@@ -666,7 +627,7 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 
 **Apple Resources:**
 - [Apple Human Interface Guidelines](https://developer.apple.com/design/human-interface-guidelines/macos)
-- [WWDC Sessions](https://developer.apple.com/videos/) - Search for "menu bar" and "screen capture"
+- [WWDC Sessions](https://developer.apple.com/videos/) - Search for "menu bar"
 
 ---
 
@@ -687,8 +648,7 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
    - ✅ Reset to default button
    - ✅ Live hotkey update notification system
 4. ✅ Remove unused legacy code
-   - ✅ Deleted `ColorPickerController.swift` (replaced by NSColorSampler)
-   - ✅ Deleted `ColorPickerOverlayView.swift` (replaced by NSColorSampler)
+   - ✅ Deleted legacy capture module (replaced by NSColorSampler)
    - ✅ Code cleanup complete
 
 5. ✅ UI/UX refinements (High-impact, Low-effort)
@@ -705,8 +665,6 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 
 7. ✅ Error handling improvements
    - ✅ Comprehensive ErrorHandler utility with user-friendly messages
-   - ✅ Screen Recording permission handling with clear instructions
-   - ✅ Accessibility permission guidance on app launch
    - ✅ Hotkey registration failure detection and explanation
    - ✅ Clipboard copy failure handling
    - ✅ Launch at login failure handling with manual setup guidance
@@ -776,7 +734,7 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 **File Size Compliance (400-line limit):**
 - ✅ `PreferencesWindowController.swift` - 315 lines (with Launch at Login, error handling)
 - ✅ `ErrorHandler.swift` - 258 lines (comprehensive error handling utility)
-- ✅ `ScreenCapture.swift` - 294 lines
+- ✅ `ColorPickerManager.swift` - thin NSColorSampler wrapper, zero permissions
 - ✅ `ClipboardNotificationView.swift` - 387 lines (click-to-copy, hover-to-pause, paste tooltip)
 - ✅ `MenuBarController.swift` - 308 lines (with Recent Colors, error handling)
 - ✅ `WelcomeNotificationView.swift` - 213 lines (first-launch onboarding)
@@ -787,8 +745,7 @@ See `docs/COMPETITIVE_ANALYSIS.md` for detailed competitive research.
 - ✅ `main.swift` - 21 lines
 
 **Unused Code Removed:**
-- ✅ `ColorPickerController.swift` - Deleted (replaced by NSColorSampler)
-- ✅ `ColorPickerOverlayView.swift` - Deleted (replaced by NSColorSampler)
+- ✅ Legacy capture module — Deleted (replaced by NSColorSampler)
 
 **Documentation Compliance:**
 - ✅ All public APIs have comprehensive doc comments

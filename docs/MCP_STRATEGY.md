@@ -156,19 +156,19 @@ with different color profiles while maintaining accuracy?
 
 ### Example: Using Context7 for Screen Capture
 
-When implementing screen capture, query Context7:
+When implementing color picking, query Context7:
 ```
-@context7 How to capture screen pixels using CGWindowListCreateImage 
-and extract color data in Swift?
+@context7 How to use NSColorSampler in Swift for zero-permission
+color picking in a macOS menu bar app?
 ```
 
 ### Example: Using Sequential Thinking for Architecture
 
-When planning the color picker overlay:
+When planning picker callback wiring:
 ```
-@sequential-thinking What's the best approach for implementing a 
-full-screen overlay window with magnifying glass that captures 
-pixel colors accurately across multiple displays?
+@sequential-thinking What's the best approach for connecting
+NSColorSampler to a hex-conversion and clipboard-copy pipeline
+in a macOS menu bar app without retain cycles?
 ```
 
 ---

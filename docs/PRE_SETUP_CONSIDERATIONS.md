@@ -47,7 +47,7 @@ HEXPal/
 
 #### UI Testing (Optional)
 - Test menu bar interactions
-- Test color picker overlay
+- Test color picker (NSColorSampler loupe activation)
 - Test result display
 
 ### 3. CI/CD Setup
@@ -207,7 +207,7 @@ jobs:
   - Monochromatic variations
 - **Use Case:** Quick palette generation for designs
 
-#### 3. Accessibility Checker
+#### 3. WCAG Contrast Checker
 **Feature:** Check WCAG contrast ratios automatically
 - **AI/Algorithm:** Contrast ratio calculations
 - **Features:**

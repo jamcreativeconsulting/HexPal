@@ -72,7 +72,7 @@ Create a simple, recognizable icon for the menu bar.
        button.image?.isTemplate = true
    } else {
        // Fallback to SF Symbol
-       button.image = NSImage(systemSymbolName: "eyedropper", accessibilityDescription: "HEXPal")
+       button.image = NSImage(systemSymbolName: "eyedropper", accessibilityDescription: "Color picker")  // VoiceOver label
        button.image?.isTemplate = true
    }
    ```

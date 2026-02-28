@@ -119,7 +119,7 @@ After creating the archive, verify it works:
 1. **Extract the ZIP** (if needed)
 2. **Right-click HexPal.app → Open** (first time only, to bypass Gatekeeper)
 3. **Test the app** - make sure it launches and works correctly
-4. **Check permissions** - verify Screen Recording permission is requested
+4. **Verify color picker** - confirm NSColorSampler activates with no permission prompts
 
 ---
 

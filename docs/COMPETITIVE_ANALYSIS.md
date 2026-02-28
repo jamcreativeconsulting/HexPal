@@ -24,7 +24,7 @@ Based on research of existing color picker tools, user reviews, and designer/dev
 ### 2. **Color Slurp** (macOS - Paid ~$14.99)
 **Strengths:**
 - Advanced palette management
-- Accessibility checks
+- WCAG contrast checks
 - Integration with design tools
 - Comprehensive feature set
 
@@ -131,7 +131,7 @@ Based on research of existing color picker tools, user reviews, and designer/dev
 2. ✅ **Instant activation** - Global hotkey or menu bar click
 3. ✅ **HEX code display** - Primary use case
 4. ✅ **Automatic clipboard copy** - No manual copy step
-5. ✅ **Magnifying glass** - Precise pixel selection
+5. ✅ **System loupe** - Precise pixel selection via NSColorSampler
 6. ✅ **Visual feedback** - Clear indication of selected color
 
 ### Tier 2: Highly Valued Features
@@ -143,7 +143,7 @@ Based on research of existing color picker tools, user reviews, and designer/dev
 
 ### Tier 3: Nice-to-Have Features
 1. Color palette management
-2. Accessibility contrast checking
+2. WCAG contrast checking
 3. Integration with design tools
 4. Color name detection
 5. Export options (CSS, Swift, etc.)
@@ -208,7 +208,7 @@ Based on research of existing color picker tools, user reviews, and designer/dev
 
 1. ✅ Menu bar icon
 2. ✅ Global hotkey (Cmd+Shift+C)
-3. ✅ Screen color picker with magnifying glass
+3. ✅ System color picker with built-in loupe (NSColorSampler)
 4. ✅ HEX code display
 5. ✅ Automatic clipboard copy
 6. ✅ Visual confirmation (notification/popover)

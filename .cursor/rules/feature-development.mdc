@@ -15,7 +15,7 @@ agentRequested: true
 ## MVP Features (Must Have)
 - Menu bar icon
 - Global hotkey (Cmd+Shift+C)
-- Screen color picker with magnifying glass
+- System color picker (NSColorSampler, zero permissions)
 - HEX code display
 - Automatic clipboard copy
 - Visual confirmation

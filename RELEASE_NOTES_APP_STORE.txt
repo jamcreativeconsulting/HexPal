@@ -32,8 +32,7 @@ HEXPal is a free, open-source macOS menu bar application for quickly picking col
 📋 Requirements
 
 • macOS 10.15 (Catalina) or later
-• Screen Recording permission (required)
-• Accessibility permission (optional, for global hotkeys)
+• Zero permissions required — works immediately
 
 🐛 Known Limitations
 
