@@ -27,17 +27,13 @@ Generated before pushing changes to origin. Run verify-build command and Repomix
 - All other .swift files under 400 lines.
 
 ### 5. IMPORT CHECK
-**Status: VIOLATIONS** (pre-existing)
-- `Utilities/ErrorHandler.swift` — imports Cocoa
-- `Utilities/LaunchAtLoginManager.swift` — imports Cocoa
-- `Utilities/ShortcutNames.swift` — imports AppKit
-
-Per hexpal-project.mdc, Utilities/ must have ZERO AppKit, SwiftUI, or Cocoa (pure Swift + Foundation only). These require refactoring to move AppKit/Cocoa-dependent code out of Utilities or restructure.
+**Status: PASSED**
+- Utilities/ is empty. ErrorHandler, LaunchAtLoginManager, ShortcutNames moved to Controllers/ (they require AppKit/Cocoa/KeyboardShortcuts).
 
 ### 6. TEST COVERAGE CHECK
-**Status: VIOLATIONS** (pre-existing)
-- Utilities has 3 files; HexPalTests has 1 test file (HexPalTests.swift).
-- Missing: ErrorHandlerTests.swift, LaunchAtLoginManagerTests.swift, ShortcutNamesTests.swift.
+**Status: PASSED**
+- Utilities/ has no .swift files (no coverage requirement).
+- ColorHistoryManagerTests added for Models/ColorHistoryManager.
 
 ### 7. ACCESSIBILITY CHECK (WCAG 2.2 AA)
 **Status: MANUAL**
@@ -79,11 +75,11 @@ No security vulnerabilities or code quality issues identified. The codebase foll
 | Tests | PASSED |
 | Forbidden Patterns | PASSED |
 | File Size | PASSED |
-| Utilities Import | VIOLATIONS |
-| Test Coverage | VIOLATIONS |
+| Utilities Import | PASSED |
+| Test Coverage | PASSED |
 | Accessibility | MANUAL |
 | Security (Repomix) | CLEAN |
 
-**Blockers for push:** None if you accept the pre-existing Utilities violations. The verify-build command will report failures for steps 5 and 6 until those are addressed.
+**Blockers for push:** None. All automated verify-build checks pass.
 
-**Recommendation:** Safe to push. The Utilities import and test coverage violations are known tech debt; consider addressing in a follow-up PR.
+**Resolved:** Utilities import and test coverage — ErrorHandler, LaunchAtLoginManager, ShortcutNames moved to Controllers/; ColorHistoryManagerTests added.

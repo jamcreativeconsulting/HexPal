@@ -4,6 +4,7 @@
 //
 //  Provides user-friendly error handling and messaging for HEXPal.
 //  All error messages use plain language and provide actionable guidance.
+//  Lives in Controllers/ because it presents UI (NSAlert, NSWorkspace).
 //
 
 import Cocoa
@@ -77,10 +78,8 @@ class ErrorHandler {
             """
             alert.addButton(withTitle: "OK")
             alert.addButton(withTitle: "Open Login Items")
-
         }
 
         return alert
     }
-
 }
