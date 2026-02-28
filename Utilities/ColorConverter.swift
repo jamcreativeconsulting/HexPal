@@ -55,6 +55,20 @@ struct ColorConverter {
         return "UIColor(red: \(r3), green: \(g3), blue: \(b3), alpha: 1.0)"
     }
 
+    /// Returns the color in the given format. Use for suggested shades and other RGB tuples.
+    static func string(for format: ColorFormat, r: Double, g: Double, b: Double) -> String {
+        switch format {
+        case .hex: return hexString(r: r, g: g, b: b)
+        case .rgb: return rgbString(r: r, g: g, b: b)
+        case .hsl: return hslString(r: r, g: g, b: b)
+        case .oklch: return oklchString(r: r, g: g, b: b)
+        case .cssCustomProperty: return cssCustomProperty(r: r, g: g, b: b)
+        case .tailwindClass: return tailwindClass(r: r, g: g, b: b)
+        case .swiftUIColor: return swiftUIColor(r: r, g: g, b: b)
+        case .uiColor: return uiColorString(r: r, g: g, b: b)
+        }
+    }
+
     static func allFormats(r: Double, g: Double, b: Double) -> [(format: ColorFormat, value: String)] {
         [
             (.hex, hexString(r: r, g: g, b: b)),

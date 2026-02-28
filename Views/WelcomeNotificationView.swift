@@ -112,8 +112,8 @@ class WelcomeNotificationView {
         contentView.setAccessibilityLabel("Welcome to HEXPal. Pick colors and get HEX codes instantly. Press Command Shift P to pick a color.")
         contentView.setAccessibilityHelp("Double-tap to dismiss. This notification will not show again.")
 
-        // Add blur effect - defer to next run loop to avoid layout recursion
-        // (NSVisualEffectView can trigger layoutSubtreeIfNeeded during parent's layout pass)
+        // Add blur effect first (before other subviews) to avoid layout recursion.
+        // Adding NSVisualEffectView during parent's layout triggers layoutSubtreeIfNeeded.
         let visualEffect = NSVisualEffectView(frame: contentView.bounds)
         visualEffect.material = .hudWindow
         visualEffect.state = .active
@@ -122,10 +122,8 @@ class WelcomeNotificationView {
         visualEffect.layer?.cornerRadius = WelcomeNotificationView.cornerRadius
         visualEffect.autoresizingMask = [.width, .height]
         visualEffect.setAccessibilityElement(false)  // Decorative
-        DispatchQueue.main.async {
-            contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
-        }
-        
+        contentView.addSubview(visualEffect)
+
         // App icon/emoji (decorative - palette icon)
         let iconLabel = NSTextField(labelWithString: "🎨")
         iconLabel.font = NSFont.systemFont(ofSize: 28)

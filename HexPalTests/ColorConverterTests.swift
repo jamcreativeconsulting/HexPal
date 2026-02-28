@@ -95,6 +95,21 @@ final class ColorConverterTests: XCTestCase {
         XCTAssertTrue(result.contains("alpha: 1.0"))
     }
 
+    // MARK: - string(for:r:g:b:)
+
+    func test_stringFor_hex_matchesHexString() {
+        let r: Double = 0.4
+        let g: Double = 0.6
+        let b: Double = 0.9
+        let result = ColorConverter.string(for: .hex, r: r, g: g, b: b)
+        XCTAssertEqual(result, ColorConverter.hexString(r: r, g: g, b: b))
+    }
+
+    func test_stringFor_rgb_matchesRgbString() {
+        let result = ColorConverter.string(for: .rgb, r: 1, g: 0, b: 0)
+        XCTAssertEqual(result, "rgb(255, 0, 0)")
+    }
+
     // MARK: - allFormats
 
     func test_allFormats_returnsAllEightFormats() {

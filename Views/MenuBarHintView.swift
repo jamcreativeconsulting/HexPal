@@ -97,11 +97,23 @@ class MenuBarHintView {
         contentView.wantsLayer = true
         contentView.layer?.cornerRadius = 10
         contentView.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.95).cgColor
-        
+
         let message = hotkeyString.isEmpty
             ? "Click the menu bar icon to pick a color"
             : "Click here or press \(hotkeyString) to pick a color"
-        
+
+        // Add blur effect first (before other subviews) to avoid layout recursion.
+        // Adding NSVisualEffectView during parent's layout triggers layoutSubtreeIfNeeded.
+        let visualEffect = NSVisualEffectView(frame: contentView.bounds)
+        visualEffect.material = .hudWindow
+        visualEffect.state = .active
+        visualEffect.blendingMode = .behindWindow
+        visualEffect.wantsLayer = true
+        visualEffect.layer?.cornerRadius = 10
+        visualEffect.autoresizingMask = [.width, .height]
+        visualEffect.setAccessibilityElement(false)  // Decorative
+        contentView.addSubview(visualEffect)
+
         let label = NSTextField(labelWithString: message)
         label.font = NSFont.systemFont(ofSize: 12, weight: .medium)
         label.textColor = NSColor.labelColor
@@ -117,18 +129,6 @@ class MenuBarHintView {
         contentView.setAccessibilityElement(true)
         contentView.setAccessibilityRole(.group)
         contentView.setAccessibilityLabel("HEXPal first-launch hint. \(message)")
-        
-        let visualEffect = NSVisualEffectView(frame: contentView.bounds)
-        visualEffect.material = .hudWindow
-        visualEffect.state = .active
-        visualEffect.blendingMode = .behindWindow
-        visualEffect.wantsLayer = true
-        visualEffect.layer?.cornerRadius = 10
-        visualEffect.autoresizingMask = [.width, .height]
-        visualEffect.setAccessibilityElement(false)  // Decorative
-        DispatchQueue.main.async {
-            contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
-        }
         
         window.contentView = contentView
         hintWindow = window

@@ -63,7 +63,7 @@ class ClipboardNotificationView: NSObject {
 
     private static let dismissInterval: TimeInterval = 3.0
     private static let width: CGFloat = 220
-    static let height: CGFloat = 112
+    static let height: CGFloat = 64
     private static let padding: CGFloat = 20
     private static let cornerRadius: CGFloat = 12
 
@@ -176,9 +176,9 @@ class ClipboardNotificationView: NSObject {
         contentView.onMouseExited = { [weak self] in
             self?.resumeTimer()
         }
-        
-        // Add blur effect - defer to next run loop to avoid layout recursion
-        // (NSVisualEffectView can trigger layoutSubtreeIfNeeded during parent's layout pass)
+
+        // Add blur effect first (before other subviews) to avoid layout recursion.
+        // Adding NSVisualEffectView during parent's layout triggers layoutSubtreeIfNeeded.
         let visualEffect = NSVisualEffectView(frame: contentView.bounds)
         visualEffect.material = .hudWindow
         visualEffect.state = .active
@@ -187,10 +187,8 @@ class ClipboardNotificationView: NSObject {
         visualEffect.layer?.cornerRadius = 12
         visualEffect.autoresizingMask = [.width, .height]
         visualEffect.setAccessibilityElement(false)  // Decorative; VoiceOver skips
-        DispatchQueue.main.async {
-            contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
-        }
-        
+        contentView.addSubview(visualEffect)
+
         // Parse HEX code to NSColor for swatch
         let color = NSColor.fromHex(hexCode)
         
@@ -236,8 +234,6 @@ class ClipboardNotificationView: NSObject {
         hexLabel.setAccessibilityLabel("HEX code \(hexCode)")
         contentView.addSubview(hexLabel)
 
-        addContrastRows(to: contentView, swatchPadding: swatchPadding)
-        
         window.contentView = contentView
         notificationWindow = window
         

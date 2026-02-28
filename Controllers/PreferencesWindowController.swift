@@ -36,6 +36,9 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
     
     /// Launch at login checkbox reference
     private var launchAtLoginCheckbox: NSButton?
+
+    /// Copy format popup reference for syncing when window is shown
+    private var copyFormatPopUp: NSPopUpButton?
     
     
     // MARK: - Initialization
@@ -54,10 +57,18 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
         if window == nil {
             createWindow()
         }
-        
+
         // Sync launch at login checkbox state
         launchAtLoginCheckbox?.state = LaunchAtLoginManager.shared.isEnabled ? .on : .off
-        
+
+        // Sync copy format popup to match stored preference
+        if let popUp = copyFormatPopUp {
+            let idx = ColorFormat.allCases.firstIndex(of: ColorFormat.preferred) ?? 0
+            if idx < popUp.numberOfItems {
+                popUp.selectItem(at: idx)
+            }
+        }
+
         // Activate app first to ensure window can appear in front
         NSApp.activate(ignoringOtherApps: true)
         
@@ -131,6 +142,7 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
         formatPopUp.setAccessibilityElement(true)
         formatPopUp.setAccessibilityRole(.popUpButton)
         formatPopUp.setAccessibilityLabel("Preferred format when copying color to clipboard")
+        copyFormatPopUp = formatPopUp
         contentView.addSubview(formatPopUp)
 
         // Separator
@@ -166,9 +178,11 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
     }
 
     @objc private func copyFormatChanged(_ sender: NSPopUpButton) {
-        let index = sender.indexOfSelectedItem
-        guard index >= 0, index < ColorFormat.allCases.count else { return }
-        ColorFormat.preferred = ColorFormat.allCases[index]
+        // Derive format from selected title to avoid index mismatch (e.g. pullsDown behavior)
+        guard let title = sender.titleOfSelectedItem else { return }
+        let formatPart = title.components(separatedBy: " (").first?.trimmingCharacters(in: .whitespaces) ?? title
+        guard let format = ColorFormat(rawValue: formatPart) else { return }
+        ColorFormat.preferred = format
     }
     
     
