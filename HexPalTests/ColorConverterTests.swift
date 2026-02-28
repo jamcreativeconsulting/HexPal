@@ -135,6 +135,28 @@ final class ColorConverterTests: XCTestCase {
         XCTAssertEqual(hexEntry?.value, ColorConverter.hexString(r: r, g: g, b: b))
     }
 
+    // MARK: - extractHex
+
+    func test_extractHex_hashPrefix_returnsNormalized() {
+        let result = ColorConverter.extractHex(from: "#FF0000")
+        XCTAssertEqual(result, "#FF0000")
+    }
+
+    func test_extractHex_noHash_returnsWithHash() {
+        let result = ColorConverter.extractHex(from: "FF0000")
+        XCTAssertEqual(result, "#FF0000")
+    }
+
+    func test_extractHex_embeddedInText_returnsFirstMatch() {
+        let result = ColorConverter.extractHex(from: "Use #FF0000 for primary")
+        XCTAssertEqual(result, "#FF0000")
+    }
+
+    func test_extractHex_noHex_returnsNil() {
+        let result = ColorConverter.extractHex(from: "no hex here")
+        XCTAssertNil(result)
+    }
+
     // MARK: - Clamping
 
     func test_hexString_outOfRange_clampsToValid() {

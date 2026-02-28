@@ -82,6 +82,20 @@ struct ColorConverter {
         ]
     }
 
+    /// Extracts the first 6-character HEX substring from a string (e.g. from clipboard).
+    ///
+    /// Handles "#FF0000", "FF0000", or text like "color: #FF0000 in CSS".
+    /// Uses the first match found; does not validate word boundaries.
+    ///
+    /// - Parameter string: The string to search for a HEX code
+    /// - Returns: Normalized hex string "#XXXXXX" or nil if no valid hex found
+    static func extractHex(from string: String) -> String? {
+        guard let regex = try? NSRegularExpression(pattern: "#?([0-9A-Fa-f]{6})"),
+              let match = regex.firstMatch(in: string, range: NSRange(string.startIndex..., in: string)),
+              let range = Range(match.range(at: 1), in: string) else { return nil }
+        return "#" + String(string[range]).uppercased()
+    }
+
     private static func clamp01(_ value: Double) -> Double {
         min(max(value, 0.0), 1.0)
     }

@@ -40,8 +40,9 @@ class MenuBarController: NSObject, NSMenuDelegate {
     /// Last picked color, used for "View contrast" panel
     private var lastPickedColor: PickedColor?
 
-    /// Reference to View contrast menu item for enable/disable
-    private var viewContrastItem: NSMenuItem?
+    /// When true, next color pick shows contrast panel instead of clipboard toast.
+    /// Set by View Contrast when no color available; reset when menu opens or pick completes.
+    private var showContrastAfterPick = false
     
     // MARK: - Initialization
     
@@ -65,8 +66,12 @@ class MenuBarController: NSObject, NSMenuDelegate {
             let value = picked.string(for: ColorFormat.preferred)
             pasteboard.setString(value, forType: .string)
             ColorHistoryManager.shared.addColor(picked.hex)
-            self.showClipboardNotification(picked: picked)
-            self.viewContrastItem?.isEnabled = true
+            if self.showContrastAfterPick {
+                self.showContrastAfterPick = false
+                ContrastPanelController.shared.show(picked: picked)
+            } else {
+                self.showClipboardNotification(picked: picked)
+            }
         }
     }
     
@@ -126,9 +131,7 @@ class MenuBarController: NSObject, NSMenuDelegate {
 
         let viewContrastItem = NSMenuItem(title: "View Contrast", action: #selector(viewContrastClicked), keyEquivalent: "")
         viewContrastItem.target = self
-        viewContrastItem.toolTip = "Open contrast panel for last picked color. Shows WCAG/APCA results and accessible shade suggestions."
-        viewContrastItem.isEnabled = lastPickedColor != nil
-        self.viewContrastItem = viewContrastItem
+        viewContrastItem.toolTip = "Open contrast panel. Uses last picked color, clipboard, or most recent from history. If none, opens color picker."
         menu.addItem(viewContrastItem)
         
         // Recent Colors submenu
@@ -242,7 +245,7 @@ class MenuBarController: NSObject, NSMenuDelegate {
         MenuBarHintView.dismissIfVisible()
         MenuBarHintView.markMenuBarHintShown()
         updateRecentColorsSubmenu()
-        viewContrastItem?.isEnabled = lastPickedColor != nil
+        showContrastAfterPick = false
         UserDefaults.standard.set(true, forKey: FirstTimeHintKeys.hasShownRecentColorsHint)
     }
 
@@ -261,14 +264,29 @@ class MenuBarController: NSObject, NSMenuDelegate {
         ColorHistoryManager.shared.copyToClipboard(hex)
         if let picked = PickedColor.fromHex(hex) {
             lastPickedColor = picked
-            viewContrastItem?.isEnabled = true
             showClipboardNotification(picked: picked)
         }
     }
 
     @objc private func viewContrastClicked() {
-        guard let picked = lastPickedColor else { return }
-        ContrastPanelController.shared.show(picked: picked)
+        let picked = resolveColorForContrast()
+        if let p = picked {
+            ContrastPanelController.shared.show(picked: p)
+        } else {
+            showContrastAfterPick = true
+            activateColorPicker()
+        }
+    }
+
+    private func resolveColorForContrast() -> PickedColor? {
+        if let p = lastPickedColor { return p }
+        if let str = NSPasteboard.general.string(forType: .string) {
+            if let p = PickedColor.fromHex(str) { return p }
+            if let hex = ColorConverter.extractHex(from: str), let p = PickedColor.fromHex(hex) { return p }
+        }
+        if let hex = ColorHistoryManager.shared.recentColors.first,
+           let p = PickedColor.fromHex(hex) { return p }
+        return nil
     }
     
     @objc private func clearHistoryClicked() {
