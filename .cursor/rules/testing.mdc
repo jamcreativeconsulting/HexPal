@@ -1,9 +1,11 @@
 ---
-description: Testing requirements and scenarios
+description: Manual/integration test scenarios — unit test structure in hexpal-testing.mdc
 agentRequested: true
 ---
 
 # Testing Requirements
+
+**Unit test structure, naming, reference values:** hexpal-testing.mdc. HexPal uses zero system permissions (hexpal-project).
 
 ## Before Committing
 - Test on latest macOS version
@@ -12,6 +14,7 @@ agentRequested: true
 - Verify hotkey works reliably
 - Check memory usage
 - Verify no crashes
+- **Accessibility (WCAG 2.2 AA):** Test with VoiceOver (Cmd+F5). Full pick → copy flow must be navigable, all content announced, no focus traps.
 
 ## Test Scenarios
 - Pick color from browser
@@ -22,8 +25,7 @@ agentRequested: true
 - Test clipboard copy functionality
 
 ## Error Testing
-- Test permission denial scenarios
-- Test hotkey conflicts
+- Test hotkey conflicts (KeyboardShortcuts needs no permissions, but keys can conflict with other apps)
 - Test multi-display edge cases
 - Test color profile conversions
 - Test memory under load

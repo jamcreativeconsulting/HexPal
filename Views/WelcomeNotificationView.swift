@@ -97,7 +97,8 @@ class WelcomeNotificationView {
         window.hasShadow = true
         window.ignoresMouseEvents = false
         window.collectionBehavior = [.transient]
-        
+        window.title = "HEXPal welcome"
+
         // Create interactive content view
         let contentView = ClickableView(frame: NSRect(x: 0, y: 0, width: WelcomeNotificationView.width, height: WelcomeNotificationView.height))
         contentView.wantsLayer = true
@@ -106,7 +107,11 @@ class WelcomeNotificationView {
         contentView.onClicked = { [weak self] in
             self?.dismiss()
         }
-        
+        contentView.setAccessibilityElement(true)
+        contentView.setAccessibilityRole(.button)
+        contentView.setAccessibilityLabel("Welcome to HEXPal. Pick colors and get HEX codes instantly. Press Command Shift P to pick a color.")
+        contentView.setAccessibilityHelp("Double-tap to dismiss. This notification will not show again.")
+
         // Add blur effect - defer to next run loop to avoid layout recursion
         // (NSVisualEffectView can trigger layoutSubtreeIfNeeded during parent's layout pass)
         let visualEffect = NSVisualEffectView(frame: contentView.bounds)
@@ -116,14 +121,16 @@ class WelcomeNotificationView {
         visualEffect.wantsLayer = true
         visualEffect.layer?.cornerRadius = WelcomeNotificationView.cornerRadius
         visualEffect.autoresizingMask = [.width, .height]
+        visualEffect.setAccessibilityElement(false)  // Decorative
         DispatchQueue.main.async {
             contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
         }
         
-        // App icon/emoji
+        // App icon/emoji (decorative - palette icon)
         let iconLabel = NSTextField(labelWithString: "🎨")
         iconLabel.font = NSFont.systemFont(ofSize: 28)
         iconLabel.frame = NSRect(x: 20, y: WelcomeNotificationView.height - 50, width: 40, height: 36)
+        iconLabel.setAccessibilityElement(false)  // Decorative; text below provides context
         contentView.addSubview(iconLabel)
         
         // Welcome text
@@ -153,6 +160,9 @@ class WelcomeNotificationView {
         hotkeyLabel.textColor = NSColor.labelColor
         hotkeyLabel.alignment = .center
         hotkeyLabel.frame = NSRect(x: 0, y: 4, width: WelcomeNotificationView.width - 40, height: 20)
+        hotkeyLabel.setAccessibilityElement(true)
+        hotkeyLabel.setAccessibilityRole(.staticText)
+        hotkeyLabel.setAccessibilityLabel("Press Command Shift P to pick a color")
         hotkeyContainer.addSubview(hotkeyLabel)
         
         window.contentView = contentView

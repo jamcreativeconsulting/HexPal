@@ -1,10 +1,12 @@
 ---
-description: Comprehensive documentation requirements for open source clarity
+description: Documentation format and MCP usage — hexpal-project requires /// doc comments for all public APIs
 globs: ["**/*.swift"]
 alwaysApply: true
 ---
 
 # Documentation Standards for Open Source
+
+**Mandate:** hexpal-project.mdc requires every public type and function to have a /// doc comment. This file defines format and best practices.
 
 ## Documentation Philosophy
 This is an **open source project**. Documentation must be comprehensive, clear, and helpful for:
@@ -37,10 +39,9 @@ func colorToHex(_ color: NSColor) -> String {
 Any non-obvious code, algorithms, or business logic MUST have explanatory comments:
 
 ```swift
-// Convert display coordinates to screen capture coordinates
-// macOS uses different coordinate systems for displays vs. captured images
-// This conversion ensures accurate pixel color extraction
-let capturePoint = convertDisplayToCapture(point: mouseLocation)
+// Convert to sRGB because HEX codes are always in sRGB color space
+// NSColor may arrive in display P3 or other spaces — conversion ensures accuracy
+let sRGBColor = color.usingColorSpace(.sRGB) ?? color
 ```
 
 ### Why, Not What

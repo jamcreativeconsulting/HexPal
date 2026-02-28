@@ -14,7 +14,6 @@ alwaysApply: true
 ## Optimization Rules
 - Profile before optimizing
 - Avoid premature optimization
-- Cache screen captures when possible
 - Use efficient algorithms for color conversion
 - Minimize UI redraws
 

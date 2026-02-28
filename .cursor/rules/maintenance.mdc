@@ -22,7 +22,7 @@ agentRequested: true
 ## Emergency Procedures
 
 ### If Hotkey Stops Working
-1. Check permission status
+1. HexPal uses KeyboardShortcuts — no permissions required. Check for key conflicts with other apps
 2. Verify hotkey registration
 3. Check for conflicts
 4. Provide fallback activation method

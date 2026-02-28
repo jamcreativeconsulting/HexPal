@@ -2,6 +2,10 @@
 
 This directory contains Project Rules for HEXPal using Cursor's modern MDC format. These rules guide the AI assistant during development.
 
+## Source of Truth
+
+**hexpal-project.mdc** is the single source of truth for architecture, file rules, code quality, forbidden patterns, and dependencies. All other rules supplement it and reference it to avoid duplication.
+
 ## Rule Types
 
 - **alwaysApply: true** - Always included in AI context
@@ -10,16 +14,18 @@ This directory contains Project Rules for HEXPal using Cursor's modern MDC forma
 
 ## Rule Files
 
-1. **core-principles.mdc** - Project philosophy and core values (alwaysApply)
-2. **swift-code-standards.mdc** - Swift style guide and architecture (alwaysApply, Swift files)
-3. **file-size-limits.mdc** - Strict 400-line file size limit (alwaysApply, Swift files)
-4. **documentation-standards.mdc** - Comprehensive documentation requirements including MCP usage (alwaysApply, Swift files)
-5. **performance-requirements.mdc** - Performance targets and optimization (alwaysApply)
-6. **macos-guidelines.mdc** - macOS-specific best practices (alwaysApply, Swift files)
-7. **testing.mdc** - Testing requirements and scenarios (agentRequested)
-8. **feature-development.mdc** - Feature development process and Git workflow (agentRequested)
-9. **security-privacy.mdc** - Security and privacy guidelines (alwaysApply)
-10. **maintenance.mdc** - Maintenance guidelines (agentRequested)
+1. **hexpal-project.mdc** - **Source of truth.** Architecture, file rules, forbidden patterns, color math (alwaysApply, Swift files)
+2. **hexpal-testing.mdc** - Unit test structure, naming, reference values (alwaysApply, test files)
+3. **core-principles.mdc** - Project philosophy (alwaysApply)
+4. **swift-code-standards.mdc** - Swift style guide; supplements hexpal-project (alwaysApply, Swift files)
+5. **file-size-limits.mdc** - Refactoring guidance; rule in hexpal-project (alwaysApply, Swift files)
+6. **documentation-standards.mdc** - Doc format and MCP usage; hexpal-project requires /// doc comments (alwaysApply, Swift files)
+7. **performance-requirements.mdc** - Performance targets (alwaysApply)
+8. **macos-guidelines.mdc** - Platform specifics; supplements hexpal-project (alwaysApply, Swift files)
+9. **security-privacy.mdc** - Privacy and logging; hexpal-project defines forbidden patterns (alwaysApply)
+10. **testing.mdc** - Manual/integration scenarios; hexpal-testing for unit tests (agentRequested)
+11. **feature-development.mdc** - Feature process and Git workflow (agentRequested)
+12. **maintenance.mdc** - Maintenance guidelines (agentRequested)
 
 ## Migration from .cursorrules
 

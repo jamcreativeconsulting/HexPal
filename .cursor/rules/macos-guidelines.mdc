@@ -1,10 +1,12 @@
 ---
-description: macOS-specific development guidelines and best practices
+description: macOS platform specifics — identity and forbidden patterns in hexpal-project.mdc
 globs: ["**/*.swift"]
 alwaysApply: true
 ---
 
 # macOS-Specific Guidelines
+
+**Identity, architecture, forbidden patterns:** hexpal-project.mdc.
 
 ## Permissions
 - HEXPal requires zero system permissions — color picking uses NSColorSampler, hotkey uses KeyboardShortcuts (no entitlements needed)
@@ -31,10 +33,17 @@ alwaysApply: true
 - Fast and responsive
 - Intuitive and discoverable
 - Consistent with macOS design
-- Support keyboard navigation
-- Provide clear labels
-- Support VoiceOver
 - Follow macOS Human Interface Guidelines
+
+## Accessibility (WCAG 2.2 AA)
+**Full requirements:** hexpal-project.mdc. HexPal must be 100% WCAG 2.2 AA accessible.
+
+- **SwiftUI:** Use `.accessibilityLabel()`, `.accessibilityHint()`, `.accessibilityValue()`, `.accessibilityAddTraits()` on every interactive view. Use `.accessibilityHidden(true)` only for purely decorative elements.
+- **AppKit:** Set `accessibilityLabel`, `accessibilityHint`, `accessibilityRole` on NSView/NSControl subclasses.
+- **Menu bar items:** Provide accessibility labels for the status item and menu items.
+- **Keyboard:** All actions reachable via keyboard. Support Tab, Shift+Tab, Enter, Space, Escape.
+- **VoiceOver:** Test every new view with Cmd+F5. Announce picked color (HEX value) and contrast results clearly.
+- **Contrast:** App chrome (buttons, text, backgrounds) must meet 4.5:1 (text) or 3:1 (large) — use the app's contrast checker on app UI colors.
 
 ## Critical Error Handling
 - Hotkey registration failures: Check for key conflicts, provide fallback (menu bar click)

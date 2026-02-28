@@ -1,10 +1,12 @@
 ---
-description: Swift code style guide and architecture patterns for open source clarity
+description: Swift style guide — supplements hexpal-project.mdc (source of truth)
 globs: ["**/*.swift"]
 alwaysApply: true
 ---
 
 # Swift Code Standards
+
+**Architecture, directory structure, file rules, forbidden patterns:** See hexpal-project.mdc.
 
 ## Swift Style Guide
 - **Follow Swift API Design Guidelines** (https://swift.org/documentation/api-design-guidelines/)
@@ -49,18 +51,12 @@ private extension ColorPickerController {
 ```
 
 ### Directory Structure
-- **App/**: Application entry point and app delegate
-- **Controllers/**: View controllers and managers
-- **Models/**: Data models and business logic
-- **Views/**: UI components and custom views
-- **Utilities/**: Helper classes and utilities
-- **Resources/**: Assets, Info.plist, etc.
+Defined in hexpal-project.mdc. Controllers use singleton managers; Utilities are pure functions only.
 
 ## Architecture Patterns
-- **MVC:** Use Model-View-Controller pattern
+- **MVC:** Model-View-Controller (hexpal-project defines structure)
 - **Separation of Concerns:** Keep controllers, models, utilities separate
 - **Single Responsibility:** Each class should have one clear purpose
-- **Dependency Injection:** Avoid singletons where possible
 - **Protocol-Oriented:** Use protocols for abstraction and testability
 
 ## Code Quality
@@ -113,10 +109,10 @@ Before submitting code for review:
 - [ ] Follows Swift API Design Guidelines
 - [ ] No linter errors
 - [ ] All tests passing
-- [ ] Performance targets met
-- [ ] Documentation updated (public APIs documented)
+- [ ] Performance targets met (see performance-requirements.mdc)
+- [ ] Documentation updated (see documentation-standards.mdc; hexpal-project requires /// doc comments)
 - [ ] Error handling implemented
 - [ ] Memory leaks checked
-- [ ] File size under 400 lines
+- [ ] File size under 400 lines (hexpal-project)
 - [ ] Code is clear and self-documenting
 - [ ] Naming is descriptive and consistent

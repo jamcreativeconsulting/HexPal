@@ -91,7 +91,8 @@ class MenuBarHintView {
         window.hasShadow = true
         window.ignoresMouseEvents = false
         window.collectionBehavior = [.transient]
-        
+        window.title = "HEXPal hint"
+
         let contentView = HintContentView(frame: NSRect(x: 0, y: 0, width: width, height: height))
         contentView.wantsLayer = true
         contentView.layer?.cornerRadius = 10
@@ -107,7 +108,15 @@ class MenuBarHintView {
         label.alignment = .center
         label.frame = NSRect(x: 12, y: 10, width: width - 24, height: 24)
         label.lineBreakMode = .byTruncatingTail
+        label.setAccessibilityElement(true)
+        label.setAccessibilityRole(.staticText)
+        label.setAccessibilityLabel(message)
+        label.setAccessibilityHelp("This hint dismisses when you click the menu bar icon or use the shortcut. Double-tap to activate.")
         contentView.addSubview(label)
+
+        contentView.setAccessibilityElement(true)
+        contentView.setAccessibilityRole(.group)
+        contentView.setAccessibilityLabel("HEXPal first-launch hint. \(message)")
         
         let visualEffect = NSVisualEffectView(frame: contentView.bounds)
         visualEffect.material = .hudWindow
@@ -116,6 +125,7 @@ class MenuBarHintView {
         visualEffect.wantsLayer = true
         visualEffect.layer?.cornerRadius = 10
         visualEffect.autoresizingMask = [.width, .height]
+        visualEffect.setAccessibilityElement(false)  // Decorative
         DispatchQueue.main.async {
             contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
         }

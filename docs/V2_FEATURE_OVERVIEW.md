@@ -1,7 +1,7 @@
 # HexPal v2 — Feature Overview
 
 ## Strategic Context
-HexPal is a free, zero-permission macOS menu bar color picker that serves as lead generation for JAM Creative's accessibility consulting. Positioned as the only native macOS picker with WCAG 2.x + APCA dual contrast, OKLCH support, and light/dark dual-context checking.
+HexPal is a free, zero-permission macOS menu bar color picker that serves as lead generation for JAM Creative's accessibility consulting. Positioned as the only native macOS picker with WCAG 2.x + APCA dual contrast, OKLCH support, and light/dark dual-context checking. **The app itself is 100% WCAG 2.2 AA accessible** — VoiceOver, keyboard nav, labels, contrast — modeling the practices it helps users achieve.
 
 ## v2.0 Features (Launch)
 

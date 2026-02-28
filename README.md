@@ -131,6 +131,7 @@ Found a bug? Have a feature request? Please [open an issue](https://github.com/j
 
 ## 📚 Documentation
 
+- **[Accessibility Audit](docs/ACCESSIBILITY_AUDIT.md)** - VoiceOver support, technical limitations, conformance statement
 - **[Development Plan](docs/PLAN.md)** - Complete development roadmap
 - **[Coding Standards](docs/CODING_STYLE.md)** - Code style and architecture guidelines
 - **[Project Summary](docs/PROJECT_SUMMARY.md)** - Project overview and context
@@ -143,6 +144,10 @@ Found a bug? Have a feature request? Please [open an issue](https://github.com/j
 - **Total Workflow:** < 2 seconds from activation to HEX in clipboard
 - **Memory:** < 50MB RAM usage
 - **CPU:** < 1% idle, < 5% when active
+
+## ♿ Accessibility (WCAG 2.2 AA)
+
+HexPal implements WCAG 2.2 AA for all UI it builds (menu, notifications, preferences). The color picker uses Apple's `NSColorSampler`; its accessibility behavior is determined by the system and cannot be customized. See [Accessibility Audit](docs/ACCESSIBILITY_AUDIT.md) for full coverage, technical limitations, and conformance details.
 
 ## 🔒 Privacy & Security
 

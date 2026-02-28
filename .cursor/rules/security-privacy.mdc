@@ -1,21 +1,20 @@
 ---
-description: Security and privacy guidelines
+description: Security and privacy — hexpal-project defines forbidden patterns
 alwaysApply: true
 ---
 
 # Security & Privacy
 
+**Forbidden patterns (analytics, tracking, network, permissions):** hexpal-project.mdc. HexPal requests ZERO system permissions.
+
 ## Permissions
-- Only request necessary permissions
-- Explain why permissions are needed
-- Handle permission denial gracefully
+- HexPal: zero permissions (NSColorSampler, KeyboardShortcuts — no Accessibility, no Screen Recording)
 - Don't collect or transmit user data
 
 ## Privacy
-- No analytics or tracking
+- No analytics, tracking, or telemetry (hexpal-project)
 - No data collection
-- No network requests (unless explicitly needed)
-- Local-only operation
+- No network requests — app runs 100% locally (hexpal-project)
 
 ## Error Handling & Logging
 

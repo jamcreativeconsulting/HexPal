@@ -1,11 +1,13 @@
 ---
-description: HEXPal core principles and project philosophy
+description: HEXPal philosophy — technical rules in hexpal-project.mdc
 alwaysApply: true
 ---
 
 # HEXPal Core Principles
 
-HEXPal is a free, open-source macOS menu bar application for quickly picking colors from anywhere on screen and getting HEX codes. Built with Swift and AppKit, optimized for speed and simplicity.
+**Technical identity, architecture, forbidden patterns:** hexpal-project.mdc. This file covers philosophy only.
+
+HEXPal is a free, open-source macOS menu bar color picker. Zero permissions (NSColorSampler, KeyboardShortcuts). Optimized for speed and simplicity.
 
 ## 1. Speed-First Design
 - **Goal:** Get HEX codes in < 2 seconds

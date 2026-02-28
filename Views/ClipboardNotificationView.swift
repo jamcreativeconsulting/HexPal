@@ -151,13 +151,20 @@ class ClipboardNotificationView {
         window.ignoresMouseEvents = false  // Enable mouse events for click/hover
         // Don't use .canJoinAllSpaces - it can cause wrong screen placement
         window.collectionBehavior = [.transient]
+        window.title = "HEXPal color copied"  // VoiceOver reads window title when focus moves to window
         
         // Create interactive content view for click and hover support
         let contentView = InteractiveNotificationView(frame: NSRect(x: 0, y: 0, width: ClipboardNotificationView.width, height: ClipboardNotificationView.height))
         contentView.wantsLayer = true
         contentView.layer?.cornerRadius = ClipboardNotificationView.cornerRadius
         contentView.layer?.backgroundColor = NSColor.controlBackgroundColor.withAlphaComponent(0.95).cgColor
-        
+
+        // VoiceOver (WCAG 2.2 AA): Announce copied color and interaction
+        contentView.setAccessibilityElement(true)
+        contentView.setAccessibilityRole(.button)
+        contentView.setAccessibilityLabel("Color \(hexCode) copied to clipboard. Success.")
+        contentView.setAccessibilityHelp("Double-tap to copy \(hexCode) to clipboard again. Press Escape to dismiss.")
+
         // Wire up interaction callbacks
         contentView.onClicked = { [weak self] in
             self?.copyToClipboard()
@@ -178,12 +185,13 @@ class ClipboardNotificationView {
         visualEffect.wantsLayer = true
         visualEffect.layer?.cornerRadius = 12
         visualEffect.autoresizingMask = [.width, .height]
+        visualEffect.setAccessibilityElement(false)  // Decorative; VoiceOver skips
         DispatchQueue.main.async {
             contentView.addSubview(visualEffect, positioned: .below, relativeTo: nil)
         }
         
         // Parse HEX code to NSColor for swatch
-        let color = hexToColor(hexCode)
+        let color = NSColor.fromHex(hexCode)
         
         // Create color swatch
         let swatchSize: CGFloat = 28
@@ -197,6 +205,9 @@ class ClipboardNotificationView {
         swatchView.layer?.cornerRadius = 6
         swatchView.layer?.borderWidth = 1.0
         swatchView.layer?.borderColor = NSColor.separatorColor.cgColor
+        swatchView.setAccessibilityElement(true)
+        swatchView.setAccessibilityRole(.image)
+        swatchView.setAccessibilityLabel("Color swatch for \(hexCode)")
         contentView.addSubview(swatchView)
         
         // Create checkmark indicator (success confirmation)
@@ -209,6 +220,9 @@ class ClipboardNotificationView {
         checkmarkLabel.textColor = NSColor.systemGreen
         checkmarkLabel.frame = NSRect(x: checkmarkX, y: checkmarkY, width: checkmarkSize, height: checkmarkSize)
         checkmarkLabel.alignment = .center
+        checkmarkLabel.setAccessibilityElement(true)
+        checkmarkLabel.setAccessibilityRole(.staticText)
+        checkmarkLabel.setAccessibilityLabel("Copied successfully")
         contentView.addSubview(checkmarkLabel)
         
         // HEX code label - monospace, clean, primary color
@@ -220,6 +234,9 @@ class ClipboardNotificationView {
         hexLabel.textColor = NSColor.labelColor
         hexLabel.frame = NSRect(x: hexLabelX, y: (ClipboardNotificationView.height - 20) / 2, width: hexLabelWidth, height: 20)
         hexLabel.alignment = .left
+        hexLabel.setAccessibilityElement(true)
+        hexLabel.setAccessibilityRole(.staticText)
+        hexLabel.setAccessibilityLabel("HEX code \(hexCode)")
         contentView.addSubview(hexLabel)
         
         window.contentView = contentView
@@ -281,6 +298,9 @@ class ClipboardNotificationView {
         tooltip.textColor = NSColor.secondaryLabelColor
         tooltip.alignment = .center
         tooltip.alphaValue = 0
+        tooltip.setAccessibilityElement(true)
+        tooltip.setAccessibilityRole(.staticText)
+        tooltip.setAccessibilityLabel("Press Command V to paste")
         tooltip.frame = NSRect(x: (contentView.bounds.width - 80) / 2, y: 8, width: 80, height: 16)
         contentView.addSubview(tooltip)
         tooltipLabel = tooltip
@@ -361,35 +381,5 @@ class ClipboardNotificationView {
         
         // Release self-reference to allow deallocation
         ClipboardNotificationView.activeNotification = nil
-    }
-    
-    /// Converts a HEX string to NSColor.
-    ///
-    /// - Parameter hex: The HEX code string (with or without # prefix)
-    /// - Returns: An NSColor representing the HEX code
-    private func hexToColor(_ hex: String) -> NSColor {
-        var hexSanitized = hex.trimmingCharacters(in: .whitespacesAndNewlines)
-        
-        // Remove # if present
-        if hexSanitized.hasPrefix("#") {
-            hexSanitized = String(hexSanitized.dropFirst())
-        }
-        
-        // Validate length
-        guard hexSanitized.count == 6 else {
-            return NSColor.black
-        }
-        
-        // Parse RGB components
-        var rgb: UInt64 = 0
-        guard Scanner(string: hexSanitized).scanHexInt64(&rgb) else {
-            return NSColor.black
-        }
-        
-        let red = CGFloat((rgb & 0xFF0000) >> 16) / 255.0
-        let green = CGFloat((rgb & 0x00FF00) >> 8) / 255.0
-        let blue = CGFloat(rgb & 0x0000FF) / 255.0
-        
-        return NSColor(srgbRed: red, green: green, blue: blue, alpha: 1.0)
     }
 }

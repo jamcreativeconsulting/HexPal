@@ -1,0 +1,41 @@
+---
+description: Unit test structure and standards — supplements hexpal-project.mdc
+globs: ["HexPalTests/**/*.swift"]
+alwaysApply: true
+---
+
+# HexPal Testing Rules
+
+**hexpal-project.mdc** requires: every Utilities/ file has a *Tests.swift; tests use known reference values; run full suite after any change.
+
+## Test Structure
+- Every test file maps 1:1 to a source file (ColorConverter.swift → ColorConverterTests.swift)
+- Import only XCTest and the module under test. No AppKit/SwiftUI in utility tests.
+- Use XCTAssertEqual with accuracy parameter for all floating point (accuracy: 0.001 unless noted)
+- Group related tests with // MARK: - SectionName
+
+## Test Naming
+- Pattern: test_functionName_inputDescription_expectedOutput()
+- Examples:
+  - test_hexString_pureRed_returnsFF0000()
+  - test_wcagContrast_blackOnWhite_returns21()
+  - test_apcaContrast_swappedColors_returnsDifferentValue()
+
+## Test Data
+Use well-known reference values:
+- WCAG: Black on White = 21:1, White on White = 1:1
+- APCA: Validate against myndex.com/APCA calculator
+- OKLCH: Validate against oklch.org converter
+- Hex: Pure red = #FF0000 = rgb(255, 0, 0)
+- Include edge cases: pure black, pure white, mid-gray, boundary thresholds (exactly 4.5:1)
+
+## Regression Prevention
+- Write the test file FIRST before implementing the feature
+- After ANY code change, run the full test suite
+- If a test fails, fix it BEFORE continuing
+- Never delete a passing test to make a build succeed
+
+## Performance Tests
+- XCTMeasure for computations that must complete < 100ms
+- Color conversion: 1000 iterations < 50ms total
+- Contrast calculation: 1000 iterations < 20ms total

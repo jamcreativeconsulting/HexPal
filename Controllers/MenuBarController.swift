@@ -85,12 +85,16 @@ class MenuBarController: NSObject, NSMenuDelegate {
         guard let statusItem = statusItem else { return }
         
         if let button = statusItem.button {
-            if let image = NSImage(systemSymbolName: "eyedropper", accessibilityDescription: "HEXPal") {
+            if let image = NSImage(systemSymbolName: "eyedropper", accessibilityDescription: "HEXPal color picker") {
                 button.image = image
                 button.image?.isTemplate = true
             } else {
                 button.title = "HEX"
             }
+            button.setAccessibilityElement(true)
+            button.setAccessibilityRole(.button)
+            button.setAccessibilityLabel("HEXPal. Click to open menu and pick a color.")
+            button.setAccessibilityHelp("Double-tap to open the HEXPal menu. Use the menu to pick a color or access preferences.")
         }
         
         buildMenu()
@@ -106,6 +110,7 @@ class MenuBarController: NSObject, NSMenuDelegate {
         // Pick Color - shortcut syncs automatically with user's Preferences setting
         let pickColorItem = NSMenuItem(title: "Pick Color", action: #selector(pickColorClicked(_:)), keyEquivalent: "")
         pickColorItem.target = self
+        pickColorItem.toolTip = "Opens the system color picker. Selected color is copied to clipboard as HEX."
         MainActor.assumeIsolated {
             pickColorItem.setShortcut(for: .pickColor)
         }
@@ -113,6 +118,7 @@ class MenuBarController: NSObject, NSMenuDelegate {
         
         // Recent Colors submenu
         let recentColorsItem = NSMenuItem(title: "Recent Colors", action: nil, keyEquivalent: "")
+        recentColorsItem.toolTip = "Previously picked colors. Select one to copy its HEX code to the clipboard."
         recentColorsSubmenu = NSMenu()
         recentColorsItem.submenu = recentColorsSubmenu
         menu.addItem(recentColorsItem)
@@ -124,6 +130,7 @@ class MenuBarController: NSObject, NSMenuDelegate {
         // Preferences
         let preferencesItem = NSMenuItem(title: "Preferences...", action: #selector(preferencesClicked), keyEquivalent: ",")
         preferencesItem.target = self
+        preferencesItem.toolTip = "Open preferences to change the pick color shortcut or launch at login."
         menu.addItem(preferencesItem)
         
         menu.addItem(NSMenuItem.separator())
@@ -160,6 +167,7 @@ class MenuBarController: NSObject, NSMenuDelegate {
             // Clear History option
             let clearItem = NSMenuItem(title: "Clear History", action: #selector(clearHistoryClicked), keyEquivalent: "")
             clearItem.target = self
+            clearItem.toolTip = "Remove all recent colors from history."
             submenu.addItem(clearItem)
         } else if !hasShownRecentColorsHint {
             let hintItem = NSMenuItem(title: "Your picked colors appear here", action: nil, keyEquivalent: "")
@@ -177,7 +185,8 @@ class MenuBarController: NSObject, NSMenuDelegate {
         let item = NSMenuItem(title: hex, action: #selector(recentColorClicked(_:)), keyEquivalent: "")
         item.target = self
         item.representedObject = hex
-        
+        item.toolTip = "Copy \(hex) to clipboard. Double-tap to select."
+
         // Create color swatch image
         let swatchSize = NSSize(width: 16, height: 16)
         let image = NSImage(size: swatchSize)

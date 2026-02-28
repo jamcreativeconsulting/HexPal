@@ -1,0 +1,91 @@
+---
+description: HexPal project-wide coding standards and architecture rules
+globs: ["**/*.swift"]
+alwaysApply: true
+---
+
+# HexPal Project Rules
+
+## Identity
+This is HexPal, a macOS menu bar color picker app. It is a FREE lead generation tool for JAM Creative's accessibility consulting. It must NEVER require system permissions (no Accessibility, no Screen Recording). It uses NSColorSampler for color picking and KeyboardShortcuts for global hotkey.
+
+## Architecture
+- Pattern: MVC with thin controllers and pure utility functions
+- Entry point: AppDelegate.swift (or @main App struct) in App/
+- Controllers: Singleton managers (ColorPickerManager, HotkeyManager, PaletteHistoryManager, ClipboardManager) in Controllers/
+- Models: Codable structs in Models/ — no classes unless required for reference semantics
+- Views: SwiftUI views in Views/ — prefer SwiftUI over AppKit for all new UI
+- Utilities: Pure functions and types with ZERO side effects in Utilities/ — independently testable, no UI dependencies
+- Resources: Assets and config in Resources/
+
+## File Rules
+- Maximum 400 lines per file. If approaching 350, split proactively.
+- One primary type per file. Filename must match the primary type name.
+- Every public function and type must have a /// doc comment.
+- No file may import both SwiftUI and AppKit unless it is a bridging adapter.
+- Utilities/ files must NEVER import AppKit, SwiftUI, or Cocoa. Pure Swift + Foundation only.
+- Test files go in HexPalTests/ and mirror the source filename with "Tests" suffix.
+
+## Code Quality
+- No force unwraps (!) except in tests and static config (known-valid hex strings).
+- No force try (try!) — always handle errors explicitly.
+- No print() in production code — use os_log or remove before commit.
+- No commented-out code. Ever. Delete it.
+- No TODO/FIXME/HACK comments — create a GitHub issue instead.
+- No empty catch blocks — at minimum log the error.
+- No magic numbers — use named constants.
+- Use guard for early exits, not nested if-lets.
+- Prefer let over var. Prefer value types over reference types.
+- All UserDefaults keys defined as static constants in a central location.
+
+## Naming Conventions
+- Types: PascalCase (ColorConverter, ContrastResult)
+- Functions/properties: camelCase (convertToHex, contrastRatio)
+- Constants: camelCase (maximumPaletteSize, defaultDarkBackground)
+- Test methods: test_functionName_condition_expectedResult()
+- Files: Match the primary type name exactly
+
+## Testing Requirements
+- Every Utilities/ file MUST have a corresponding test file in HexPalTests/
+- Every Models/ file with computed properties or methods MUST have tests
+- Tests use known reference values from published sources, not random data
+- Tests must not depend on UI, system state, or permissions
+- Tests must run in < 1 second each
+- After ANY code change, run the full test suite to verify no regressions
+
+## Dependencies
+- ZERO new external dependencies for v2. All color math is pure Swift.
+- Only external dependency: KeyboardShortcuts (from v1 refactor).
+- If you think you need a package, implement it in pure Swift instead.
+
+## Color Math Standards
+- All internal color representation: sRGB color space, Double precision
+- OKLCH uses Björn Ottosson's canonical Oklab specification
+- WCAG 2.x uses the W3C relative luminance formula exactly
+- APCA uses APCA-W3 0.0.98G-4g reference algorithm
+- ΔE uses CIE ΔE2000 (not ΔE76 or ΔE94)
+- All color math uses Double, never Float
+
+## Accessibility (WCAG 2.2 AA)
+HexPal must be 100% WCAG 2.2 AA accessible. It is a lead generation tool for accessibility consulting — the app itself must model best practices.
+
+- **Every interactive UI element** must have `accessibilityLabel` (SwiftUI: `.accessibilityLabel()`). Describe the element's purpose, not its appearance.
+- **Every interactive element** should have `accessibilityHint` (SwiftUI: `.accessibilityHint()`) when the action is non-obvious.
+- **Images and icons** must have meaningful labels (decorative images: `.accessibilityHidden(true)`).
+- **Color** must never be the sole indicator of meaning — pair with text, icons, or labels.
+- **Contrast** in app UI must meet WCAG 2.2 AA (4.5:1 text, 3:1 large text). Use the app's own contrast checker to validate.
+- **Keyboard navigation** must reach all interactive elements. Tab order must be logical.
+- **VoiceOver** must announce all content correctly. Test with Cmd+F5 on every new UI.
+- **Focus** must be visible and never get trapped.
+- **Dynamic content** (e.g., picked color, HEX value) must be announced via `accessibilityValue` or live region updates.
+
+Before shipping any UI change: run VoiceOver and navigate the full flow. Document any accessibility decisions in code comments.
+
+## Forbidden Patterns
+- No accessibility permission code (AXIsProcessTrusted, etc.)
+- No screen recording permission code (CGPreflightScreenCaptureAccess, etc.)
+- No CGWindowListCreateImage or custom screen capture
+- No subscription, paywall, or in-app purchase code
+- No analytics, tracking, or telemetry
+- No network requests (the app runs 100% locally)
+- No iCloud sync (v2.0 scope — may add later)

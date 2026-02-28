@@ -101,10 +101,17 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
         let hotkeyLabel = NSTextField(labelWithString: "Pick Color Shortcut:")
         hotkeyLabel.font = NSFont.systemFont(ofSize: 13)
         hotkeyLabel.frame = NSRect(x: 20, y: 218, width: 150, height: 22)
+        hotkeyLabel.setAccessibilityElement(true)
+        hotkeyLabel.setAccessibilityRole(.staticText)
+        hotkeyLabel.setAccessibilityLabel("Pick color shortcut")
         contentView.addSubview(hotkeyLabel)
         
         let recorder = KeyboardShortcuts.RecorderCocoa(for: .pickColor)
         recorder.frame = NSRect(x: 170, y: 214, width: 200, height: 28)
+        recorder.setAccessibilityElement(true)
+        recorder.setAccessibilityRole(.button)
+        recorder.setAccessibilityLabel("Keyboard shortcut for picking a color. Default is Command Shift P.")
+        recorder.setAccessibilityHelp("Double-tap to focus and press a new key combination to change the shortcut.")
         contentView.addSubview(recorder)
         
         // Separator
@@ -116,11 +123,18 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
         let launchTitleLabel = NSTextField(labelWithString: "Launch at Login")
         launchTitleLabel.font = NSFont.boldSystemFont(ofSize: 14)
         launchTitleLabel.frame = NSRect(x: 20, y: 45, width: 200, height: 24)
+        launchTitleLabel.setAccessibilityElement(true)
+        launchTitleLabel.setAccessibilityRole(.staticText)
+        launchTitleLabel.setAccessibilityLabel("Launch at Login")
         contentView.addSubview(launchTitleLabel)
         
         let checkbox = NSButton(checkboxWithTitle: "Launch HEXPal automatically when you log in", target: self, action: #selector(launchAtLoginChanged))
         checkbox.frame = NSRect(x: 20, y: 15, width: 360, height: 24)
         checkbox.state = LaunchAtLoginManager.shared.isEnabled ? .on : .off
+        checkbox.setAccessibilityElement(true)
+        checkbox.setAccessibilityRole(.checkBox)
+        checkbox.setAccessibilityLabel("Launch HEXPal automatically when you log in")
+        checkbox.setAccessibilityHelp("Double-tap to turn on or off. When on, HEXPal starts when you log in to your Mac.")
         launchAtLoginCheckbox = checkbox
         contentView.addSubview(checkbox)
         

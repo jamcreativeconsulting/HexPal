@@ -5,16 +5,18 @@ agentRequested: true
 
 # Feature Development Process
 
+**Code standards, file rules, forbidden patterns:** hexpal-project.mdc. **New feature checklist:** Run the new-feature-checklist command.
+
 ## Adding New Features
 1. **Justify:** Does it support the core workflow?
-2. **Plan:** Update `docs/PLAN.md` with feature details
-3. **Implement:** Follow code standards
-4. **Test:** Verify performance and reliability
-5. **Document:** Update README and code comments
+2. **Plan:** Update docs (e.g., V2_FEATURE_OVERVIEW.md) with feature details
+3. **Implement:** Follow hexpal-project and swift-code-standards
+4. **Test:** Run verify-build command; see hexpal-testing.mdc
+5. **Document:** Update README and add /// doc comments (hexpal-project)
 
 ## MVP Features (Must Have)
 - Menu bar icon
-- Global hotkey (Cmd+Shift+C)
+- Global hotkey (Cmd+Shift+P per macos-guidelines)
 - System color picker (NSColorSampler, zero permissions)
 - HEX code display
 - Automatic clipboard copy
@@ -62,9 +64,10 @@ agentRequested: true
 - `fix/*` - Bug fixes
 
 ### Before Merging
+- Run verify-build command (hexpal-project compliance)
 - Code review required
 - All tests passing
-- Documentation updated
+- Documentation updated (hexpal-project requires /// doc comments)
 - No linter errors
 - Performance targets met
-- File size limits respected (400 lines max)
+- File size under 400 lines (hexpal-project)

@@ -31,6 +31,7 @@
 /* Begin PBXFileReference section */
 		17130F9D2F53231C0061AAB8 /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 		17132A462F5334850061AAB8 /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
+		17132C132F53373F0061AAB8 /* HexPal.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = HexPal.xcodeproj; sourceTree = "<group>"; };
 		171BB0042F04087B000DE8DF /* HexPal.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HexPal.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		171BB0142F04087D000DE8DF /* HexPalTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HexPalTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		171BB01E2F04087D000DE8DF /* HexPalUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = HexPalUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -133,6 +134,11 @@
 			sourceTree = "<group>";
 		};
 		17132A4C2F5334850061AAB8 /* Products */ = {
+			isa = PBXGroup;
+			name = Products;
+			sourceTree = "<group>";
+		};
+		17132C192F53373F0061AAB8 /* Products */ = {
 			isa = PBXGroup;
 			name = Products;
 			sourceTree = "<group>";
@@ -257,7 +263,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 2600;
-				LastUpgradeCheck = 2600;
+				LastUpgradeCheck = 2620;
 				TargetAttributes = {
 					171BB0032F04087B000DE8DF = {
 						CreatedOnToolsVersion = 26.0.1;
@@ -303,6 +309,10 @@
 				{
 					ProductGroup = 172C135D2F16A586005EEE73 /* Products */;
 					ProjectRef = 172C13572F16A586005EEE73 /* HexPal.xcodeproj */;
+				},
+				{
+					ProductGroup = 17132C192F53373F0061AAB8 /* Products */;
+					ProjectRef = 17132C132F53373F0061AAB8 /* HexPal.xcodeproj */;
 				},
 			);
 			projectRoot = "";
@@ -410,6 +420,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = DV99BDRK7P;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -474,6 +485,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = DV99BDRK7P;
 				ENABLE_NS_ASSERTIONS = NO;
@@ -506,6 +518,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = DV99BDRK7P;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -544,6 +557,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = DV99BDRK7P;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -578,6 +592,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = DV99BDRK7P;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
@@ -599,6 +614,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = DV99BDRK7P;
 				GENERATE_INFOPLIST_FILE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 11.5;
@@ -619,6 +635,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = DV99BDRK7P;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;
@@ -638,6 +655,7 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = DV99BDRK7P;
 				GENERATE_INFOPLIST_FILE = YES;
 				MARKETING_VERSION = 1.0;

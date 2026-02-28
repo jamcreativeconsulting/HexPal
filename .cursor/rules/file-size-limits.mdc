@@ -1,30 +1,21 @@
 ---
-description: Strict file size limits and code organization requirements
+description: File size refactoring guidance — rule defined in hexpal-project.mdc
 globs: ["**/*.swift"]
 alwaysApply: true
 ---
 
 # File Size Limits & Code Organization
 
-## Strict File Size Rule
-- **Maximum file size: 400 lines** (including comments and whitespace)
-- If a file exceeds 400 lines, it MUST be refactored into smaller, focused files
-- Each file should have a single, clear responsibility
+**Source of truth:** hexpal-project.mdc File Rules. Max 400 lines, split proactively at 350.
 
 ## Refactoring Guidelines
-When a file approaches or exceeds 400 lines:
+
+When a file approaches 350 lines or exceeds 400:
 1. **Extract related functionality** into separate files
 2. **Use extensions** to organize code into logical groups
 3. **Separate protocol conformances** into extension files
 4. **Split large classes** into smaller, focused components
 5. **Move utility functions** to dedicated utility files
-
-## File Organization Principles
-- One class/struct/enum per file (when possible)
-- Group related functionality together
-- Use extensions to organize code within a file
-- Keep files focused on a single responsibility
-- Prefer composition over large monolithic files
 
 ## Examples
 
@@ -48,6 +39,5 @@ Instead of one large `MenuBarController.swift` (500 lines):
 - `MenuBarController+Formatting.swift` (key code formatting, ~150 lines)
 
 ## Enforcement
-- Code review must check file sizes
-- Automated checks recommended (if possible)
+- Run verify-build command before every commit (includes file size check)
 - Refactor before merging if limit exceeded
