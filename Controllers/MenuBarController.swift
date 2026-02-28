@@ -51,14 +51,14 @@ class MenuBarController: NSObject, NSMenuDelegate {
         
         // Wire the color-picked callback once at init time.
         // ColorPickerManager calls this on the main thread after a successful pick.
-        ColorPickerManager.shared.onColorPicked = { [weak self] color in
+        ColorPickerManager.shared.onColorPicked = { [weak self] picked in
             guard let self = self else { return }
-            let hexString = self.colorToHex(color)
             let pasteboard = NSPasteboard.general
             pasteboard.clearContents()
-            pasteboard.setString(hexString, forType: .string)
-            ColorHistoryManager.shared.addColor(hexString)
-            self.showClipboardNotification(hex: hexString)
+            let value = picked.string(for: ColorFormat.preferred)
+            pasteboard.setString(value, forType: .string)
+            ColorHistoryManager.shared.addColor(picked.hex)
+            self.showClipboardNotification(picked: picked)
         }
     }
     
@@ -242,28 +242,18 @@ class MenuBarController: NSObject, NSMenuDelegate {
     
     @objc private func recentColorClicked(_ sender: NSMenuItem) {
         guard let hex = sender.representedObject as? String else { return }
-        
-        // Copy to clipboard
         ColorHistoryManager.shared.copyToClipboard(hex)
-        
-        // Show notification
-        showClipboardNotification(hex: hex)
+        if let picked = PickedColor.fromHex(hex) {
+            showClipboardNotification(picked: picked)
+        }
     }
     
     @objc private func clearHistoryClicked() {
         ColorHistoryManager.shared.clearHistory()
     }
     
-    private func colorToHex(_ color: NSColor) -> String {
-        guard let rgbColor = color.usingColorSpace(.sRGB) else { return "#000000" }
-        let red = Int(rgbColor.redComponent * 255)
-        let green = Int(rgbColor.greenComponent * 255)
-        let blue = Int(rgbColor.blueComponent * 255)
-        return String(format: "#%02X%02X%02X", red, green, blue)
-    }
-    
-    private func showClipboardNotification(hex: String) {
-        let notification = ClipboardNotificationView(hex: hex)
+    private func showClipboardNotification(picked: PickedColor) {
+        let notification = ClipboardNotificationView(picked: picked)
         notification.show()
     }
     

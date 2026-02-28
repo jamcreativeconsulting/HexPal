@@ -114,8 +114,27 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
         recorder.setAccessibilityHelp("Double-tap to focus and press a new key combination to change the shortcut.")
         contentView.addSubview(recorder)
         
+        // Copy Format Section
+        let formatLabel = NSTextField(labelWithString: "Copy Format:")
+        formatLabel.font = NSFont.systemFont(ofSize: 13)
+        formatLabel.frame = NSRect(x: 20, y: 178, width: 100, height: 22)
+        formatLabel.setAccessibilityElement(true)
+        formatLabel.setAccessibilityRole(.staticText)
+        formatLabel.setAccessibilityLabel("Preferred format when copying to clipboard")
+        contentView.addSubview(formatLabel)
+
+        let formatPopUp = NSPopUpButton(frame: NSRect(x: 130, y: 174, width: 240, height: 26), pullsDown: false)
+        formatPopUp.addItems(withTitles: ColorFormat.allCases.map { "\($0.rawValue) (\($0.example))" })
+        formatPopUp.selectItem(at: ColorFormat.allCases.firstIndex(of: ColorFormat.preferred) ?? 0)
+        formatPopUp.target = self
+        formatPopUp.action = #selector(copyFormatChanged)
+        formatPopUp.setAccessibilityElement(true)
+        formatPopUp.setAccessibilityRole(.popUpButton)
+        formatPopUp.setAccessibilityLabel("Preferred format when copying color to clipboard")
+        contentView.addSubview(formatPopUp)
+
         // Separator
-        let separator = NSBox(frame: NSRect(x: 20, y: 75, width: 360, height: 1))
+        let separator = NSBox(frame: NSRect(x: 20, y: 145, width: 360, height: 1))
         separator.boxType = .separator
         contentView.addSubview(separator)
         
@@ -144,6 +163,12 @@ class PreferencesWindowController: NSObject, NSWindowDelegate {
     @objc private func launchAtLoginChanged() {
         let enabled = launchAtLoginCheckbox?.state == .on
         LaunchAtLoginManager.shared.isEnabled = enabled
+    }
+
+    @objc private func copyFormatChanged(_ sender: NSPopUpButton) {
+        let index = sender.indexOfSelectedItem
+        guard index >= 0, index < ColorFormat.allCases.count else { return }
+        ColorFormat.preferred = ColorFormat.allCases[index]
     }
     
     

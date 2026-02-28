@@ -15,8 +15,8 @@ import AppKit
 ///
 /// ## Usage
 /// ```swift
-/// ColorPickerManager.shared.onColorPicked = { color in
-///     // handle NSColor
+/// ColorPickerManager.shared.onColorPicked = { pickedColor in
+///     // handle PickedColor with hex, contrast, and fix suggestions
 /// }
 /// ColorPickerManager.shared.pickColor()
 /// ```
@@ -27,7 +27,7 @@ final class ColorPickerManager {
 
     /// Callback fired on the main thread when the user successfully picks a color.
     /// Not called if the user cancels by pressing Escape.
-    var onColorPicked: ((NSColor) -> Void)?
+    var onColorPicked: ((PickedColor) -> Void)?
 
     private init() {}
 
@@ -37,8 +37,20 @@ final class ColorPickerManager {
     func pickColor() {
         let sampler = NSColorSampler()
         sampler.show { [weak self] selectedColor in
-            guard let color = selectedColor else { return }
-            self?.onColorPicked?(color)
+            guard let color = selectedColor,
+                  let (r, g, b) = color.srgbComponents() else { return }
+            let dualContext = DualContextChecker.check(r: r, g: g, b: b)
+            let lightSuggestion = dualContext.onLight.passesWCAGAA ? nil
+                : AccessibleColorSuggester.suggest(r: r, g: g, b: b, against: DualContextChecker.lightBackground)
+            let darkSuggestion = dualContext.onDark.passesWCAGAA ? nil
+                : AccessibleColorSuggester.suggest(r: r, g: g, b: b, against: DualContextChecker.darkBackground)
+            let picked = PickedColor(
+                r: r, g: g, b: b,
+                dualContext: dualContext,
+                lightSuggestion: lightSuggestion,
+                darkSuggestion: darkSuggestion
+            )
+            self?.onColorPicked?(picked)
         }
     }
 }
